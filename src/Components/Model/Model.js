@@ -9,12 +9,18 @@ import StandUp from "./files/Stand Up.fbx";
 import Stunned from "./files/Stunned.fbx";
 import GettingUp from "./files/Getting Up.fbx";
 
-const animations = { Die, Angry, StandUp, Stunned, GettingUp };
+const animations = {
+  die: { file: Die, once: true },
+  angry: { file: Angry, once: false },
+  standUp: { file: StandUp, once: true },
+  stunned: { file: Stunned, once: true },
+  gettingUp: { file: GettingUp, once: true },
+};
 const loader = new FBXLoader();
 let toggle = true;
 const chainLookup = {
-  Stunned: "GettingUp",
-  GettingUp: "Angry",
+  stunned: "gettingUp",
+  gettingUp: "angry",
 };
 
 export default function Model({ clicked }) {
@@ -25,15 +31,11 @@ export default function Model({ clicked }) {
   const nextAnimation = useRef();
   const animationInProgress = useRef(false);
 
-  const loadAnimation = useCallback((name, file) => {
+  const loadAnimation = useCallback((name, anim) => {
+    const { file, once } = anim;
     loader.load(file, (fbx) => {
       const action = mixer.current.clipAction(fbx.animations[0]);
-      if (
-        name === "Die" ||
-        name === "Stunned" ||
-        name === "GettingUp" ||
-        name === "StandUp"
-      ) {
+      if (once) {
         action.loop = THREE.LoopOnce;
         action.clampWhenFinished = true;
       }
@@ -51,8 +53,8 @@ export default function Model({ clicked }) {
       mixer.current = new THREE.AnimationMixer(fbx);
       const action = mixer.current.clipAction(fbx.animations[0]);
       action.play();
-      actions.current["HipHop1"] = action;
-      action.name = "HipHop1";
+      actions.current["hipHop1"] = action;
+      action.name = "hipHop1";
       setFbx(fbx);
       for (const name in animations) {
         loadAnimation(name, animations[name]);
@@ -62,7 +64,7 @@ export default function Model({ clicked }) {
   }, [loadAnimation]);
 
   const runNextAnimation = useCallback(() => {
-    if (currentAction.current.name === "GettingUp") {
+    if (currentAction.current.name === "gettingUp") {
       animationInProgress.current = false;
     }
     const action = actions.current[nextAnimation.current];
@@ -81,10 +83,10 @@ export default function Model({ clicked }) {
     mixer.current.removeEventListener("finished", runNextAnimation);
     if (toggle) {
       animationInProgress.current = true;
-      nextAnimation.current = "Stunned";
+      nextAnimation.current = "stunned";
       runNextAnimation();
     } else {
-      nextAnimation.current = "HipHop1";
+      nextAnimation.current = "hipHop1";
       runNextAnimation();
     }
     toggle = !toggle;
