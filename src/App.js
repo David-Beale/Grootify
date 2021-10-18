@@ -21,7 +21,6 @@ export default function App() {
           shadows
         >
           <Stats className="stats" />
-          <ambientLight intensity={0.5} />
           <Main clicked={clicked} />
           <OrbitControls />
         </Canvas>
