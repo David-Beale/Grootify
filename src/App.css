@@ -1,0 +1,19 @@
+.container {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* background-color: white; */
+  background: radial-gradient(circle at top, #034412, #000000);
+  overflow: hidden;
+  color: rgb(0, 37, 46);
+  /* cursor: none; */
+}
+.stats {
+  top: unset !important;
+  left: unset !important;
+  right: 0 !important;
+  bottom: 0 !important;
+}
