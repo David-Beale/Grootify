@@ -5,9 +5,9 @@ import { Loader, OrbitControls, Stats } from "@react-three/drei";
 import Main from "./Components/Main/Main";
 
 export default function App() {
-  const [dead, setDead] = useState(false);
+  const [clicked, setClicked] = useState(false);
   const onClick = () => {
-    setDead([]);
+    setClicked([]);
   };
   return (
     <div className="container" onClick={onClick}>
@@ -22,7 +22,7 @@ export default function App() {
         >
           <Stats className="stats" />
           <ambientLight intensity={0.5} />
-          <Main dead={dead} />
+          <Main clicked={clicked} />
           <OrbitControls />
         </Canvas>
       </Suspense>

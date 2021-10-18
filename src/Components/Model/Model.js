@@ -12,11 +12,18 @@ import GettingUp from "./files/Getting Up.fbx";
 const animations = { Die, Angry, StandUp, Stunned, GettingUp };
 const loader = new FBXLoader();
 let toggle = true;
-export default function Model({ dead }) {
+const chainLookup = {
+  Stunned: "GettingUp",
+  GettingUp: "Angry",
+};
+
+export default function Model({ clicked }) {
   const [fbx, setFbx] = useState({});
   const mixer = useRef();
   const actions = useRef({});
   const currentAction = useRef();
+  const nextAnimation = useRef();
+  const animationInProgress = useRef(false);
 
   const loadAnimation = useCallback((name, file) => {
     loader.load(file, (fbx) => {
@@ -36,14 +43,6 @@ export default function Model({ dead }) {
   }, []);
 
   useEffect(() => {
-    if (!dead) return;
-    die();
-    // if (toggle) die();
-    // else dance();
-    toggle = !toggle;
-  }, [dead]);
-
-  useEffect(() => {
     loader.load(HipHopDancing, (fbx) => {
       fbx.scale.setScalar(0.02);
       fbx.traverse((c) => {
@@ -52,8 +51,8 @@ export default function Model({ dead }) {
       mixer.current = new THREE.AnimationMixer(fbx);
       const action = mixer.current.clipAction(fbx.animations[0]);
       action.play();
-      actions.current["hipHop1"] = action;
-      action.name = "hipHop1";
+      actions.current["HipHop1"] = action;
+      action.name = "HipHop1";
       setFbx(fbx);
       for (const name in animations) {
         loadAnimation(name, animations[name]);
@@ -62,71 +61,38 @@ export default function Model({ dead }) {
     });
   }, [loadAnimation]);
 
+  const runNextAnimation = useCallback(() => {
+    if (currentAction.current.name === "GettingUp") {
+      animationInProgress.current = false;
+    }
+    const action = actions.current[nextAnimation.current];
+    action.reset();
+    action.crossFadeFrom(currentAction.current, 0.5);
+    action.play();
+    currentAction.current = action;
+    nextAnimation.current = chainLookup[nextAnimation.current];
+    if (nextAnimation.current) {
+      mixer.current.addEventListener("finished", runNextAnimation);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!clicked || animationInProgress.current) return;
+    mixer.current.removeEventListener("finished", runNextAnimation);
+    if (toggle) {
+      animationInProgress.current = true;
+      nextAnimation.current = "Stunned";
+      runNextAnimation();
+    } else {
+      nextAnimation.current = "HipHop1";
+      runNextAnimation();
+    }
+    toggle = !toggle;
+  }, [clicked, runNextAnimation]);
+
   useFrame((state, delta) => {
     if (mixer.current) mixer.current.update(delta);
   });
-
-  const die = () => {
-    console.log("die");
-    const action = actions.current["Stunned"];
-    // mixer.current.stopAllAction();
-    action.reset();
-    action.setEffectiveTimeScale(1.0);
-    action.setEffectiveWeight(1.0);
-    action.crossFadeFrom(currentAction.current, 0.5);
-    // currentAction.current.stop();
-    // action.fadeIn(0.5);
-    action.play();
-    currentAction.current = action;
-    console.log("currentAction now die");
-
-    mixer.current.addEventListener("finished", standUp);
-  };
-  const standUp = () => {
-    console.log("standup");
-    mixer.current.removeEventListener("finished", standUp);
-    const action = actions.current["GettingUp"];
-    // mixer.current.stopAllAction();
-    action.reset();
-    action.setEffectiveTimeScale(1.0);
-    action.setEffectiveWeight(1.0);
-    console.log(currentAction.current.name);
-    action.crossFadeFrom(currentAction.current, 0.5);
-    // action.fadeIn(0.5);
-    action.play();
-    action.loop = THREE.LoopOnce;
-    action.clampWhenFinished = true;
-    currentAction.current = action;
-
-    mixer.current.addEventListener("finished", angry);
-  };
-  const angry = () => {
-    mixer.current.removeEventListener("finished", angry);
-    const action = actions.current["Angry"];
-    // mixer.current.stopAllAction();
-    action.reset();
-    action.setEffectiveTimeScale(1.0);
-    action.setEffectiveWeight(1.0);
-    action.crossFadeFrom(currentAction.current, 0.5);
-    // currentAction.current.stop();
-    // action.fadeIn(0.5);
-    action.play();
-    currentAction.current = action;
-    // mixer.current.addEventListener("finished", dance);
-  };
-  const dance = () => {
-    mixer.current.removeEventListener("finished", dance);
-    const action = actions.current["hipHop1"];
-    // mixer.current.stopAllAction();
-    action.reset();
-    action.setEffectiveTimeScale(1.0);
-    action.setEffectiveWeight(1.0);
-    action.crossFadeFrom(currentAction.current, 0.5);
-    // action.fadeIn(0.5);
-    action.play();
-    currentAction.current = action;
-    console.log("currentAction now dance");
-  };
 
   return <primitive object={fbx} position={[0, -20, 0]} />;
 }

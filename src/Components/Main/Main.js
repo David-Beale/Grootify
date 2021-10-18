@@ -2,10 +2,10 @@ import { SpotLight } from "@react-three/drei";
 import Floor from "../Floor/Floor";
 import Model from "../Model/Model";
 
-export default function Main({ dead }) {
+export default function Main({ clicked }) {
   return (
     <>
-      <Model dead={dead} />
+      <Model clicked={clicked} />
       <SpotLight
         intensity={5}
         position={[0, 40, 0]}
