@@ -5,6 +5,7 @@ import Logo from "../Logo/Logo";
 import Model from "../Model/Model";
 import Effects from "../Effects/Effects";
 import NoEffects from "../NoEffects/NoEffects";
+import Ring from "../Ring/Ring";
 
 export default function Main({ clicked }) {
   const lightRef = useRef(0);
@@ -34,6 +35,7 @@ export default function Main({ clicked }) {
       </NoEffects>
       <Effects>
         <Logo />
+        <Ring />
       </Effects>
     </>
   );
