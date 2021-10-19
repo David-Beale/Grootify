@@ -60,7 +60,7 @@ export const useLoader = () => {
     const action = actions.current[nextAnimation.current];
     action.reset();
     if (currentAction.current) {
-      action.crossFadeFrom(currentAction.current, fadeSpeed.current, true);
+      action.crossFadeFrom(currentAction.current, fadeSpeed.current);
 
       if (currentAction.current.name === "land") {
         fadeSpeed.current = 0.5;
