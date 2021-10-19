@@ -15,7 +15,7 @@ export const useLoader = () => {
   const [fbx, setFbx] = useState({});
 
   const loadAnimation = useCallback((name, anim) => {
-    const { file, once, blocking } = anim;
+    const { file, once, blocking, cb } = anim;
     loader.load(file, (fbx) => {
       const action = mixer.current.clipAction(fbx.animations[0]);
       if (once) {
@@ -24,7 +24,9 @@ export const useLoader = () => {
       }
       action.name = name;
       action.blocking = blocking;
+      action.cb = cb;
       actions.current[name] = action;
+
       if (name === "hangingIdle") {
         currentAction.current = action;
         action.play();
@@ -54,10 +56,11 @@ export const useLoader = () => {
 
   const runNextAnimation = useCallback(() => {
     mixer.current.removeEventListener("finished", runNextAnimation);
+    if (currentAction.current.cb) currentAction.current.cb();
     const action = actions.current[nextAnimation.current];
     action.reset();
     if (currentAction.current) {
-      action.crossFadeFrom(currentAction.current, fadeSpeed.current);
+      action.crossFadeFrom(currentAction.current, fadeSpeed.current, true);
 
       if (currentAction.current.name === "land") {
         fadeSpeed.current = 0.5;

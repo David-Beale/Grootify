@@ -26,8 +26,8 @@ export default function App() {
         >
           <Stats className="stats" />
           <Main clicked={clicked} />
-          {/* <OrbitControls /> */}
-          <Rig mouse={mouse} />
+          <OrbitControls />
+          {/* <Rig mouse={mouse} /> */}
         </Canvas>
       </Suspense>
       <Loader />
