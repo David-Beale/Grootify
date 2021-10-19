@@ -10,6 +10,7 @@ import Stunned from "./files/UserInput/Stunned.fbx";
 import GettingUp from "./files/UserInput/Getting Up.fbx";
 
 import Angry from "./files/Angry.fbx";
+import Typing from "./files/Typing.fbx";
 
 import RunningV1 from "./files/Running/RunningRight.fbx";
 import StopRight from "./files/Running/StopRight.fbx";
@@ -25,6 +26,7 @@ export const animations = {
   waving: { file: Waving, once: true, blocking: true },
   runningV1: { file: RunningV1, once: false, blocking: true },
   stopRight: { file: StopRight, once: true, blocking: true },
+  typing: { file: Typing, once: false, blocking: false },
 };
 
 export const chainLookup = {

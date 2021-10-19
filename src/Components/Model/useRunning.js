@@ -8,9 +8,9 @@ export const useRunning = (posRef, velRef, running, setNextAnimation) => {
     velRef.current = Math.min(0.4, velRef.current);
 
     posRef.current.position.x += velRef.current * running.current.direction;
-    if (posRef.current.position.x >= 60) {
+    if (posRef.current.position.x >= 56) {
       running.current.active = false;
-      setNextAnimation("stopRight", true);
+      setNextAnimation("typing", true);
     }
   });
 };

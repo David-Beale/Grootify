@@ -6,6 +6,7 @@ import Model from "../Model/Model";
 import Effects from "../Effects/Effects";
 import NoEffects from "../NoEffects/NoEffects";
 import Ring from "../Ring/Ring";
+import Table from "../Table/Table";
 
 export default function Main({ clicked }) {
   const lightRef = useRef(0);
@@ -35,6 +36,7 @@ export default function Main({ clicked }) {
           castShadow
         />
         <Floor />
+        <Table />
       </NoEffects>
       <Effects bloomRef={bloomRef}>
         <Logo />
