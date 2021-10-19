@@ -10,11 +10,14 @@ import Ring from "../Ring/Ring";
 export default function Main({ clicked }) {
   const lightRef = useRef(0);
   const [angle, setAngle] = useState(360);
+  const bloomRef = useRef();
 
   const lightsOn = useCallback(() => {
     lightRef.current.intensity = 5;
+    bloomRef.current.strength = 4;
     setAngle(3);
   }, []);
+
   return (
     <>
       <NoEffects>
@@ -33,7 +36,7 @@ export default function Main({ clicked }) {
         />
         <Floor />
       </NoEffects>
-      <Effects>
+      <Effects bloomRef={bloomRef}>
         <Logo />
         <Ring />
       </Effects>
