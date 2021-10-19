@@ -7,17 +7,16 @@ import { useAnimations } from "./animations";
 
 let toggle = true;
 
-export default memo(function Model({ clicked, setLightOn }) {
-  const posRef = useRef();
+export default memo(function Model({ clicked, setLightOn, modelRef }) {
   const velRef = useRef(0);
   const running = useRef({ active: false, direction: null });
 
-  useAnimations(posRef, running);
+  useAnimations(modelRef, running);
 
   const { fbx, setNextAnimation } = useLoader();
 
-  useFalling(posRef, velRef, setLightOn, setNextAnimation);
-  useRunning(posRef, velRef, running, setNextAnimation);
+  useFalling(modelRef, velRef, setLightOn, setNextAnimation);
+  useRunning(modelRef, velRef, running, setNextAnimation);
 
   useEffect(() => {
     if (!clicked) return;
@@ -30,7 +29,7 @@ export default memo(function Model({ clicked, setLightOn }) {
   }, [clicked, setNextAnimation]);
 
   return (
-    <group ref={posRef} position={[0, 21.5, 0]}>
+    <group ref={modelRef} position={[0, 21.5, 0]}>
       <primitive object={fbx} />;
     </group>
   );

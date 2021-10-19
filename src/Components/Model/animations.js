@@ -37,11 +37,11 @@ export const chainLookup = {
   stopRight: "angry",
 };
 
-export const useAnimations = (posRef, running) => {
+export const useAnimations = (modelRef, running) => {
   useEffect(() => {
     animations.waving.cb = () => {
       running.current.active = true;
       running.current.direction = 1;
     };
-  }, [posRef, running]);
+  }, [modelRef, running]);
 };

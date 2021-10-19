@@ -12,8 +12,10 @@ export default function Main({ clicked }) {
   const lightRef = useRef(0);
   const [angle, setAngle] = useState(360);
   const bloomRef = useRef();
+  const modelRef = useRef();
 
   const lightsOn = useCallback(() => {
+    lightRef.current.target = modelRef.current;
     lightRef.current.intensity = 5;
     bloomRef.current.strength = 4;
     setAngle(3);
@@ -22,7 +24,7 @@ export default function Main({ clicked }) {
   return (
     <>
       <NoEffects>
-        <Model clicked={clicked} setLightOn={lightsOn} />
+        <Model clicked={clicked} setLightOn={lightsOn} modelRef={modelRef} />
         <ambientLight intensity={0.5} />
         <SpotLight
           ref={lightRef}
