@@ -25,7 +25,7 @@ export default function Main({ clicked }) {
     <>
       <NoEffects>
         <Model clicked={clicked} setLightOn={lightsOn} modelRef={modelRef} />
-        <ambientLight intensity={0.2} />
+        <ambientLight intensity={0.3} />
         <SpotLight
           ref={lightRef}
           intensity={0}
