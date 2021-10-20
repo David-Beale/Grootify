@@ -1,29 +1,41 @@
 import SpotifyWebApi from "spotify-web-api-node";
+import axios from "axios";
 
 export const spotifyApi = new SpotifyWebApi();
 
-spotifyApi.preFlightCheck = () => {
+spotifyApi.refreshAccessToken = () => {
+  const refreshToken = spotifyApi.getRefreshToken();
+  const params = new URLSearchParams();
+
+  params.append("client_id", process.env.REACT_APP_SPOTIFY_CLIENT_ID);
+  params.append("grant_type", "refresh_token");
+  params.append("refresh_token", refreshToken);
+
+  axios
+    .post("https://accounts.spotify.com/api/token", params, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;",
+      },
+    })
+    .then((res) => {
+      const { access_token, expires_in } = res.data;
+      localStorage.setItem("sp-accessToken", access_token);
+      localStorage.setItem("sp-expiry", Date.now() + (expires_in - 60) * 1000);
+      spotifyApi.setAccessToken(access_token);
+      return 2;
+    })
+    .catch((err) => {
+      console.log("Could not refresh access token", err);
+      spotifyApi.logout();
+      return false;
+    });
+};
+
+spotifyApi.preFlightCheck = async () => {
   const expiry = localStorage.getItem("sp-expiry");
   if (Date.now() > expiry) {
     //try to refresh token
-    spotifyApi.refreshAccessToken().then(
-      function (data) {
-        const { access_token, expires_in } = data.body;
-        // Save the access token so that it's used in future calls
-        spotifyApi.setAccessToken(access_token);
-        localStorage.setItem("sp-accessToken", access_token);
-        localStorage.setItem(
-          "sp-expiry",
-          Date.now() + (expires_in - 60) * 1000
-        );
-        return 2;
-      },
-      function (err) {
-        console.log("Could not refresh access token", err);
-        spotifyApi.logout();
-        return false;
-      }
-    );
+    return await spotifyApi.refreshAccessToken();
   }
   return 1;
 };

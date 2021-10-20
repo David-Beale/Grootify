@@ -1,14 +1,16 @@
 import "./App.css";
 import { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Loader, OrbitControls, Stats } from "@react-three/drei";
+import { OrbitControls, Stats } from "@react-three/drei";
 import Main from "./Components/Main/Main";
 import { useMouseInteraction } from "./Components/Rig/useInteractions";
 import Rig from "./Components/Rig/Rig";
 import Login from "./Components/Login/Login";
+import Loader from "./Components/Loader/Loader";
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(null);
+  const [loaded, setLoaded] = useState(false);
   const [clicked, setClicked] = useState(false);
   const onClick = () => {
     setClicked([]);
@@ -17,7 +19,7 @@ export default function App() {
   const [mouse, onMouseMove] = useMouseInteraction(loggedIn);
   return (
     <div className="container" onClick={onClick} onPointerMove={onMouseMove}>
-      <Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+      <Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} loaded={loaded} />
       <Suspense fallback={null}>
         <Canvas
           camera={{
@@ -32,7 +34,7 @@ export default function App() {
           <Rig mouse={mouse} />
         </Canvas>
       </Suspense>
-      <Loader />
+      <Loader loaded={loaded} setLoaded={setLoaded} />
       {/* <OrbitControls /> */}
     </div>
   );
