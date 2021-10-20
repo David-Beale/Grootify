@@ -8,9 +8,8 @@ import {
   popupWindow,
 } from "./authHelpers";
 
-export const useLogin = () => {
+export const useLogin = (setLoggedIn) => {
   const [inProgress, setInProgress] = useState(false);
-  const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const stateLocal = useRef(null);
   const codeVerifierLocal = useRef(null);
@@ -69,11 +68,14 @@ export const useLogin = () => {
         })
         .then((res) => {
           const { access_token, refresh_token, expires_in } = res.data;
-          console.log(access_token, refresh_token, expires_in);
           localStorage.setItem("sp-accessToken", access_token);
           localStorage.setItem("sp-refreshToken", refresh_token);
+          localStorage.setItem(
+            "sp-expiry",
+            Date.now() + (expires_in - 60) * 1000
+          );
 
-          setSuccess(true);
+          setLoggedIn(true);
           setInProgress(false);
         })
         .catch((err) => {
@@ -89,5 +91,5 @@ export const useLogin = () => {
     };
   };
 
-  return [initiateSpotifyLogin, inProgress, error, success];
+  return [initiateSpotifyLogin, inProgress, error];
 };

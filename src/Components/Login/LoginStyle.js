@@ -2,6 +2,9 @@ import styled from "styled-components";
 import { spotifyGreen } from "../../colors";
 
 export const LoginContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -9,6 +12,7 @@ export const LoginContainer = styled.div`
   align-items: center;
   justify-content: center;
   color: white;
+  z-index: 2;
 `;
 
 export const Status = styled.div`
@@ -31,7 +35,6 @@ export const LoginButton = styled.div`
   font-size: 1.2rem;
   border-radius: 25px;
   cursor: pointer;
-  z-index: 2;
   box-shadow: 0 0 6px 0px white;
   user-select: none;
 `;

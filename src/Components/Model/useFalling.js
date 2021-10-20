@@ -1,22 +1,21 @@
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 
-export const useFalling = (modelRef, velRef, setLightOn, setNextAnimation) => {
+export const useFalling = (
+  modelRef,
+  velRef,
+  setLightOn,
+  setNextAnimation,
+  loggedIn
+) => {
   const falling = useRef(null);
 
   useEffect(() => {
-    const onKey = (e) => {
-      if (e.code === "Space" && falling.current === null) {
-        falling.current = true;
-        setNextAnimation("falling", true);
-      }
-    };
-    window.addEventListener("keydown", onKey);
+    if (!loggedIn) return;
 
-    return () => {
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [setNextAnimation]);
+    falling.current = true;
+    setNextAnimation("falling", true);
+  }, [setNextAnimation, loggedIn]);
 
   useFrame(() => {
     if (!falling.current) return;

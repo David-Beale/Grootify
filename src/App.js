@@ -8,16 +8,17 @@ import Rig from "./Components/Rig/Rig";
 import Login from "./Components/Login/Login";
 
 export default function App() {
+  const [loggedIn, setLoggedIn] = useState(null);
   const [clicked, setClicked] = useState(false);
   const onClick = () => {
     setClicked([]);
   };
 
-  const [mouse, onMouseMove] = useMouseInteraction();
+  const [mouse, onMouseMove] = useMouseInteraction(loggedIn);
   return (
     <div className="container" onClick={onClick} onPointerMove={onMouseMove}>
-      <Login />
-      {/* <Suspense fallback={null}>
+      <Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+      <Suspense fallback={null}>
         <Canvas
           camera={{
             position: [0, 0, 100],
@@ -27,11 +28,11 @@ export default function App() {
           shadows
         >
           <Stats className="stats" />
-          <Main clicked={clicked} />
+          <Main clicked={clicked} loggedIn={loggedIn} />
           <Rig mouse={mouse} />
         </Canvas>
       </Suspense>
-      <Loader /> */}
+      <Loader />
       {/* <OrbitControls /> */}
     </div>
   );
