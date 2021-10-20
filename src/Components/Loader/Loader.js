@@ -5,13 +5,17 @@ import { Border1, Border2, Container, Text } from "./LoaderStyle";
 export default function Loader({ loaded, setLoaded }) {
   const { active, progress } = useProgress();
   const activeRef = useRef();
+  const idRef = useRef();
 
   useEffect(() => {
     activeRef.current = active;
     if (active === false && progress > 0) {
+      const id = Date.now();
+      idRef.current = id;
       setTimeout(() => {
-        if (!activeRef.current) setLoaded(true);
-      }, 5000);
+        if (idRef.current !== id || activeRef.current) return;
+        setLoaded(true);
+      }, 3000);
     }
   }, [progress, active, setLoaded]);
 
