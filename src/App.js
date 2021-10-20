@@ -5,6 +5,7 @@ import { Loader, OrbitControls, Stats } from "@react-three/drei";
 import Main from "./Components/Main/Main";
 import { useMouseInteraction } from "./Components/Rig/useInteractions";
 import Rig from "./Components/Rig/Rig";
+import Login from "./Components/Login/Login";
 
 export default function App() {
   const [clicked, setClicked] = useState(false);
@@ -15,7 +16,8 @@ export default function App() {
   const [mouse, onMouseMove] = useMouseInteraction();
   return (
     <div className="container" onClick={onClick} onPointerMove={onMouseMove}>
-      <Suspense fallback={null}>
+      <Login />
+      {/* <Suspense fallback={null}>
         <Canvas
           camera={{
             position: [0, 0, 100],
@@ -26,11 +28,11 @@ export default function App() {
         >
           <Stats className="stats" />
           <Main clicked={clicked} />
-          {/* <OrbitControls /> */}
           <Rig mouse={mouse} />
         </Canvas>
       </Suspense>
-      <Loader />
+      <Loader /> */}
+      {/* <OrbitControls /> */}
     </div>
   );
 }
