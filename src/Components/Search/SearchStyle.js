@@ -7,7 +7,7 @@ export const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(0, 7, 2);
+  background-color: rgb(23, 23, 23);
   height: 75px;
   box-shadow: 0 0 15px 0 ${colors.spotifyGreen};
 `;
@@ -28,18 +28,18 @@ export const Input = styled.input`
   outline: none;
   padding: 10px 10px 5px 70px;
   background-color: transparent;
-  color: ${colors.spotifyGreen};
+  color: rgb(218, 218, 218);
   box-shadow: inset 8px 8px 8px ${colors.topShadow},
     inset -8px -8px 8px ${colors.bottomShadow};
   font-weight: 700;
   font-size: 1rem;
   ::placeholder {
-    color: ${colors.spotifyGreen};
+    color: rgb(218, 218, 218);
   }
 `;
 
 export const StyledSearchIcon = styled(SearchIcon)`
-  color: ${colors.spotifyGreen};
+  color: rgb(218, 218, 218);
   position: absolute;
   left: 10px;
   top: 10px;

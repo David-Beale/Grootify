@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { colors } from "../../../colors";
 
 export const TrackResultContainer = styled.div`
   min-height: 65px;

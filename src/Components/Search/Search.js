@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { debounce } from "lodash";
 import { spotifyApi } from "../Api/SpotifyApi";
 import {
@@ -10,9 +16,8 @@ import {
 } from "./SearchStyle";
 import TrackResult from "./TrackResult/TrackResult";
 
-export default function Search() {
+export default function Search({ setSong }) {
   const [searchText, setSearchText] = useState("");
-  const [placeholder, setPlaceholder] = useState("Search for songs...");
   const [searchResults, setSearchResults] = useState([]);
   const id = useRef();
 
@@ -35,13 +40,20 @@ export default function Search() {
   }, [requestSearch]);
 
   const onSearchTextChange = (e) => {
-    if (!e.target.value) {
-      setPlaceholder("Search for songs...");
-    } else {
+    if (e.target.value) {
       requestSearch(e.target.value);
     }
     setSearchText(e.target.value);
   };
+
+  const selectSong = useCallback(
+    (song) => {
+      setSong(song);
+      setSearchText("");
+      setSearchResults([]);
+    },
+    [setSong]
+  );
 
   return (
     <>
@@ -51,7 +63,7 @@ export default function Search() {
           <Input
             type="text"
             id="search"
-            placeholder={placeholder}
+            placeholder={"Search for songs..."}
             value={searchText}
             onChange={onSearchTextChange}
             autoComplete="off"
@@ -61,7 +73,11 @@ export default function Search() {
       <SearchResultsContainer>
         {searchResults
           ? searchResults.map((track) => (
-              <TrackResult key={track.uri} track={track} />
+              <TrackResult
+                key={track.uri}
+                track={track}
+                selectSong={selectSong}
+              />
             ))
           : "No Results Found"}
       </SearchResultsContainer>

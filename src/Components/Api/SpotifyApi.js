@@ -83,7 +83,8 @@ spotifyApi.loginRedirect = async () => {
     response_type: "code",
     client_id: process.env.REACT_APP_SPOTIFY_CLIENT_ID,
     redirect_uri: "http://localhost:3000/",
-    scope: "user-follow-modify",
+    scope:
+      "streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state user-library-read user-library-modify",
     state: stateLocal,
     code_challenge: codeChallenge,
     code_challenge_method: "S256",
