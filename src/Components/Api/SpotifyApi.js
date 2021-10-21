@@ -137,7 +137,6 @@ const formatDuration = (duration) => {
 };
 spotifyApi.getTracks = (query) => {
   return spotifyApi.searchTracks(query).then((res) => {
-    console.log(res.body.tracks.items);
     const tracks = res.body.tracks.items.map((track) => {
       const albumImage = track.album.images.reduce((smallest, image) => {
         if (image.height < smallest.height) return image;
