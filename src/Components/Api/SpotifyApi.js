@@ -18,8 +18,9 @@ spotifyApi.refreshAccessToken = () => {
       },
     })
     .then((res) => {
-      const { access_token, expires_in } = res.data;
+      const { access_token, expires_in, refresh_token } = res.data;
       localStorage.setItem("sp-accessToken", access_token);
+      localStorage.setItem("sp-refreshToken", refresh_token);
       localStorage.setItem("sp-expiry", Date.now() + (expires_in - 60) * 1000);
       spotifyApi.setAccessToken(access_token);
       return 2;
