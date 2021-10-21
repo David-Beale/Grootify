@@ -8,6 +8,7 @@ import Rig from "./Components/Rig/Rig";
 import Login from "./Components/Login/Login";
 import Loader from "./Components/Loader/Loader";
 import Logout from "./Components/Logout/Logout";
+import SpotifyLogo from "./Components/SpotifyLogo/SpotifyLogo";
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(null);
@@ -37,6 +38,7 @@ export default function App() {
         </Canvas>
       </Suspense>
       <Loader loaded={loaded} setLoaded={setLoaded} />
+      <SpotifyLogo />
       {/* <OrbitControls /> */}
     </div>
   );
