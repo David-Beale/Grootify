@@ -136,20 +136,23 @@ const formatDuration = (duration) => {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
 spotifyApi.getTracks = (query) => {
-  return spotifyApi.searchTracks(query).then((res) => {
-    const tracks = res.body.tracks.items.map((track) => {
-      const albumImage = track.album.images.reduce((smallest, image) => {
-        if (image.height < smallest.height) return image;
-        return smallest;
-      }, track.album.images[0]);
-      return {
-        artist: track.artists[0].name,
-        title: track.name,
-        uri: track.uri,
-        albumUrl: albumImage.url,
-        duration: formatDuration(track.duration_ms),
-      };
-    });
-    return tracks;
-  });
+  return spotifyApi
+    .searchTracks(query)
+    .then((res) => {
+      const tracks = res.body.tracks.items.map((track) => {
+        const albumImage = track.album.images.reduce((smallest, image) => {
+          if (image.height < smallest.height) return image;
+          return smallest;
+        }, track.album.images[0]);
+        return {
+          artist: track.artists[0].name,
+          title: track.name,
+          uri: track.uri,
+          albumUrl: albumImage.url,
+          duration: formatDuration(track.duration_ms),
+        };
+      });
+      return tracks;
+    })
+    .catch(() => false);
 };

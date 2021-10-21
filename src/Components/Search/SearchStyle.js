@@ -55,4 +55,6 @@ export const SearchResultsContainer = styled.div`
   justify-content: flex-start;
   overflow: auto;
   padding-top: 25px;
+  color: white;
+  font-size: 1.5rem;
 `;

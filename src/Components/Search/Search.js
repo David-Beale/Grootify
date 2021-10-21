@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { debounce } from "lodash";
 import { spotifyApi } from "../Api/SpotifyApi";
 import {
@@ -7,7 +7,6 @@ import {
   SearchBarContainer,
   StyledSearchIcon,
   SearchResultsContainer,
-  SearchResult,
 } from "./SearchStyle";
 import TrackResult from "./TrackResult/TrackResult";
 
@@ -15,11 +14,15 @@ export default function Search() {
   const [searchText, setSearchText] = useState("");
   const [placeholder, setPlaceholder] = useState("Search for songs...");
   const [searchResults, setSearchResults] = useState([]);
+  const id = useRef();
 
   const requestSearch = useMemo(
     () =>
       debounce(async (query) => {
+        const localId = Date.now();
+        id.current = localId;
         const tracks = await spotifyApi.getTracks(query);
+        if (id.current !== localId) return;
         setSearchResults(tracks);
       }, 300),
     []
@@ -56,9 +59,11 @@ export default function Search() {
         </SearchBarContainer>
       </HeaderContainer>
       <SearchResultsContainer>
-        {searchResults.map((track) => (
-          <TrackResult key={track.uri} track={track} />
-        ))}
+        {searchResults
+          ? searchResults.map((track) => (
+              <TrackResult key={track.uri} track={track} />
+            ))
+          : "No Results Found"}
       </SearchResultsContainer>
     </>
   );
