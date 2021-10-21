@@ -1,5 +1,12 @@
 import SpotifyWebApi from "spotify-web-api-node";
 import axios from "axios";
+import {
+  makeid,
+  getRandomInt,
+  pkce_challenge_from_verifier,
+  buildParams,
+  popupWindow,
+} from "./authHelpers";
 
 export const spotifyApi = new SpotifyWebApi();
 
@@ -59,4 +66,63 @@ spotifyApi.checkAuthentication = async () => {
   } catch (error) {
     return false;
   }
+};
+
+let codeVerifierLocal;
+let stateLocal;
+spotifyApi.loginRedirect = async () => {
+  codeVerifierLocal = makeid(getRandomInt(43, 128));
+
+  const codeChallenge = await pkce_challenge_from_verifier(codeVerifierLocal);
+  stateLocal = makeid(12);
+
+  // construct the authentication url
+  const parameters = {
+    response_type: "code",
+    client_id: process.env.REACT_APP_SPOTIFY_CLIENT_ID,
+    redirect_uri: "http://localhost:3000/",
+    scope: "user-follow-modify",
+    state: stateLocal,
+    code_challenge: codeChallenge,
+    code_challenge_method: "S256",
+  };
+
+  const authURL =
+    "https://accounts.spotify.com/authorize?" + buildParams(parameters);
+
+  const popup = popupWindow(authURL, "Login With Spotify", window, 600, 800);
+
+  return popup;
+};
+
+spotifyApi.requestTokens = (payload) => {
+  const { state, code, error } = payload;
+
+  if (error || state !== stateLocal) return false;
+
+  const params = new URLSearchParams();
+
+  params.append("client_id", process.env.REACT_APP_SPOTIFY_CLIENT_ID);
+  params.append("grant_type", "authorization_code");
+  params.append("code", code);
+  params.append("redirect_uri", "http://localhost:3000/");
+  params.append("code_verifier", codeVerifierLocal);
+
+  return axios
+    .post("https://accounts.spotify.com/api/token", params, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;",
+      },
+    })
+    .then((res) => {
+      const { access_token, refresh_token, expires_in } = res.data;
+      localStorage.setItem("sp-accessToken", access_token);
+      localStorage.setItem("sp-refreshToken", refresh_token);
+      localStorage.setItem("sp-expiry", Date.now() + (expires_in - 60) * 1000);
+      return true;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
 };
