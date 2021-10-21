@@ -8,11 +8,12 @@ export const useFalling = (
   setNextAnimation,
   loggedIn
 ) => {
+  const once = useRef(false);
   const falling = useRef(null);
 
   useEffect(() => {
-    if (!loggedIn) return;
-
+    if (!loggedIn || once.current) return;
+    once.current = true;
     falling.current = true;
     setNextAnimation("falling", true);
   }, [setNextAnimation, loggedIn]);

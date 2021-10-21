@@ -7,6 +7,7 @@ import { useMouseInteraction } from "./Components/Rig/useInteractions";
 import Rig from "./Components/Rig/Rig";
 import Login from "./Components/Login/Login";
 import Loader from "./Components/Loader/Loader";
+import Logout from "./Components/Logout/Logout";
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(null);
@@ -20,6 +21,7 @@ export default function App() {
   return (
     <div className="container" onClick={onClick} onPointerMove={onMouseMove}>
       <Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} loaded={loaded} />
+      <Logout loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
       <Suspense fallback={null}>
         <Canvas
           camera={{
