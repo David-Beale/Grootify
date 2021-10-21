@@ -9,6 +9,7 @@ import Login from "./Components/Login/Login";
 import Loader from "./Components/Loader/Loader";
 import Logout from "./Components/Logout/Logout";
 import SpotifyLogo from "./Components/SpotifyLogo/SpotifyLogo";
+import Search from "./Components/Search/Search";
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(null);
@@ -23,7 +24,8 @@ export default function App() {
     <div className="container" onClick={onClick} onPointerMove={onMouseMove}>
       <Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} loaded={loaded} />
       <Logout loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-      <Suspense fallback={null}>
+      <Search />
+      {/* <Suspense fallback={null}>
         <Canvas
           camera={{
             position: [0, 0, 100],
@@ -36,7 +38,7 @@ export default function App() {
           <Main clicked={clicked} loggedIn={loggedIn} />
           <Rig mouse={mouse} />
         </Canvas>
-      </Suspense>
+      </Suspense> */}
       <Loader loaded={loaded} setLoaded={setLoaded} />
       <SpotifyLogo />
       {/* <OrbitControls /> */}

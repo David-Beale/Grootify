@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { spotifyGreen } from "../../colors";
+import { colors } from "../../colors";
 
 export const LoginContainer = styled.div`
   position: fixed;
@@ -26,7 +26,7 @@ export const Status = styled.div`
 `;
 
 export const LoginButton = styled.div`
-  background-color: ${spotifyGreen};
+  background-color: ${colors.spotifyGreen};
   width: 200px;
   height: 50px;
   display: flex;

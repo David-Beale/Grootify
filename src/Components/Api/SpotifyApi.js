@@ -56,6 +56,7 @@ spotifyApi.checkAuthentication = async () => {
 
   spotifyApi.setRefreshToken(refreshToken);
   const preFlight = await spotifyApi.preFlightCheck();
+  console.log({ preFlight });
   if (!preFlight) return false;
   if (preFlight === 2) return true;
 
@@ -64,6 +65,7 @@ spotifyApi.checkAuthentication = async () => {
     await spotifyApi.getMe();
     return true;
   } catch (error) {
+    console.log("access token error");
     return false;
   }
 };
@@ -125,4 +127,30 @@ spotifyApi.requestTokens = (payload) => {
       console.log(err);
       return false;
     });
+};
+
+const formatDuration = (duration) => {
+  let seconds = Math.round(duration / 1000);
+  const minutes = ~~(seconds / 60);
+  seconds -= minutes * 60;
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+};
+spotifyApi.getTracks = (query) => {
+  return spotifyApi.searchTracks(query).then((res) => {
+    console.log(res.body.tracks.items);
+    const tracks = res.body.tracks.items.map((track) => {
+      const albumImage = track.album.images.reduce((smallest, image) => {
+        if (image.height < smallest.height) return image;
+        return smallest;
+      }, track.album.images[0]);
+      return {
+        artist: track.artists[0].name,
+        title: track.name,
+        uri: track.uri,
+        albumUrl: albumImage.url,
+        duration: formatDuration(track.duration_ms),
+      };
+    });
+    return tracks;
+  });
 };
