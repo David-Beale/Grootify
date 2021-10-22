@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import SearchIcon from "@mui/icons-material/Search";
+import ClearIcon from "@mui/icons-material/Clear";
 import { colors } from "../../colors";
 
 export const HeaderContainer = styled.div`
@@ -10,6 +11,8 @@ export const HeaderContainer = styled.div`
   background-color: rgb(23, 23, 23);
   height: 75px;
   box-shadow: 0 0 15px 0 ${colors.spotifyGreen};
+  position: relative;
+  z-index: 1;
 `;
 
 export const SearchBarContainer = styled.div`
@@ -44,8 +47,17 @@ export const StyledSearchIcon = styled(SearchIcon)`
   left: 10px;
   top: 10px;
 `;
+export const StyledCancelIcon = styled(ClearIcon)`
+  color: ${colors.primary};
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  cursor: pointer;
+`;
 
 export const SearchResultsContainer = styled.div`
+  z-index: 0;
+  position: relative;
   height: calc(100vh - 100px);
   /* width: calc(100vw - 500px); */
   width: 100%;
@@ -57,4 +69,6 @@ export const SearchResultsContainer = styled.div`
   padding-top: 25px;
   color: white;
   font-size: 1.5rem;
+  top: ${({ open }) => (open ? 0 : "-100%")};
+  transition: top 500ms ease-in-out;
 `;

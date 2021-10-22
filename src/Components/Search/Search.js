@@ -13,12 +13,14 @@ import {
   SearchBarContainer,
   StyledSearchIcon,
   SearchResultsContainer,
+  StyledCancelIcon,
 } from "./SearchStyle";
 import TrackResult from "./TrackResult/TrackResult";
 
 export default function Search({ setSong }) {
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [open, setOpen] = useState(false);
   const id = useRef();
 
   const requestSearch = useMemo(
@@ -29,9 +31,18 @@ export default function Search({ setSong }) {
         const tracks = await spotifyApi.getTracks(query);
         if (id.current !== localId) return;
         setSearchResults(tracks);
+        setOpen(true);
       }, 300),
     []
   );
+
+  const onClose = useCallback(() => {
+    setOpen(false);
+    setSearchText("");
+    setTimeout(() => {
+      setSearchResults([]);
+    }, 750);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -39,20 +50,24 @@ export default function Search({ setSong }) {
     };
   }, [requestSearch]);
 
-  const onSearchTextChange = (e) => {
-    if (e.target.value) {
-      requestSearch(e.target.value);
-    }
-    setSearchText(e.target.value);
-  };
+  const onSearchTextChange = useCallback(
+    (e) => {
+      if (e.target.value) {
+        requestSearch(e.target.value);
+        setSearchText(e.target.value);
+      } else {
+        onClose();
+      }
+    },
+    [onClose, requestSearch]
+  );
 
   const selectSong = useCallback(
     (song) => {
       setSong(song);
-      setSearchText("");
-      setSearchResults([]);
+      onClose();
     },
-    [setSong]
+    [onClose, setSong]
   );
 
   return (
@@ -68,9 +83,12 @@ export default function Search({ setSong }) {
             onChange={onSearchTextChange}
             autoComplete="off"
           />
+          {searchText && (
+            <StyledCancelIcon onClick={onClose} fontSize="large" />
+          )}
         </SearchBarContainer>
       </HeaderContainer>
-      <SearchResultsContainer>
+      <SearchResultsContainer open={open}>
         {searchResults
           ? searchResults.map((track) => (
               <TrackResult
