@@ -1,15 +1,11 @@
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
+import { useAuthStore } from "../Store/authStore";
 
-export const useFalling = (
-  modelRef,
-  velRef,
-  setLightOn,
-  setNextAnimation,
-  loggedIn
-) => {
+export const useFalling = (modelRef, velRef, setLightOn, setNextAnimation) => {
   const once = useRef(false);
   const falling = useRef(null);
+  const loggedIn = useAuthStore((state) => state.loggedIn);
 
   useEffect(() => {
     if (!loggedIn || once.current) return;

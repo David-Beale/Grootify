@@ -8,7 +8,7 @@ import NoEffects from "../NoEffects/NoEffects";
 import Ring from "../Ring/Ring";
 import Table from "../Table/Table";
 
-export default function Main({ clicked, loggedIn }) {
+export default function Main({ clicked }) {
   const lightRef = useRef(0);
   const [angle, setAngle] = useState(360);
   const bloomRef = useRef();
@@ -24,12 +24,7 @@ export default function Main({ clicked, loggedIn }) {
   return (
     <>
       <NoEffects>
-        <Model
-          clicked={clicked}
-          setLightOn={lightsOn}
-          modelRef={modelRef}
-          loggedIn={loggedIn}
-        />
+        <Model clicked={clicked} setLightOn={lightsOn} modelRef={modelRef} />
         <ambientLight intensity={0.3} />
         <SpotLight
           ref={lightRef}

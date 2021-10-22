@@ -16,23 +16,22 @@ import SidePanel from "./Components/SidePanel/SidePanel";
 
 export default function App() {
   const [songs, setSongs] = useState([]);
-  const [loggedIn, setLoggedIn] = useState(null);
   const [loaded, setLoaded] = useState(false);
   const [clicked, setClicked] = useState(false);
   const onClick = () => {
     setClicked([]);
   };
 
-  const [mouse, onMouseMove] = useMouseInteraction(loggedIn);
+  const [mouse, onMouseMove] = useMouseInteraction();
   return (
     <>
       <div className="app" onClick={onClick} onPointerMove={onMouseMove}>
-        <Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} loaded={loaded} />
-        <Logout loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-        <SidePanel loggedIn={loggedIn} setSongs={setSongs} />
+        <Login loaded={loaded} />
+        <Logout />
+        <SidePanel setSongs={setSongs} />
         <Search setSongs={setSongs} />
         <Loader loaded={loaded} setLoaded={setLoaded} />
-        <Player loggedIn={loggedIn} songs={songs} />
+        <Player songs={songs} />
         <SpotifyLogo />
       </div>
       <div className="container">
@@ -47,7 +46,7 @@ export default function App() {
             shadows
           >
             <Stats className="stats" />
-            <Main clicked={clicked} loggedIn={loggedIn} />
+            <Main clicked={clicked} />
             <Rig mouse={mouse} />
           </Canvas>
         </Suspense>

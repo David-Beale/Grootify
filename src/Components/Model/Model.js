@@ -7,19 +7,14 @@ import { useAnimations } from "./animations";
 
 let toggle = true;
 
-export default memo(function Model({
-  clicked,
-  setLightOn,
-  modelRef,
-  loggedIn,
-}) {
+export default memo(function Model({ clicked, setLightOn, modelRef }) {
   const velRef = useRef(0);
   const running = useRef({ active: false, direction: null });
 
   useAnimations(modelRef, running);
 
   const { fbx, setNextAnimation } = useLoader();
-  useFalling(modelRef, velRef, setLightOn, setNextAnimation, loggedIn);
+  useFalling(modelRef, velRef, setLightOn, setNextAnimation);
   useRunning(modelRef, velRef, running, setNextAnimation);
 
   useEffect(() => {

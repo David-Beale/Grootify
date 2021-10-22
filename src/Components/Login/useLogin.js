@@ -1,8 +1,11 @@
 import { useState } from "react";
 
 import { spotifyApi } from "../Api/SpotifyApi";
+import { useAuthStore } from "../Store/authStore";
 
-export const useLogin = (setLoggedIn) => {
+export const useLogin = () => {
+  const login = useAuthStore((state) => state.login);
+
   const [inProgress, setInProgress] = useState(false);
   const [error, setError] = useState(false);
 
@@ -18,10 +21,7 @@ export const useLogin = (setLoggedIn) => {
       setInProgress(false);
       if (success) {
         const loggedIn = await spotifyApi.login();
-        if (loggedIn) {
-          setLoggedIn(true);
-          return;
-        }
+        if (loggedIn) return login();
       }
       setError(true);
     };

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { spotifyApi } from "../Api/SpotifyApi";
 import TrackResult from "../Search/TrackResult/TrackResult";
+import { useAuthStore } from "../Store/authStore";
 import Playlist from "./Playlist/Playlist";
 import { PlaylistTracksContainer, SidePanelContainer } from "./SidePanelStyle";
 
@@ -13,7 +14,9 @@ const buildPlaylist = (list, song) => {
     }
   }
 };
-export default function SidePanel({ loggedIn, setSongs }) {
+export default function SidePanel({ setSongs }) {
+  const loggedIn = useAuthStore((state) => state.loggedIn);
+
   const [playlists, setPlaylists] = useState([]);
   const [playlistTracks, setPlaylistTracks] = useState([]);
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);

@@ -3,21 +3,27 @@ import { LoginContainer, LoginButton, Status } from "./LoginStyle";
 import { useLogin } from "./useLogin";
 import { spotifyApi } from "../Api/SpotifyApi";
 import { useEffect, useState } from "react";
+import { useAuthStore } from "../Store/authStore";
 
-export default function Login({ loggedIn, setLoggedIn, loaded }) {
-  const [initiateSpotifyLogin, inProgress, error] = useLogin(setLoggedIn);
+export default function Login({ loaded }) {
+  const loggedIn = useAuthStore((state) => state.loggedIn);
+  const login = useAuthStore((state) => state.login);
+  const logout = useAuthStore((state) => state.logout);
+
+  const [initiateSpotifyLogin, inProgress, error] = useLogin();
 
   const [loginBuffer, setLoginBuffer] = useState(null);
 
   useEffect(() => {
     //login buffer is used to prevent the animations from starting before the scene has loaded
     if (!loaded || loginBuffer === null) return;
-    setLoggedIn(loginBuffer);
-  }, [loginBuffer, loaded, setLoggedIn]);
+    if (loginBuffer) login();
+    else logout();
+  }, [loginBuffer, loaded, login, logout]);
 
   useEffect(() => {
     spotifyApi.logout = () => {
-      setLoggedIn(false);
+      logout();
       localStorage.removeItem("sp-accessToken");
       localStorage.removeItem("sp-refreshToken");
     };
@@ -25,7 +31,7 @@ export default function Login({ loggedIn, setLoggedIn, loaded }) {
       const isAuth = await spotifyApi.checkAuthentication();
       setLoginBuffer(isAuth);
     })();
-  }, [setLoggedIn]);
+  }, [logout]);
 
   return (
     <>
