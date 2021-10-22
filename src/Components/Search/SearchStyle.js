@@ -28,18 +28,18 @@ export const Input = styled.input`
   outline: none;
   padding: 10px 10px 5px 70px;
   background-color: transparent;
-  color: rgb(218, 218, 218);
+  color: ${colors.primary};
   box-shadow: inset 8px 8px 8px ${colors.topShadow},
     inset -8px -8px 8px ${colors.bottomShadow};
   font-weight: 700;
   font-size: 1rem;
   ::placeholder {
-    color: rgb(218, 218, 218);
+    color: ${colors.primary};
   }
 `;
 
 export const StyledSearchIcon = styled(SearchIcon)`
-  color: rgb(218, 218, 218);
+  color: ${colors.primary};
   position: absolute;
   left: 10px;
   top: 10px;

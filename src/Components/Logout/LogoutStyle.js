@@ -12,5 +12,5 @@ export const Container = styled.div`
   z-index: 2;
 `;
 export const StyledLogoutIcon = styled(LogoutIcon)`
-  color: rgb(218, 218, 218);
+  color: ${colors.primary};
 `;

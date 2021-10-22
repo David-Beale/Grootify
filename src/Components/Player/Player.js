@@ -1,13 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import SpotifyPlayer from "react-spotify-web-playback";
 import { spotifyApi } from "../Api/SpotifyApi";
-import { PlayerContainer } from "./PlayerStyles";
+import { PlayerContainer, styles } from "./PlayerStyles";
 
-const styles = {
-  bgColor: "rgb(26, 26, 26)",
-  height: "75px",
-  color: "rgb(218, 218, 218)",
-};
 export default function Player({ loggedIn, song }) {
   const [play, setPlay] = useState(false);
 
@@ -27,6 +22,7 @@ export default function Player({ loggedIn, song }) {
             play={play}
             callback={playerCB}
             showSaveIcon
+            syncExternalDevice
             uris={song ? [song] : []}
             styles={styles}
           />

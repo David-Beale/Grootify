@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { colors } from "../../../colors";
 
 export const TrackResultContainer = styled.div`
   min-height: 65px;
@@ -32,14 +33,14 @@ export const TextContainer = styled.div`
 `;
 export const TrackTitle = styled.div`
   font-size: 1.1rem;
-  color: rgb(218, 218, 218);
+  color: ${colors.primary};
 `;
 export const Artist = styled.div`
   font-size: 0.8rem;
-  color: rgb(168, 168, 168);
+  color: ${colors.secondary};
   margin-top: 6px;
 `;
 export const Duration = styled.div`
   font-size: 1rem;
-  color: rgb(218, 218, 218);
+  color: ${colors.primary};
 `;
