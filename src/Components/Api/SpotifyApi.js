@@ -9,6 +9,7 @@ import {
 } from "./authHelpers";
 
 export const spotifyApi = new SpotifyWebApi();
+let userId = null;
 
 spotifyApi.refreshAccessToken = () => {
   const refreshToken = spotifyApi.getRefreshToken();
@@ -34,7 +35,7 @@ spotifyApi.refreshAccessToken = () => {
       setTimeout(() => {
         spotifyApi.refreshAccessToken();
       }, adjustedExpiry);
-      return 2;
+      return "accessTokenRefreshed";
     })
     .catch((err) => {
       console.log("Could not refresh access token", err);
@@ -43,7 +44,7 @@ spotifyApi.refreshAccessToken = () => {
     });
 };
 
-spotifyApi.preFlightCheck = async () => {
+spotifyApi.preFlightCheck = async (accessToken) => {
   const expiry = localStorage.getItem("sp-expiry");
   if (Date.now() > expiry) {
     //try to refresh token
@@ -53,7 +54,19 @@ spotifyApi.preFlightCheck = async () => {
       spotifyApi.refreshAccessToken();
     }, Date.now() - expiry);
   }
-  return 1;
+  spotifyApi.setAccessToken(accessToken);
+  return "accessTokenValid";
+};
+
+spotifyApi.login = async () => {
+  try {
+    const res = await spotifyApi.getMe();
+    userId = res.body.id;
+    return true;
+  } catch (error) {
+    console.log("access token error");
+    return false;
+  }
 };
 
 spotifyApi.checkAuthentication = async () => {
@@ -63,19 +76,11 @@ spotifyApi.checkAuthentication = async () => {
   if (!accessToken || !refreshToken) return false;
 
   spotifyApi.setRefreshToken(refreshToken);
-  const preFlight = await spotifyApi.preFlightCheck();
-  console.log({ preFlight });
+  const preFlight = await spotifyApi.preFlightCheck(accessToken);
+  console.log(preFlight);
   if (!preFlight) return false;
-  if (preFlight === 2) return true;
 
-  spotifyApi.setAccessToken(accessToken);
-  try {
-    await spotifyApi.getMe();
-    return true;
-  } catch (error) {
-    console.log("access token error");
-    return false;
-  }
+  return await spotifyApi.login();
 };
 
 let codeVerifierLocal;
@@ -87,12 +92,21 @@ spotifyApi.loginRedirect = async () => {
   stateLocal = makeid(12);
 
   // construct the authentication url
+  const scopes = [
+    "streaming",
+    "user-read-email",
+    "user-read-private",
+    "user-read-playback-state",
+    "user-modify-playback-state",
+    "user-library-read",
+    "user-library-modify",
+    "playlist-read-private",
+  ];
   const parameters = {
     response_type: "code",
     client_id: process.env.REACT_APP_SPOTIFY_CLIENT_ID,
     redirect_uri: "http://localhost:3000/",
-    scope:
-      "streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state user-library-read user-library-modify",
+    scope: scopes.join(" "),
     state: stateLocal,
     code_challenge: codeChallenge,
     code_challenge_method: "S256",
@@ -131,9 +145,12 @@ spotifyApi.requestTokens = (payload) => {
       localStorage.setItem("sp-refreshToken", refresh_token);
       const adjustedExpiry = (expires_in - 60) * 1000;
       localStorage.setItem("sp-expiry", Date.now() + adjustedExpiry);
+      spotifyApi.setAccessToken(access_token);
+      spotifyApi.setRefreshToken(refresh_token);
       setTimeout(() => {
         spotifyApi.refreshAccessToken();
       }, adjustedExpiry);
+
       return true;
     })
     .catch((err) => {
@@ -148,24 +165,61 @@ const formatDuration = (duration) => {
   seconds -= minutes * 60;
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
+const formatTracks = (tracks, playlist = false) => {
+  return tracks.map((track) => {
+    if (playlist) track = track.track;
+    const albumImage = track.album.images.reduce((smallest, image) => {
+      if (image.height < smallest.height) return image;
+      return smallest;
+    }, track.album.images[0]);
+    return {
+      artist: track.artists[0].name,
+      title: track.name,
+      id: track.id,
+      albumUrl: albumImage.url,
+      duration: formatDuration(track.duration_ms),
+    };
+  });
+};
 spotifyApi.getTracks = (query) => {
   return spotifyApi
     .searchTracks(query)
-    .then((res) => {
-      const tracks = res.body.tracks.items.map((track) => {
-        const albumImage = track.album.images.reduce((smallest, image) => {
-          if (image.height < smallest.height) return image;
-          return smallest;
-        }, track.album.images[0]);
-        return {
-          artist: track.artists[0].name,
-          title: track.name,
-          uri: track.uri,
-          albumUrl: albumImage.url,
-          duration: formatDuration(track.duration_ms),
-        };
-      });
-      return tracks;
-    })
+    .then((res) => formatTracks(res.body.tracks.items))
     .catch(() => false);
+};
+spotifyApi.getMyPlaylist = (playlist) => {
+  return spotifyApi
+    .getPlaylist(playlist)
+    .then((res) => formatTracks(res.body.tracks.items, true))
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
+};
+
+spotifyApi.getTracks = (query) => {
+  return spotifyApi
+    .searchTracks(query)
+    .then((res) => formatTracks(res.body.tracks.items))
+    .catch(() => false);
+};
+
+spotifyApi.getPlaylists = () => {
+  return spotifyApi
+    .getUserPlaylists(userId, { limit: 50 })
+    .then(
+      function (data) {
+        return data.body.items.map((playlist) => {
+          return {
+            name: playlist.name,
+            id: playlist.id,
+            image: playlist.images[1] || playlist.images[0],
+          };
+        });
+      },
+      function (err) {
+        console.log("Something went wrong!", err);
+      }
+    )
+    .catch((err) => console.log(err));
 };

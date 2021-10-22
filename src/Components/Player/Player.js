@@ -11,7 +11,9 @@ export default function Player({ loggedIn, song }) {
   }, []);
 
   useEffect(() => {
-    if (song) setPlay(true);
+    if (!song) return;
+
+    setPlay(true);
   }, [song]);
   return (
     <>

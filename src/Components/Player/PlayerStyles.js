@@ -5,10 +5,11 @@ export const PlayerContainer = styled.div`
   position: fixed;
   bottom: 0;
   width: 100%;
+  z-index: 3;
 `;
 
 export const styles = {
-  bgColor: "rgb(26, 26, 26)",
+  bgColor: colors.primaryBackground,
   height: "75px",
   color: colors.primary,
   sliderTrackColor: colors.secondary,

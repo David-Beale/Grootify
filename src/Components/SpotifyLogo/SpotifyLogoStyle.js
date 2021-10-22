@@ -6,4 +6,5 @@ export const Logo = styled.img`
   left: 5px;
   width: 200px;
   cursor: pointer;
+  z-index: 2;
 `;

@@ -8,11 +8,13 @@ export const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(23, 23, 23);
+  background-color: ${colors.primaryBackground};
   height: 75px;
   box-shadow: 0 0 15px 0 ${colors.spotifyGreen};
-  position: relative;
   z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
 `;
 
 export const SearchBarContainer = styled.div`
@@ -59,8 +61,8 @@ export const SearchResultsContainer = styled.div`
   z-index: 0;
   position: relative;
   height: calc(100vh - 100px);
-  /* width: calc(100vw - 500px); */
-  width: 100%;
+  width: calc(100vw - 750px);
+  max-width: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -69,6 +71,6 @@ export const SearchResultsContainer = styled.div`
   padding-top: 25px;
   color: white;
   font-size: 1.5rem;
-  top: ${({ open }) => (open ? 0 : "-100%")};
+  top: ${({ open }) => (open ? "75px" : "-100%")};
   transition: top 500ms ease-in-out;
 `;

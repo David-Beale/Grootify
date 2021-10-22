@@ -12,6 +12,7 @@ import Logout from "./Components/Logout/Logout";
 import SpotifyLogo from "./Components/SpotifyLogo/SpotifyLogo";
 import Search from "./Components/Search/Search";
 import Player from "./Components/Player/Player";
+import SidePanel from "./Components/SidePanel/SidePanel";
 
 export default function App() {
   const [song, setSong] = useState(null);
@@ -28,6 +29,7 @@ export default function App() {
       <div className="app" onClick={onClick} onPointerMove={onMouseMove}>
         <Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} loaded={loaded} />
         <Logout loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+        <SidePanel loggedIn={loggedIn} setSong={setSong} />
         <Search setSong={setSong} />
         <Loader loaded={loaded} setLoaded={setLoaded} />
         <Player loggedIn={loggedIn} song={song} />

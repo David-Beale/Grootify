@@ -9,7 +9,7 @@ import {
 
 export default function TrackResult({ track, selectSong }) {
   const onClick = () => {
-    selectSong(track.uri);
+    selectSong(track.id);
   };
   return (
     <TrackResultContainer onClick={onClick}>

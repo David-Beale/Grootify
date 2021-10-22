@@ -17,10 +17,13 @@ export const useLogin = (setLoggedIn) => {
       const success = await spotifyApi.requestTokens(payload);
       setInProgress(false);
       if (success) {
-        setLoggedIn(true);
-      } else {
-        setError(true);
+        const loggedIn = await spotifyApi.login();
+        if (loggedIn) {
+          setLoggedIn(true);
+          return;
+        }
       }
+      setError(true);
     };
 
     window.spotifyCallback = (payload) => {

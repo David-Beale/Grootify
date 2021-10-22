@@ -2,10 +2,12 @@ import styled from "styled-components";
 import { colors } from "../../../colors";
 
 export const TrackResultContainer = styled.div`
+  box-sizing: border-box;
   min-height: 65px;
-  width: 50%;
-  background-color: rgba(169, 169, 169, 0.5);
-  margin-bottom: 10px;
+  width: calc(100% - 25px);
+  background-color: rgba(100, 110, 100, 1);
+  margin-bottom: 2px;
+  margin-right: 25px;
   border-radius: 15px;
   display: flex;
   align-items: center;
@@ -17,7 +19,7 @@ export const TrackResultContainer = styled.div`
   padding-right: 35px;
 
   &:hover {
-    background-color: rgba(169, 169, 169, 0.8);
+    background-color: rgb(70, 80, 70);
     box-shadow: 0 0 10px 0px chartreuse;
   }
 `;
@@ -30,10 +32,14 @@ export const Image = styled.img`
 export const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
+  width: calc(100% - 50px);
 `;
 export const TrackTitle = styled.div`
   font-size: 1.1rem;
   color: ${colors.primary};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 export const Artist = styled.div`
   font-size: 0.8rem;

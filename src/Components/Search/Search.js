@@ -64,7 +64,13 @@ export default function Search({ setSong }) {
 
   const selectSong = useCallback(
     (song) => {
-      setSong(song);
+      setSong("spotify:track:" + song);
+      spotifyApi.getAudioFeaturesForTrack(song).then(
+        function (data) {
+          console.log(data.body);
+        },
+        function (err) {}
+      );
       onClose();
     },
     [onClose, setSong]
@@ -92,7 +98,7 @@ export default function Search({ setSong }) {
         {searchResults
           ? searchResults.map((track) => (
               <TrackResult
-                key={track.uri}
+                key={track.id}
                 track={track}
                 selectSong={selectSong}
               />
