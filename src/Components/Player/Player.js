@@ -5,6 +5,7 @@ import { useStore } from "../Store/store";
 import { PlayerContainer, styles } from "./PlayerStyles";
 
 export default function Player() {
+  const interfaceOpen = useStore((state) => state.interfaceOpen);
   const loggedIn = useStore((state) => state.loggedIn);
   const songs = useStore((state) => state.songs);
 
@@ -22,7 +23,7 @@ export default function Player() {
   return (
     <>
       {loggedIn && (
-        <PlayerContainer>
+        <PlayerContainer open={interfaceOpen}>
           <SpotifyPlayer
             token={spotifyApi.getAccessToken()}
             play={play}

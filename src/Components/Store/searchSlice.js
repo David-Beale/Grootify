@@ -29,5 +29,5 @@ export const onCloseSearch = (set) => {
   setTimeout(() => {
     if (id !== searchId) return;
     set(() => ({ searchTracks: [] }));
-  }, 750);
+  }, 500);
 };

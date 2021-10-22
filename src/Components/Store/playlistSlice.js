@@ -50,5 +50,5 @@ export const onClosePlaylist = (set) => {
   setTimeout(() => {
     if (id !== playlistId) return;
     set(() => ({ playlistTracks: [] }));
-  }, 750);
+  }, 500);
 };

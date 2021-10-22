@@ -13,8 +13,9 @@ export const HeaderContainer = styled.div`
   box-shadow: 0 0 15px 0 ${colors.spotifyGreen};
   z-index: 1;
   position: fixed;
-  top: 0;
   left: 0;
+  top: ${({ open }) => (open ? 0 : "-75px")};
+  transition: top 1s ease-in-out;
 `;
 
 export const SearchBarContainer = styled.div`

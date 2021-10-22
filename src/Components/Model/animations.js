@@ -13,7 +13,6 @@ import Angry from "./files/Angry.fbx";
 import Typing from "./files/Typing.fbx";
 
 import RunningV1 from "./files/Running/RunningRight.fbx";
-import StopRight from "./files/Running/StopRight.fbx";
 
 export const animations = {
   hipHop1: { file: HipHopDancing, once: true, blocking: false },
@@ -25,8 +24,7 @@ export const animations = {
   land: { file: Land, once: true, blocking: true },
   waving: { file: Waving, once: true, blocking: true },
   runningV1: { file: RunningV1, once: false, blocking: true },
-  stopRight: { file: StopRight, once: true, blocking: true },
-  typing: { file: Typing, once: false, blocking: false },
+  typing: { file: Typing, once: true, blocking: false },
 };
 
 export const chainLookup = {
@@ -34,7 +32,7 @@ export const chainLookup = {
   gettingUp: "angry",
   land: "waving",
   waving: "runningV1",
-  stopRight: "angry",
+  typing: "angry",
 };
 
 export const useAnimations = (modelRef, running) => {

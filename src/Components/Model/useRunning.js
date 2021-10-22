@@ -1,6 +1,8 @@
 import { useFrame } from "@react-three/fiber";
+import { useStore } from "../Store/store";
 
 export const useRunning = (modelRef, velRef, running, setNextAnimation) => {
+  const onInterfaceOpen = useStore((state) => state.onInterfaceOpen);
   useFrame(() => {
     // console.log(running.current.active);
     if (!running.current.active) return;
@@ -11,6 +13,9 @@ export const useRunning = (modelRef, velRef, running, setNextAnimation) => {
     if (modelRef.current.position.x >= 56) {
       running.current.active = false;
       setNextAnimation("typing", true);
+      setTimeout(() => {
+        onInterfaceOpen();
+      }, 4000);
     }
   });
 };

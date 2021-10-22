@@ -17,6 +17,7 @@ import {
 import { useStore } from "../Store/store";
 
 export default function Search() {
+  const interfaceOpen = useStore((state) => state.interfaceOpen);
   const clearSearchText = useStore((state) => state.clearSearchText);
   const onCloseSearch = useStore((state) => state.onCloseSearch);
   const setSearchTracks = useStore((state) => state.setSearchTracks);
@@ -59,23 +60,21 @@ export default function Search() {
   );
 
   return (
-    <>
-      <HeaderContainer>
-        <SearchBarContainer>
-          <StyledSearchIcon fontSize="large" />
-          <Input
-            type="text"
-            id="search"
-            placeholder={"Search for songs..."}
-            value={searchText}
-            onChange={onSearchTextChange}
-            autoComplete="off"
-          />
-          {searchText && (
-            <StyledCancelIcon onClick={onCloseSearch} fontSize="large" />
-          )}
-        </SearchBarContainer>
-      </HeaderContainer>
-    </>
+    <HeaderContainer open={interfaceOpen}>
+      <SearchBarContainer>
+        <StyledSearchIcon fontSize="large" />
+        <Input
+          type="text"
+          id="search"
+          placeholder={"Search for songs..."}
+          value={searchText}
+          onChange={onSearchTextChange}
+          autoComplete="off"
+        />
+        {searchText && (
+          <StyledCancelIcon onClick={onCloseSearch} fontSize="large" />
+        )}
+      </SearchBarContainer>
+    </HeaderContainer>
   );
 }

@@ -5,8 +5,8 @@ import Playlist from "./Playlist/Playlist";
 import { SidePanelContainer } from "./SidePanelStyle";
 
 export default function SidePanel() {
+  const interfaceOpen = useStore((state) => state.interfaceOpen);
   const loggedIn = useStore((state) => state.loggedIn);
-
   const selectedPlaylist = useStore((state) => state.selectedPlaylist);
   const onSelectPlayList = useStore((state) => state.onSelectPlayList);
 
@@ -21,7 +21,7 @@ export default function SidePanel() {
   }, [loggedIn]);
 
   return (
-    <SidePanelContainer>
+    <SidePanelContainer open={interfaceOpen}>
       {playlists.map((playlist) => (
         <Playlist
           key={playlist.id}
