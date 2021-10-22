@@ -5,7 +5,8 @@ export const PlayerContainer = styled.div`
   position: fixed;
   bottom: 0;
   width: 100%;
-  z-index: 3;
+  z-index: 1;
+  box-shadow: 0 0 15px 0 ${colors.spotifyGreen};
 `;
 
 export const styles = {

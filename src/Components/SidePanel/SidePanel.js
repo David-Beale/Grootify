@@ -44,6 +44,7 @@ export default function SidePanel({ loggedIn, setSong }) {
   const selectSong = useCallback(
     (song) => {
       setSong("spotify:track:" + song);
+      onClose();
       spotifyApi.getAudioFeaturesForTrack(song).then(
         function (data) {
           console.log(data.body);
@@ -51,7 +52,7 @@ export default function SidePanel({ loggedIn, setSong }) {
         function (err) {}
       );
     },
-    [setSong]
+    [setSong, onClose]
   );
 
   return (

@@ -8,16 +8,14 @@ export const PlaylistContainer = styled.div`
   color: ${({ selected }) => (selected ? colors.primary : colors.secondary)};
   font-weight: ${({ selected }) => (selected ? 600 : "")};
   cursor: pointer;
-  padding: 0 25px;
+  padding: 3px 25px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: flex;
-  align-items: center;
   background-color: ${({ selected }) => (selected ? colors.spotifyGreen : "")};
   &:hover {
     color: ${colors.primary};
     background-color: ${({ selected }) =>
-      selected ? colors.spotifyGreen : "rgb(70, 110, 70)"};
+      selected ? colors.spotifyGreen : "rgb(60, 70, 60)"};
   }
 `;

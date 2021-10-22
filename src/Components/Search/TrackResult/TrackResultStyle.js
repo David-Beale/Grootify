@@ -5,7 +5,8 @@ export const TrackResultContainer = styled.div`
   box-sizing: border-box;
   min-height: 65px;
   width: calc(100%);
-  background-color: rgba(100, 110, 100, 1);
+  /* background-color: rgba(100, 110, 100, 1); */
+  background-color: rgba(60, 70, 60, 1);
   margin-bottom: 2px;
   border-radius: 15px;
   display: flex;
@@ -18,8 +19,8 @@ export const TrackResultContainer = styled.div`
   padding-right: 35px;
 
   &:hover {
-    background-color: rgb(70, 80, 70);
-    box-shadow: 0 0 10px 0px chartreuse;
+    background-color: rgb(50, 60, 50);
+    box-shadow: 0 0 4px 0px chartreuse;
   }
 `;
 export const Image = styled.img`
