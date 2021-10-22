@@ -28,8 +28,12 @@ spotifyApi.refreshAccessToken = () => {
       const { access_token, expires_in, refresh_token } = res.data;
       localStorage.setItem("sp-accessToken", access_token);
       localStorage.setItem("sp-refreshToken", refresh_token);
-      localStorage.setItem("sp-expiry", Date.now() + (expires_in - 60) * 1000);
+      const adjustedExpiry = (expires_in - 60) * 1000;
+      localStorage.setItem("sp-expiry", Date.now() + adjustedExpiry);
       spotifyApi.setAccessToken(access_token);
+      setTimeout(() => {
+        spotifyApi.refreshAccessToken();
+      }, adjustedExpiry);
       return 2;
     })
     .catch((err) => {
@@ -44,6 +48,10 @@ spotifyApi.preFlightCheck = async () => {
   if (Date.now() > expiry) {
     //try to refresh token
     return await spotifyApi.refreshAccessToken();
+  } else {
+    setTimeout(() => {
+      spotifyApi.refreshAccessToken();
+    }, Date.now() - expiry);
   }
   return 1;
 };
@@ -121,7 +129,11 @@ spotifyApi.requestTokens = (payload) => {
       const { access_token, refresh_token, expires_in } = res.data;
       localStorage.setItem("sp-accessToken", access_token);
       localStorage.setItem("sp-refreshToken", refresh_token);
-      localStorage.setItem("sp-expiry", Date.now() + (expires_in - 60) * 1000);
+      const adjustedExpiry = (expires_in - 60) * 1000;
+      localStorage.setItem("sp-expiry", Date.now() + adjustedExpiry);
+      setTimeout(() => {
+        spotifyApi.refreshAccessToken();
+      }, adjustedExpiry);
       return true;
     })
     .catch((err) => {
