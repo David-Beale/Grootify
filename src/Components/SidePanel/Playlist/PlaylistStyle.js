@@ -17,7 +17,7 @@ export const PlaylistContainer = styled.div`
   background-color: ${({ selected }) => (selected ? colors.spotifyGreen : "")};
   &:hover {
     color: ${colors.primary};
-    background-color: rgb(70, 110, 70);
-    /* background-color: ${colors.primaryBackground}; */
+    background-color: ${({ selected }) =>
+      selected ? colors.spotifyGreen : "rgb(70, 110, 70)"};
   }
 `;
