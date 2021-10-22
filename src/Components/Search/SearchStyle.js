@@ -58,19 +58,20 @@ export const StyledCancelIcon = styled(ClearIcon)`
 `;
 
 export const SearchResultsContainer = styled.div`
+  box-sizing: border-box;
   z-index: 0;
-  position: relative;
-  height: calc(100vh - 100px);
+  position: absolute;
+  height: calc(100vh - 150px);
   width: calc(100vw - 750px);
-  max-width: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   overflow: auto;
-  padding-top: 25px;
+  padding: 25px;
   color: white;
   font-size: 1.5rem;
+  left: 350px;
   top: ${({ open }) => (open ? "75px" : "-100%")};
   transition: top 500ms ease-in-out;
 `;

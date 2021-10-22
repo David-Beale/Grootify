@@ -4,10 +4,9 @@ import { colors } from "../../../colors";
 export const TrackResultContainer = styled.div`
   box-sizing: border-box;
   min-height: 65px;
-  width: calc(100% - 25px);
+  width: calc(100%);
   background-color: rgba(100, 110, 100, 1);
   margin-bottom: 2px;
-  margin-right: 25px;
   border-radius: 15px;
   display: flex;
   align-items: center;
