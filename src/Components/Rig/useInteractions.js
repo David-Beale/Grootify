@@ -1,8 +1,8 @@
 import { useCallback, useRef } from "react";
-import { useAuthStore } from "../Store/authStore";
+import { useStore } from "../Store/store";
 
 export const useMouseInteraction = () => {
-  const loggedIn = useAuthStore((state) => state.loggedIn);
+  const loggedIn = useStore((state) => state.loggedIn);
   const mouse = useRef([0.5, 0.5]);
 
   const onMouseMove = useCallback(

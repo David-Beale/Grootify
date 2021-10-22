@@ -3,12 +3,12 @@ import { LoginContainer, LoginButton, Status } from "./LoginStyle";
 import { useLogin } from "./useLogin";
 import { spotifyApi } from "../Api/SpotifyApi";
 import { useEffect, useState } from "react";
-import { useAuthStore } from "../Store/authStore";
+import { useStore } from "../Store/store";
 
 export default function Login({ loaded }) {
-  const loggedIn = useAuthStore((state) => state.loggedIn);
-  const login = useAuthStore((state) => state.login);
-  const logout = useAuthStore((state) => state.logout);
+  const loggedIn = useStore((state) => state.loggedIn);
+  const login = useStore((state) => state.login);
+  const logout = useStore((state) => state.logout);
 
   const [initiateSpotifyLogin, inProgress, error] = useLogin();
 

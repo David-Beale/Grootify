@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import SpotifyPlayer from "react-spotify-web-playback";
 import { spotifyApi } from "../Api/SpotifyApi";
-import { useAuthStore } from "../Store/authStore";
-import { useSpotifyStore } from "../Store/spotifyStore";
+import { useStore } from "../Store/store";
 import { PlayerContainer, styles } from "./PlayerStyles";
 
 export default function Player() {
-  const loggedIn = useAuthStore((state) => state.loggedIn);
-  const songs = useSpotifyStore((state) => state.songs);
+  const loggedIn = useStore((state) => state.loggedIn);
+  const songs = useStore((state) => state.songs);
 
   const [play, setPlay] = useState(false);
 

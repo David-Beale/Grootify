@@ -1,11 +1,11 @@
-import { useSpotifyStore } from "../Store/spotifyStore";
+import { useStore } from "../Store/store";
 import TrackResult from "../TrackResult/TrackResult";
 import { PlaylistTracksContainer } from "./SidePanelStyle";
 
 export default function PlaylistTracks() {
-  const playlistTracks = useSpotifyStore((state) => state.playlistTracks);
-  const open = useSpotifyStore((state) => state.playlistTracksOpen);
-  const setPlaylistSong = useSpotifyStore((state) => state.setPlaylistSong);
+  const playlistTracks = useStore((state) => state.playlistTracks);
+  const open = useStore((state) => state.playlistTracksOpen);
+  const setPlaylistSong = useStore((state) => state.setPlaylistSong);
   return (
     <PlaylistTracksContainer open={open}>
       {playlistTracks.map((track) => (

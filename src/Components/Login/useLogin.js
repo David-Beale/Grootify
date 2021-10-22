@@ -1,10 +1,10 @@
 import { useState } from "react";
 
 import { spotifyApi } from "../Api/SpotifyApi";
-import { useAuthStore } from "../Store/authStore";
+import { useStore } from "../Store/store";
 
 export const useLogin = () => {
-  const login = useAuthStore((state) => state.login);
+  const login = useStore((state) => state.login);
 
   const [inProgress, setInProgress] = useState(false);
   const [error, setError] = useState(false);

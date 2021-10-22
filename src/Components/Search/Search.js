@@ -14,12 +14,12 @@ import {
   StyledSearchIcon,
   StyledCancelIcon,
 } from "./SearchStyle";
-import { useSpotifyStore } from "../Store/spotifyStore";
+import { useStore } from "../Store/store";
 
 export default function Search() {
-  const clearSearchText = useSpotifyStore((state) => state.clearSearchText);
-  const onCloseSearch = useSpotifyStore((state) => state.onCloseSearch);
-  const setSearchTracks = useSpotifyStore((state) => state.setSearchTracks);
+  const clearSearchText = useStore((state) => state.clearSearchText);
+  const onCloseSearch = useStore((state) => state.onCloseSearch);
+  const setSearchTracks = useStore((state) => state.setSearchTracks);
 
   const [searchText, setSearchText] = useState("");
   const id = useRef();

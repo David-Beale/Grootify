@@ -1,11 +1,11 @@
-import { useSpotifyStore } from "../Store/spotifyStore";
+import { useStore } from "../Store/store";
 import { SearchResultsContainer } from "./SearchStyle";
 import TrackResult from "../TrackResult/TrackResult";
 
 export default function SearchTracks() {
-  const open = useSpotifyStore((state) => state.searchTracksOpen);
-  const searchTracks = useSpotifyStore((state) => state.searchTracks);
-  const setSearchSong = useSpotifyStore((state) => state.setSearchSong);
+  const open = useStore((state) => state.searchTracksOpen);
+  const searchTracks = useStore((state) => state.searchTracks);
+  const setSearchSong = useStore((state) => state.setSearchSong);
 
   return (
     <SearchResultsContainer open={open}>
