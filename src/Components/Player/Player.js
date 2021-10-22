@@ -3,7 +3,7 @@ import SpotifyPlayer from "react-spotify-web-playback";
 import { spotifyApi } from "../Api/SpotifyApi";
 import { PlayerContainer, styles } from "./PlayerStyles";
 
-export default function Player({ loggedIn, song }) {
+export default function Player({ loggedIn, songs }) {
   const [play, setPlay] = useState(false);
 
   const playerCB = useCallback((state) => {
@@ -11,10 +11,11 @@ export default function Player({ loggedIn, song }) {
   }, []);
 
   useEffect(() => {
-    if (!song) return;
+    console.log(songs);
+    if (!songs.length) return;
 
     setPlay(true);
-  }, [song]);
+  }, [songs]);
   return (
     <>
       {loggedIn && (
@@ -25,7 +26,7 @@ export default function Player({ loggedIn, song }) {
             callback={playerCB}
             showSaveIcon
             syncExternalDevice
-            uris={song ? [song] : []}
+            uris={songs}
             styles={styles}
           />
         </PlayerContainer>

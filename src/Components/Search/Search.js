@@ -17,7 +17,7 @@ import {
 } from "./SearchStyle";
 import TrackResult from "./TrackResult/TrackResult";
 
-export default function Search({ setSong }) {
+export default function Search({ setSongs }) {
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [open, setOpen] = useState(false);
@@ -64,7 +64,7 @@ export default function Search({ setSong }) {
 
   const selectSong = useCallback(
     (song) => {
-      setSong("spotify:track:" + song);
+      setSongs(["spotify:track:" + song]);
       spotifyApi.getAudioFeaturesForTrack(song).then(
         function (data) {
           console.log(data.body);
@@ -73,7 +73,7 @@ export default function Search({ setSong }) {
       );
       onClose();
     },
-    [onClose, setSong]
+    [onClose, setSongs]
   );
 
   return (

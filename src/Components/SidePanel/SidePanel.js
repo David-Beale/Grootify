@@ -4,7 +4,16 @@ import TrackResult from "../Search/TrackResult/TrackResult";
 import Playlist from "./Playlist/Playlist";
 import { PlaylistTracksContainer, SidePanelContainer } from "./SidePanelStyle";
 
-export default function SidePanel({ loggedIn, setSong }) {
+const buildPlaylist = (list, song) => {
+  for (let i = 0; i < list.length; i++) {
+    if (list[i].id === song) {
+      return [...list.slice(i, list.length), ...list.slice(0, i)].map(
+        (track) => "spotify:track:" + track.id
+      );
+    }
+  }
+};
+export default function SidePanel({ loggedIn, setSongs }) {
   const [playlists, setPlaylists] = useState([]);
   const [playlistTracks, setPlaylistTracks] = useState([]);
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
@@ -43,7 +52,7 @@ export default function SidePanel({ loggedIn, setSong }) {
 
   const selectSong = useCallback(
     (song) => {
-      setSong("spotify:track:" + song);
+      setSongs(buildPlaylist(playlistTracks, song));
       onClose();
       spotifyApi.getAudioFeaturesForTrack(song).then(
         function (data) {
@@ -52,7 +61,7 @@ export default function SidePanel({ loggedIn, setSong }) {
         function (err) {}
       );
     },
-    [setSong, onClose]
+    [setSongs, playlistTracks, onClose]
   );
 
   return (
