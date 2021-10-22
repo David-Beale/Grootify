@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const TrackResultContainer = styled.div`
   min-height: 65px;
   width: 50%;
-  background-color: rgba(169, 169, 169, 0.3);
+  background-color: rgba(169, 169, 169, 0.5);
   margin-bottom: 10px;
   border-radius: 15px;
   display: flex;
@@ -16,7 +16,7 @@ export const TrackResultContainer = styled.div`
   padding-right: 35px;
 
   &:hover {
-    background-color: rgba(169, 169, 169, 0.5);
+    background-color: rgba(169, 169, 169, 0.8);
     box-shadow: 0 0 10px 0px chartreuse;
   }
 `;
