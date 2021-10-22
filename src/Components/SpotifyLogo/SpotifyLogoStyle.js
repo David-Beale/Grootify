@@ -5,4 +5,5 @@ export const Logo = styled.img`
   top: 5px;
   left: 5px;
   width: 200px;
+  cursor: pointer;
 `;
