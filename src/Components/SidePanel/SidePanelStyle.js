@@ -4,7 +4,7 @@ import { colors } from "../../colors";
 export const SidePanelContainer = styled.div`
   box-sizing: border-box;
   width: 350px;
-  height: calc(100vh - 155px);
+  height: calc(100vh - 157px);
   background-color: ${colors.primaryBackground};
   position: absolute;
   left: 0;
