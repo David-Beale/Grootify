@@ -18,7 +18,7 @@ spotifyApi.refreshAccessToken = () => {
   params.append("grant_type", "refresh_token");
   params.append("refresh_token", refreshToken);
 
-  axios
+  return axios
     .post("https://accounts.spotify.com/api/token", params, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded;",
