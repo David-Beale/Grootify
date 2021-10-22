@@ -12,37 +12,34 @@ import {
   HeaderContainer,
   SearchBarContainer,
   StyledSearchIcon,
-  SearchResultsContainer,
   StyledCancelIcon,
 } from "./SearchStyle";
-import TrackResult from "./TrackResult/TrackResult";
+import { useSpotifyStore } from "../Store/spotifyStore";
 
-export default function Search({ setSongs }) {
+export default function Search() {
+  const clearSearchText = useSpotifyStore((state) => state.clearSearchText);
+  const onCloseSearch = useSpotifyStore((state) => state.onCloseSearch);
+  const setSearchTracks = useSpotifyStore((state) => state.setSearchTracks);
+
   const [searchText, setSearchText] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [open, setOpen] = useState(false);
   const id = useRef();
+
+  useEffect(() => {
+    setSearchText("");
+  }, [clearSearchText]);
 
   const requestSearch = useMemo(
     () =>
       debounce(async (query) => {
+        if (!query) return;
         const localId = Date.now();
         id.current = localId;
         const tracks = await spotifyApi.getTracks(query);
         if (id.current !== localId) return;
-        setSearchResults(tracks);
-        setOpen(true);
+        setSearchTracks(tracks);
       }, 300),
-    []
+    [setSearchTracks]
   );
-
-  const onClose = useCallback(() => {
-    setOpen(false);
-    setSearchText("");
-    setTimeout(() => {
-      setSearchResults([]);
-    }, 750);
-  }, []);
 
   useEffect(() => {
     return () => {
@@ -52,28 +49,13 @@ export default function Search({ setSongs }) {
 
   const onSearchTextChange = useCallback(
     (e) => {
-      if (e.target.value) {
-        requestSearch(e.target.value);
-        setSearchText(e.target.value);
-      } else {
-        onClose();
+      requestSearch(e.target.value);
+      setSearchText(e.target.value);
+      if (!e.target.value) {
+        onCloseSearch();
       }
     },
-    [onClose, requestSearch]
-  );
-
-  const selectSong = useCallback(
-    (song) => {
-      setSongs(["spotify:track:" + song]);
-      spotifyApi.getAudioFeaturesForTrack(song).then(
-        function (data) {
-          console.log(data.body);
-        },
-        function (err) {}
-      );
-      onClose();
-    },
-    [onClose, setSongs]
+    [requestSearch, onCloseSearch]
   );
 
   return (
@@ -90,21 +72,10 @@ export default function Search({ setSongs }) {
             autoComplete="off"
           />
           {searchText && (
-            <StyledCancelIcon onClick={onClose} fontSize="large" />
+            <StyledCancelIcon onClick={onCloseSearch} fontSize="large" />
           )}
         </SearchBarContainer>
       </HeaderContainer>
-      <SearchResultsContainer open={open}>
-        {searchResults
-          ? searchResults.map((track) => (
-              <TrackResult
-                key={track.id}
-                track={track}
-                selectSong={selectSong}
-              />
-            ))
-          : "No Results Found"}
-      </SearchResultsContainer>
     </>
   );
 }
