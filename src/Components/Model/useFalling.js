@@ -1,39 +1,31 @@
 import { useFrame } from "@react-three/fiber";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { useStore } from "../Store/store";
+import model from "./modelClass";
 
-export const useFalling = (modelRef, velRef, setNextAnimation) => {
+export const useFalling = () => {
   const loggedIn = useStore((state) => state.loggedIn);
   const isLoaded = useStore((state) => state.isLoaded);
   const setRunning = useStore((state) => state.setRunning);
   const onInterfaceOpen = useStore((state) => state.onInterfaceOpen);
   const setLightsOn = useStore((state) => state.setLightsOn);
 
-  const once = useRef(false);
-  const falling = useRef(null);
-
   const landingChain = useMemo(
     () => [
       {
         animation: "falling",
         cb: () => {
-          falling.current = true;
-          once.current = true;
+          model.fall();
         },
       },
       {
         animation: "land",
         cb: () => {
-          falling.current = false;
-          once.current = true;
-          modelRef.current.position.y = -20;
-          velRef.current = 0;
+          model.land();
           setLightsOn(true);
         },
       },
-      {
-        animation: "waving",
-      },
+      { animation: "waving" },
       {
         animation: "runRight",
         cb: () => {
@@ -52,21 +44,23 @@ export const useFalling = (modelRef, velRef, setNextAnimation) => {
         animation: "angry",
       },
     ],
-    [modelRef, onInterfaceOpen, setLightsOn, setRunning, velRef]
+    [onInterfaceOpen, setLightsOn, setRunning]
   );
 
   useEffect(() => {
-    if (!loggedIn || !isLoaded || once.current) return;
-    setNextAnimation({ chain: landingChain, override: true });
-  }, [setNextAnimation, loggedIn, isLoaded, landingChain]);
+    if (!loggedIn || !isLoaded || model.started) return;
+    setTimeout(() => {
+      model.setNextAnimation({ chain: landingChain, override: true });
+    }, 2000);
+  }, [loggedIn, isLoaded, landingChain]);
 
   useFrame(() => {
-    if (!falling.current) return;
-    velRef.current += 0.01;
-    modelRef.current.position.y -= velRef.current;
+    if (!model.falling) return;
+    model.vel += 0.01;
+    model.ref.current.position.y -= model.vel;
 
-    if (modelRef.current.position.y <= -20) {
-      setNextAnimation({ override: true });
+    if (model.ref.current.position.y <= -20) {
+      model.setNextAnimation({ override: true });
     }
   });
 };

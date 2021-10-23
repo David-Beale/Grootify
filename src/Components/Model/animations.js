@@ -1,5 +1,3 @@
-import HipHopDancing from "./files/Main/Hip Hop Dancing.fbx";
-
 import HangingIdle from "./files/Intro/HangingIdle.fbx";
 import Falling from "./files/Intro/Fall.fbx";
 import Land from "./files/Intro/Land.fbx";
@@ -22,16 +20,7 @@ export const animations = {
   runRight: { file: RunRight, once: false, blocking: true },
   typing: { file: Typing, once: true, blocking: false },
 
-  hipHop1: { file: HipHopDancing, once: true, blocking: false },
   angry: { file: Angry, once: false, blocking: false },
   stunned: { file: Stunned, once: true, blocking: true },
   gettingUp: { file: GettingUp, once: true, blocking: true },
-};
-
-export const chainLookup = {
-  stunned: "gettingUp",
-  gettingUp: "angry",
-  land: "waving",
-  waving: "runRight",
-  typing: "angry",
 };

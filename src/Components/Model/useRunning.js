@@ -1,8 +1,9 @@
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import { useStore } from "../Store/store";
+import model from "./modelClass";
 
-export const useRunning = (modelRef, velRef, setNextAnimation) => {
+export const useRunning = () => {
   const running = useStore((state) => state.running);
   const setRunning = useStore((state) => state.setRunning);
 
@@ -11,18 +12,19 @@ export const useRunning = (modelRef, velRef, setNextAnimation) => {
   useEffect(() => {
     if (!running) return;
     activeDirection.current = running === "right" ? 1 : -1;
+    model.vel = 0;
   }, [running]);
 
   useFrame(() => {
     if (!activeDirection.current) return;
-    velRef.current += 0.008;
-    velRef.current = Math.min(0.4, velRef.current);
+    model.vel += 0.008;
+    model.vel = Math.min(0.4, model.vel);
 
-    modelRef.current.position.x += velRef.current * activeDirection.current;
-    if (activeDirection.current === 1 && modelRef.current.position.x >= 56) {
+    model.ref.current.position.x += model.vel * activeDirection.current;
+    if (activeDirection.current === 1 && model.ref.current.position.x >= 56) {
       activeDirection.current = false;
       setRunning(false);
-      setNextAnimation({ override: true });
+      model.setNextAnimation({ override: true });
     }
   });
 };

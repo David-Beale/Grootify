@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useStore } from "../Store/store";
+import model from "./modelClass";
 
-export const useClick = (setNextAnimation) => {
+export const useClick = () => {
   const click = useStore((state) => state.click);
   const toggle = useRef(true);
 
@@ -31,10 +32,10 @@ export const useClick = (setNextAnimation) => {
   useEffect(() => {
     if (!click) return;
     if (toggle.current) {
-      setNextAnimation({ chain: hitChain });
+      model.setNextAnimation({ chain: hitChain });
     } else {
-      setNextAnimation({ chain: danceChain });
+      model.setNextAnimation({ chain: danceChain });
     }
     toggle.current = !toggle.current;
-  }, [click, setNextAnimation, danceChain, hitChain]);
+  }, [click, danceChain, hitChain]);
 };
