@@ -30,11 +30,13 @@ export const useFalling = () => {
         animation: "runRight",
         cb: () => {
           setRunning("right");
+          model.pos = "transitRight";
         },
       },
       {
         animation: "typing",
         cb: () => {
+          model.pos = "right";
           setTimeout(() => {
             onInterfaceOpen();
           }, 4000);

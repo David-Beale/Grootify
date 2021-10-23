@@ -10,6 +10,7 @@ import Angry from "./files/Angry.fbx";
 import Typing from "./files/Typing.fbx";
 
 import RunRight from "./files/Running/RunningRight.fbx";
+import RunLeft from "./files/Running/RunningLeft.fbx";
 
 export const animations = {
   hangingIdle: { file: HangingIdle, once: false, blocking: true },
@@ -19,6 +20,7 @@ export const animations = {
   waving: { file: Waving, once: true, blocking: true },
   runRight: { file: RunRight, once: false, blocking: true },
   typing: { file: Typing, once: true, blocking: false },
+  runLeft: { file: RunLeft, once: false, blocking: true },
 
   angry: { file: Angry, once: false, blocking: false },
   stunned: { file: Stunned, once: true, blocking: true },

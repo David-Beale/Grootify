@@ -21,10 +21,18 @@ export const useRunning = () => {
     model.vel = Math.min(0.4, model.vel);
 
     model.ref.current.position.x += model.vel * activeDirection.current;
-    if (activeDirection.current === 1 && model.ref.current.position.x >= 56) {
-      activeDirection.current = false;
-      setRunning(false);
-      model.setNextAnimation({ override: true });
+    if (activeDirection.current === 1) {
+      if (model.ref.current.position.x >= 56) {
+        activeDirection.current = false;
+        setRunning(false);
+        model.setNextAnimation({ override: true });
+      }
+    } else {
+      if (model.ref.current.position.x <= 0) {
+        activeDirection.current = false;
+        setRunning(false);
+        model.setNextAnimation({ override: true });
+      }
     }
   });
 };

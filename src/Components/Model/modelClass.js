@@ -16,6 +16,7 @@ class ModelClass {
     this.ref = null;
     this.falling = false;
     this.started = false;
+    this.pos = null;
     this.init();
   }
   init() {
