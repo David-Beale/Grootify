@@ -49,9 +49,7 @@ export const useFalling = () => {
 
   useEffect(() => {
     if (!loggedIn || !isLoaded || model.started) return;
-    setTimeout(() => {
-      model.setNextAnimation({ chain: landingChain, override: true });
-    }, 2000);
+    model.setNextAnimation({ chain: landingChain, override: true });
   }, [loggedIn, isLoaded, landingChain]);
 
   useFrame(() => {

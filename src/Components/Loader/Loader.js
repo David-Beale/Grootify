@@ -5,14 +5,14 @@ import { Border1, Border2, Container, Text } from "./LoaderStyle";
 
 export default function Loader() {
   const isLoaded = useStore((state) => state.isLoaded);
-  const setLoaded = useStore((state) => state.setLoaded);
+  const setPreLoaded = useStore((state) => state.setPreLoaded);
   const { active, progress } = useProgress();
 
   useEffect(() => {
     if (active === false && progress > 0) {
-      setLoaded(true);
+      setPreLoaded();
     }
-  }, [progress, active, setLoaded]);
+  }, [progress, active, setPreLoaded]);
 
   return (
     <>

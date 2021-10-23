@@ -4,13 +4,18 @@ import { useStore } from "../Store/store";
 import model from "./modelClass";
 
 export const useLoader = (modelRef) => {
-  const isLoaded = useStore((state) => state.isLoaded);
+  const isPreLoaded = useStore((state) => state.isPreLoaded);
+  const setLoaded = useStore((state) => state.setLoaded);
   const [fbx, setFbx] = useState({});
 
   useEffect(() => {
+    if (!isPreLoaded) return;
     setFbx(model.fbx);
     model.setRef(modelRef);
-  }, [isLoaded, modelRef]);
+    setTimeout(() => {
+      setLoaded();
+    }, 2000);
+  }, [isPreLoaded, modelRef, setLoaded]);
 
   useFrame((state, delta) => {
     if (model.mixer) model.mixer.update(delta);
