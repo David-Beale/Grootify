@@ -4,11 +4,12 @@ import { useStore } from "../Store/store";
 import Playlist from "./Playlist/Playlist";
 import { SidePanelContainer } from "./SidePanelStyle";
 
+const likedSongs = { name: "Liked Songs", id: "liked" };
+
 export default function SidePanel() {
   const interfaceOpen = useStore((state) => state.interfaceOpen);
   const loggedIn = useStore((state) => state.loggedIn);
   const selectedPlaylist = useStore((state) => state.selectedPlaylist);
-  const onSelectPlayList = useStore((state) => state.onSelectPlayList);
 
   const [playlists, setPlaylists] = useState([]);
 
@@ -16,7 +17,7 @@ export default function SidePanel() {
     if (!loggedIn) return;
     (async () => {
       const playlists = await spotifyApi.getPlaylists();
-      setPlaylists(playlists);
+      setPlaylists([likedSongs, ...playlists]);
     })();
   }, [loggedIn]);
 
@@ -26,7 +27,6 @@ export default function SidePanel() {
         <Playlist
           key={playlist.id}
           playlist={playlist}
-          onSelectPlayList={onSelectPlayList}
           selected={selectedPlaylist === playlist.id}
         />
       ))}

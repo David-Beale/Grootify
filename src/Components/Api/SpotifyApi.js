@@ -188,6 +188,15 @@ spotifyApi.getTracks = (query) => {
     .catch(() => false);
 };
 spotifyApi.getMyPlaylist = (playlist) => {
+  if (playlist === "liked") {
+    return spotifyApi
+      .getMySavedTracks()
+      .then((res) => formatTracks(res.body.items, true))
+      .catch((err) => {
+        console.log(err);
+        return false;
+      });
+  }
   return spotifyApi
     .getPlaylist(playlist)
     .then((res) => formatTracks(res.body.tracks.items, true))
