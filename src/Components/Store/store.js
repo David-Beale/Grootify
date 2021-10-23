@@ -1,11 +1,13 @@
 import create from "zustand";
 import { authSlice } from "./authSlice";
+import { loaderSlice } from "./loaderSlice";
 import { playlistSlice } from "./playlistSlice";
 import { searchSlice } from "./searchSlice";
 import { songsSlice } from "./songsSlice";
 import { triggersSlice } from "./triggersSlice";
 
 export const useStore = create((set, get) => ({
+  ...loaderSlice(set, get),
   ...authSlice(set, get),
   ...songsSlice(set, get),
   ...searchSlice(set, get),

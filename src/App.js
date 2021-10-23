@@ -17,7 +17,6 @@ import SearchTracks from "./Components/Search/SearchTracks";
 import PlaylistTracks from "./Components/SidePanel/PlaylistTracks";
 
 export default function App() {
-  const [loaded, setLoaded] = useState(false);
   const [clicked, setClicked] = useState(false);
   const onClick = () => {
     setClicked([]);
@@ -27,13 +26,13 @@ export default function App() {
   return (
     <>
       <div className="app" onClick={onClick} onPointerMove={onMouseMove}>
-        <Login loaded={loaded} />
+        <Login />
         <Logout />
         <SidePanel />
         <PlaylistTracks />
         <Search />
         <SearchTracks />
-        <Loader loaded={loaded} setLoaded={setLoaded} />
+        <Loader />
         <Player />
         <SpotifyLogo />
       </div>

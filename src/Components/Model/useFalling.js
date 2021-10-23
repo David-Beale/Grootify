@@ -6,13 +6,14 @@ export const useFalling = (modelRef, velRef, setLightOn, setNextAnimation) => {
   const once = useRef(false);
   const falling = useRef(null);
   const loggedIn = useStore((state) => state.loggedIn);
+  const isLoaded = useStore((state) => state.isLoaded);
 
   useEffect(() => {
-    if (!loggedIn || once.current) return;
+    if (!loggedIn || !isLoaded || once.current) return;
     once.current = true;
     falling.current = true;
     setNextAnimation("falling", true);
-  }, [setNextAnimation, loggedIn]);
+  }, [setNextAnimation, loggedIn, isLoaded]);
 
   useFrame(() => {
     if (!falling.current) return;

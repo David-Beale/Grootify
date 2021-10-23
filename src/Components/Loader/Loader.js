@@ -1,8 +1,11 @@
 import { useProgress } from "@react-three/drei";
 import { useEffect, useRef } from "react";
+import { useStore } from "../Store/store";
 import { Border1, Border2, Container, Text } from "./LoaderStyle";
 
-export default function Loader({ loaded, setLoaded }) {
+export default function Loader() {
+  const isLoaded = useStore((state) => state.isLoaded);
+  const setLoaded = useStore((state) => state.setLoaded);
   const { active, progress } = useProgress();
   const activeRef = useRef();
   const idRef = useRef();
@@ -21,7 +24,7 @@ export default function Loader({ loaded, setLoaded }) {
 
   return (
     <>
-      {!loaded && (
+      {!isLoaded && (
         <Container>
           <Text>{Math.round(progress)}%</Text>
           <Border1 />
