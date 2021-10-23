@@ -8,12 +8,17 @@ export default function Player() {
   const interfaceOpen = useStore((state) => state.interfaceOpen);
   const loggedIn = useStore((state) => state.loggedIn);
   const songs = useStore((state) => state.songs);
+  const setIsPlaying = useStore((state) => state.setIsPlaying);
 
   const [play, setPlay] = useState(false);
 
-  const playerCB = useCallback((state) => {
-    if (!state.isPlaying) setPlay(false);
-  }, []);
+  const playerCB = useCallback(
+    (state) => {
+      setIsPlaying(state.isPlaying);
+      if (!state.isPlaying) setPlay(false);
+    },
+    [setIsPlaying]
+  );
 
   useEffect(() => {
     if (!songs.length) return;

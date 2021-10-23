@@ -10,4 +10,7 @@ export const triggersSlice = (set) => ({
 
   click: false,
   onClick: () => set(() => ({ click: [] })),
+
+  isPlaying: false,
+  setIsPlaying: (status) => set(() => ({ isPlaying: status })),
 });
