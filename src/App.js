@@ -1,5 +1,5 @@
 import "./App.css";
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stats } from "@react-three/drei";
 
@@ -15,12 +15,10 @@ import Player from "./Components/Player/Player";
 import SidePanel from "./Components/SidePanel/SidePanel";
 import SearchTracks from "./Components/Search/SearchTracks";
 import PlaylistTracks from "./Components/SidePanel/PlaylistTracks";
+import { useStore } from "./Components/Store/store";
 
 export default function App() {
-  const [clicked, setClicked] = useState(false);
-  const onClick = () => {
-    setClicked([]);
-  };
+  const onClick = useStore((state) => state.onClick);
 
   const [mouse, onMouseMove] = useMouseInteraction();
   return (
@@ -48,7 +46,7 @@ export default function App() {
             shadows
           >
             <Stats className="stats" />
-            <Main clicked={clicked} />
+            <Main />
             <Rig mouse={mouse} />
           </Canvas>
         </Suspense>

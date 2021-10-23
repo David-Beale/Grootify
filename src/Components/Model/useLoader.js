@@ -2,14 +2,15 @@ import { useFrame } from "@react-three/fiber";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimationMixer, LoopOnce } from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
-import { animations, chainLookup } from "./animations";
+import { animations } from "./animations";
 
 const loader = new FBXLoader();
+
 export const useLoader = () => {
   const mixer = useRef();
   const actions = useRef({});
   const currentAction = useRef();
-  const nextAnimation = useRef();
+  const chaining = useRef();
   const fadeSpeed = useRef(0.25);
 
   const [fbx, setFbx] = useState({});
@@ -56,8 +57,11 @@ export const useLoader = () => {
 
   const runNextAnimation = useCallback(() => {
     mixer.current.removeEventListener("finished", runNextAnimation);
-    if (currentAction.current.cb) currentAction.current.cb();
-    const action = actions.current[nextAnimation.current];
+    const next = chaining.current.shift();
+    if (!next) return;
+    const { animation, cb } = next;
+    if (cb) cb();
+    const action = actions.current[animation];
     action.reset();
     if (currentAction.current) {
       action.crossFadeFrom(currentAction.current, fadeSpeed.current);
@@ -68,16 +72,13 @@ export const useLoader = () => {
     }
     action.play();
     currentAction.current = action;
-    nextAnimation.current = chainLookup[nextAnimation.current];
-    if (nextAnimation.current) {
-      mixer.current.addEventListener("finished", runNextAnimation);
-    }
-  }, []);
+    mixer.current.addEventListener("finished", runNextAnimation);
+  }, [chaining]);
 
   const setNextAnimation = useCallback(
-    (animation, overide = false) => {
-      if (!overide && currentAction.current.blocking) return;
-      nextAnimation.current = animation;
+    ({ chain, override = false }) => {
+      if (!override && currentAction.current.blocking) return;
+      if (chain) chaining.current = chain;
       runNextAnimation();
     },
     [runNextAnimation]
