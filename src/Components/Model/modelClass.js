@@ -2,6 +2,7 @@ import { animations } from "./animations";
 import { AnimationMixer, LoopOnce } from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import Main from "./files/Main/Hip Hop Dancing.fbx";
+import { useStore } from "../Store/store";
 
 class ModelClass {
   constructor() {
@@ -87,16 +88,134 @@ class ModelClass {
   setRef(ref) {
     this.ref = ref;
   }
-  fall() {
+  fall = () => {
     this.falling = true;
     this.started = true;
-  }
-  land() {
+  };
+  land = () => {
     this.falling = false;
     this.started = true;
     this.ref.current.position.y = -20;
     this.vel = 0;
+    useStore.setState({ lightsOn: true });
+  };
+
+  runLeft = () => {
+    this.running = -1;
+    this.vel = 0;
+    this.pos = "transit";
+  };
+  endLeft = () => {
+    this.pos = "left";
+  };
+  runRight = () => {
+    this.running = 1;
+    this.vel = 0;
+    this.pos = "transit";
+  };
+  endRight = () => {
+    this.pos = "right";
+  };
+  typing = () => {
+    this.pos = "right";
+    setTimeout(() => {
+      useStore.setState({ interfaceOpen: true });
+    }, 4000);
+  };
+  //
+  // ─── CHAINS ─────────────────────────────────────────────────────────────────────
+  //
+  leftDanceChain() {
+    this.setNextAnimation({
+      chain: [
+        { animation: "runLeft", cb: this.runLeft },
+        { animation: "hipHop1", cb: this.endLeft },
+      ],
+      override: true,
+    });
   }
+  danceChain() {
+    this.setNextAnimation({
+      chain: [{ animation: "hipHop1" }],
+      override: true,
+    });
+  }
+
+  rightDanceChain() {
+    this.setNextAnimation({
+      chain: [
+        { animation: "runRight", cb: this.runRight },
+        { animation: "hipHop1", cb: this.endRight },
+      ],
+      override: true,
+    });
+  }
+  rightIdleChain() {
+    this.setNextAnimation({
+      chain: [
+        { animation: "runRight", cb: this.runRight },
+        { animation: "idle", cb: this.endRight },
+      ],
+      override: true,
+    });
+  }
+
+  idleChain() {
+    this.setNextAnimation({
+      chain: [{ animation: "idle" }],
+      override: true,
+    });
+  }
+  angryChain() {
+    this.setNextAnimation({
+      chain: [{ animation: "angry" }],
+      override: true,
+    });
+  }
+  scaredDanceChain() {
+    this.setNextAnimation({
+      chain: [
+        { animation: "scared", cb: this.runRight },
+        { animation: "hipHop1", cb: this.endRight },
+      ],
+      override: true,
+    });
+  }
+  scaredIdleChain() {
+    this.setNextAnimation({
+      chain: [
+        { animation: "scared", cb: this.runRight },
+        { animation: "idle", cb: this.endRight },
+      ],
+      override: true,
+    });
+  }
+  fallingChain() {
+    model.setNextAnimation({
+      chain: [
+        { animation: "falling", cb: this.fall },
+        { animation: "land", cb: this.land },
+        { animation: "waving" },
+        { animation: "runRight", cb: this.runRight },
+        { animation: "typing", cb: this.typing },
+        { animation: "angry" },
+      ],
+      override: true,
+    });
+  }
+  fallOverChain() {
+    model.setNextAnimation({
+      chain: [
+        { animation: "stunned" },
+        { animation: "gettingUp" },
+        { animation: "angry" },
+      ],
+    });
+  }
+
+  //
+  // ─── END ────────────────────────────────────────────────────────────────────────
+  //
 }
 
 const model = new ModelClass();
