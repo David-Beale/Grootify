@@ -30,7 +30,7 @@ export const useFalling = () => {
         animation: "runRight",
         cb: () => {
           setRunning("right");
-          model.pos = "transitRight";
+          model.pos = "transit";
         },
       },
       {

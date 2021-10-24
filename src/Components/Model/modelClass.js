@@ -63,6 +63,7 @@ class ModelClass {
     const next = this.chain.shift();
     if (!next) return;
     const { animation, cb } = next;
+    if (animation === this.currentAction.name) return;
     if (cb) cb();
     const action = this.actions[animation];
     action.reset();

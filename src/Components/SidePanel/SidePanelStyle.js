@@ -18,7 +18,7 @@ export const SidePanelContainer = styled.div`
 
 export const PlaylistTracksContainer = styled.div`
   box-sizing: border-box;
-  z-index: 0;
+  z-index: 1;
   position: absolute;
   height: calc(100vh - 150px);
   width: calc(100vw - 750px);
