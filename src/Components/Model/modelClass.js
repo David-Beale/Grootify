@@ -24,7 +24,10 @@ class ModelClass {
     this.loader.load(mainModel, (fbx) => {
       fbx.scale.setScalar(0.02);
       fbx.traverse((c) => {
-        if (c.isMesh) c.castShadow = true;
+        if (c.isMesh) {
+          c.castShadow = true;
+          c.__r3f = { handlers: {} };
+        }
       });
       this.mixer = new AnimationMixer(fbx);
       const action = this.mixer.clipAction(fbx.animations[0]);

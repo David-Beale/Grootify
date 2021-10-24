@@ -15,15 +15,12 @@ import Player from "./Components/Player/Player";
 import SidePanel from "./Components/SidePanel/SidePanel";
 import SearchTracks from "./Components/Search/SearchTracks";
 import PlaylistTracks from "./Components/SidePanel/PlaylistTracks";
-import { useStore } from "./Components/Store/store";
 
 export default function App() {
-  const onClick = useStore((state) => state.onClick);
-
   const [mouse, onMouseMove] = useMouseInteraction();
   return (
     <>
-      <div className="app" onClick={onClick} onPointerMove={onMouseMove}>
+      <div className="container" onPointerMove={onMouseMove}>
         <Login />
         <Logout />
         <SidePanel />
@@ -33,8 +30,6 @@ export default function App() {
         <Loader />
         <Player />
         <SpotifyLogo />
-      </div>
-      <div className="container">
         <Suspense fallback={null}>
           <Canvas
             className="canvas"
