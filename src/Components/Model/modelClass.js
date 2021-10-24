@@ -18,6 +18,12 @@ class ModelClass {
     this.falling = false;
     this.started = false;
     this.pos = null;
+    this.neck = null;
+    this.waist = null;
+    this.mouseX = 0;
+    this.mouseY = 0;
+    this.x = 0;
+    this.y = 0;
     this.init();
   }
   init() {
@@ -28,6 +34,10 @@ class ModelClass {
         if (c.isMesh) {
           c.castShadow = true;
           c.__r3f = { handlers: {} };
+        } else if (c.isBone && c.name === "mixamorigNeck") {
+          this.neck = c;
+        } else if (c.isBone && c.name === "mixamorigSpine") {
+          this.waist = c;
         }
       });
       this.mixer = new AnimationMixer(fbx);
@@ -52,7 +62,10 @@ class ModelClass {
       action.name = name;
       action.blocking = blocking;
       this.actions[name] = action;
-
+      if (name === "idle") {
+        action._clip.tracks.splice(5, 1);
+        action._clip.tracks.splice(2, 1);
+      }
       if (name === "hangingIdle") {
         this.currentAction = action;
         action.play();
@@ -122,6 +135,20 @@ class ModelClass {
       useStore.setState({ interfaceOpen: true });
     }, 4000);
   };
+  moveJoint(joint, angle) {
+    joint.rotation.y = this.x * angle;
+    joint.rotation.x = this.y * angle;
+  }
+  moveJoints() {
+    if (!this.currentAction || this.currentAction.name !== "idle") return;
+    // adjust xpos to account for model position (on the far right)
+    let xPos = this.mouseX - 0.43;
+    if (xPos > 0) xPos *= 13;
+    this.x += (xPos - this.x) * 0.1;
+    this.y += (this.mouseY - 0.1 - this.y) * 0.1;
+    this.moveJoint(this.neck, 1.2);
+    this.moveJoint(this.waist, 0.5);
+  }
   //
   // ─── CHAINS ─────────────────────────────────────────────────────────────────────
   //

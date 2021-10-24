@@ -18,7 +18,10 @@ export const useLoader = (modelRef) => {
   }, [isPreLoaded, modelRef, setLoaded]);
 
   useFrame((state, delta) => {
-    if (model.mixer) model.mixer.update(delta);
+    if (model.mixer) {
+      model.mixer.update(delta);
+      model.moveJoints();
+    }
   });
 
   return fbx;

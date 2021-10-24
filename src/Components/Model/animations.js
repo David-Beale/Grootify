@@ -12,7 +12,8 @@ import Typing from "./files/Typing.fbx";
 import RunRight from "./files/Running/RunningRight.fbx";
 import RunLeft from "./files/Running/RunningLeft.fbx";
 
-import Idle from "./files/Happy Idle.fbx";
+import HappyIdle from "./files/Idle/Happy Idle.fbx";
+import Idle from "./files/Idle/Breathing Idle.fbx";
 import Scared from "./files/Running/Scared.fbx";
 
 export const animations = {
@@ -30,5 +31,6 @@ export const animations = {
   gettingUp: { file: GettingUp, once: true, blocking: true },
 
   idle: { file: Idle, once: false, blocking: false },
+  happyIdle: { file: HappyIdle, once: false, blocking: false },
   scared: { file: Scared, once: false, blocking: true },
 };
