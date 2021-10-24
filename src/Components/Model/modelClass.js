@@ -198,7 +198,7 @@ class ModelClass {
         { animation: "waving" },
         { animation: "runRight", cb: this.runRight },
         { animation: "typing", cb: this.typing },
-        { animation: "angry" },
+        { animation: "idle" },
       ],
       override: true,
     });
