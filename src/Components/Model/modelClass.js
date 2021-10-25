@@ -128,6 +128,7 @@ class ModelClass {
   };
   endRight = () => {
     this.pos = "right";
+    this.getJointAngle(this.neck, 1.2);
   };
   typing = () => {
     this.pos = "right";
@@ -135,6 +136,10 @@ class ModelClass {
       useStore.setState({ interfaceOpen: true });
     }, 4000);
   };
+  getJointAngle(joint, angle) {
+    this.x = joint.rotation.y / angle;
+    this.y = joint.rotation.x / angle;
+  }
   moveJoint(joint, angle) {
     joint.rotation.y = this.x * angle;
     joint.rotation.x = this.y * angle;
@@ -189,7 +194,7 @@ class ModelClass {
 
   idleChain() {
     this.setNextAnimation({
-      chain: [{ animation: "idle" }],
+      chain: [{ animation: "idle", cb: this.endRight }],
       override: true,
     });
   }
@@ -225,7 +230,7 @@ class ModelClass {
         { animation: "waving" },
         { animation: "runRight", cb: this.runRight },
         { animation: "typing", cb: this.typing },
-        { animation: "idle" },
+        { animation: "idle", cb: this.endRight },
       ],
       override: true,
     });

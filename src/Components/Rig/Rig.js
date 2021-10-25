@@ -1,7 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import model from "../Model/modelClass";
 
-const mouseRangeX = 55;
+const mouseRangeX = 20;
 const mouseRangeY = 20;
 export default function Rig({ mouse }) {
   const { camera } = useThree();
