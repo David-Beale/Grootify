@@ -23,10 +23,10 @@ export const animations = {
   land: { file: Land, once: true, blockUser: true },
   waving: { file: Waving, once: true, blockUser: true },
   runRight: { file: RunRight, once: false, blockUser: true },
-  typing: { file: Typing, once: true },
+  typing: { file: Typing, once: true, blockUser: true },
   runLeft: { file: RunLeft, once: false, blockUser: true },
 
-  angry: { file: Angry, once: false },
+  angry: { file: Angry, once: true, blockUser: true },
   stunned: { file: Stunned, once: true, blockAll: true },
   gettingUp: { file: GettingUp, once: true, blockAll: true },
 

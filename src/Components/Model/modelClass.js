@@ -22,6 +22,7 @@ class ModelClass {
     this.waist = null;
     this.mouseX = 0;
     this.mouseY = 0;
+    this.fadeJointsRequired = false;
     this.x = 0;
     this.y = 0;
     this.init();
@@ -83,9 +84,12 @@ class ModelClass {
     action.reset();
     if (this.currentAction) {
       action.crossFadeFrom(this.currentAction, this.fadeSpeed);
-
-      if (this.currentAction.name === "land") {
-        this.fadeSpeed = 0.5;
+      if (this.currentAction.name === "land") this.fadeSpeed = 0.5;
+      if (this.currentAction.name === "idle") {
+        this.fadeJointsRequired = true;
+        setTimeout(() => {
+          this.fadeJointsRequired = false;
+        }, 500);
       }
     }
     action.play();
@@ -143,6 +147,7 @@ class ModelClass {
   };
   endLeft = () => {
     this.pos = "left";
+    this.getJointAngle();
   };
   runRight = () => {
     this.running = 1;
@@ -151,29 +156,43 @@ class ModelClass {
   };
   endRight = () => {
     this.pos = "right";
-    this.getJointAngle(this.neck, 1.2);
+    this.getJointAngle();
   };
   typing = () => {
     this.pos = "right";
     setTimeout(() => {
       useStore.setState({ interfaceOpen: true });
-    }, 4000);
+    }, 3000);
   };
-  getJointAngle(joint, angle) {
-    this.x = joint.rotation.y / angle;
-    this.y = joint.rotation.x / angle;
-  }
+  getJointAngle = () => {
+    this.x = this.neck.rotation.y / 1.2;
+    this.y = this.neck.rotation.x / 1.2;
+  };
   moveJoint(joint, angle) {
     joint.rotation.y = this.x * angle;
     joint.rotation.x = this.y * angle;
   }
   moveJoints() {
     if (!this.currentAction || this.currentAction.name !== "idle") return;
-    // adjust xpos to account for model position (on the far right)
-    let xPos = this.mouseX - 0.43;
-    if (xPos > 0) xPos *= 13;
-    this.x += (xPos - this.x) * 0.1;
+    // adjust xpos to account for model position
+    if (this.pos === "right") {
+      this.mouseX -= 0.43;
+      if (this.mouseX > 0) this.mouseX *= 13;
+    } else {
+      this.mouseX *= 2;
+    }
+    this.x += (this.mouseX - this.x) * 0.1;
     this.y += (this.mouseY - 0.1 - this.y) * 0.1;
+    this.moveJoint(this.neck, 1.2);
+    this.moveJoint(this.waist, 0.5);
+  }
+  fadeJoints() {
+    if (!this.fadeJointsRequired) return;
+    const targetX = this.neck.rotation.y / 1.2;
+    const targetY = this.neck.rotation.x / 1.2;
+
+    this.x += (targetX - this.x) * 0.1;
+    this.y += (targetY - this.y) * 0.1;
     this.moveJoint(this.neck, 1.2);
     this.moveJoint(this.waist, 0.5);
   }
@@ -213,12 +232,15 @@ class ModelClass {
 
   idleChain() {
     this.setNextAnimation({
-      chain: [{ animation: "idle", cb: this.endRight }],
+      chain: [{ animation: "idle", cb: this.getJointAngle }],
     });
   }
   angryChain() {
     this.setNextAnimation({
-      chain: [{ animation: "angry" }],
+      chain: [
+        { animation: "angry" },
+        { animation: "idle", cb: this.getJointAngle },
+      ],
     });
   }
   scaredDanceChain() {
@@ -245,17 +267,19 @@ class ModelClass {
         { animation: "waving" },
         { animation: "runRight", cb: this.runRight },
         { animation: "typing", cb: this.typing },
-        { animation: "idle", cb: this.endRight },
+        { animation: "idle", cb: this.getJointAngle },
       ],
     });
   }
   fallOverChain() {
+    const chain = [{ animation: "stunned" }, { animation: "gettingUp" }];
+    if (this.currentAction.name === "idle") {
+      chain.push({ animation: "idle", cb: this.getJointAngle });
+    } else {
+      chain.push({ animation: this.currentAction.name });
+    }
     model.setNextAnimation({
-      chain: [
-        { animation: "stunned" },
-        { animation: "gettingUp" },
-        { animation: "angry" },
-      ],
+      chain,
       userAction: true,
     });
   }

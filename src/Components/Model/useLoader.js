@@ -21,6 +21,7 @@ export const useLoader = (modelRef) => {
     if (model.mixer) {
       model.mixer.update(delta);
       model.moveJoints();
+      model.fadeJoints();
     }
   });
 
