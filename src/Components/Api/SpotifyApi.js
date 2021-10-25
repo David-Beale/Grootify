@@ -7,6 +7,7 @@ import {
   buildParams,
   popupWindow,
 } from "./authHelpers";
+import { useStore } from "../Store/store";
 
 export const spotifyApi = new SpotifyWebApi();
 let userId = null;
@@ -39,7 +40,7 @@ spotifyApi.refreshAccessToken = () => {
     })
     .catch((err) => {
       console.log("Could not refresh access token", err);
-      spotifyApi.logout();
+      useStore.getState().logout();
       return false;
     });
 };

@@ -13,11 +13,6 @@ export default function Login() {
   const [initiateSpotifyLogin, inProgress, error] = useLogin();
 
   useEffect(() => {
-    spotifyApi.logout = () => {
-      logout();
-      localStorage.removeItem("sp-accessToken");
-      localStorage.removeItem("sp-refreshToken");
-    };
     (async () => {
       const isAuth = await spotifyApi.checkAuthentication();
       if (isAuth) login();

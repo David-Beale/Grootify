@@ -3,7 +3,7 @@ import { useStore } from "../Store/store";
 
 export const useMouseInteraction = () => {
   const loggedIn = useStore((state) => state.loggedIn);
-  const mouse = useRef([0.5, 0.5]);
+  const mouse = useRef([0, 0]);
 
   const onMouseMove = useCallback(
     (e) => {
