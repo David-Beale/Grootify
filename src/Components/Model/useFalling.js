@@ -6,11 +6,18 @@ import model from "./modelClass";
 export const useFalling = () => {
   const loggedIn = useStore((state) => state.loggedIn);
   const isLoaded = useStore((state) => state.isLoaded);
+  const onInterfaceOpen = useStore((state) => state.onInterfaceOpen);
+  const setLightsOn = useStore((state) => state.setLightsOn);
 
   useEffect(() => {
-    if (!loggedIn || !isLoaded || model.started) return;
-    model.fallingChain();
-  }, [loggedIn, isLoaded]);
+    if (!loggedIn || !isLoaded) return;
+    if (!model.started) {
+      model.fallingChain();
+    } else {
+      onInterfaceOpen();
+      setLightsOn();
+    }
+  }, [loggedIn, isLoaded, onInterfaceOpen, setLightsOn]);
 
   useFrame(() => {
     if (!model.falling) return;

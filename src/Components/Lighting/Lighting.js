@@ -8,11 +8,17 @@ export default function Lighting({ modelRef, bloomRef }) {
   const [angle, setAngle] = useState(360);
 
   useEffect(() => {
-    if (!lightsOn) return;
-    lightRef.current.intensity = 5;
-    lightRef.current.angle = 0.8;
-    bloomRef.current.strength = 4;
-    setAngle(0.8);
+    if (lightsOn) {
+      lightRef.current.intensity = 5;
+      lightRef.current.angle = 0.8;
+      bloomRef.current.strength = 4;
+      setAngle(0.8);
+    } else {
+      lightRef.current.intensity = 0;
+      lightRef.current.angle = 360;
+      bloomRef.current.strength = 0;
+      setAngle(360);
+    }
   }, [lightsOn, bloomRef]);
 
   return (
