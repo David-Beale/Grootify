@@ -85,7 +85,7 @@ class ModelClass {
     if (this.currentAction) {
       action.crossFadeFrom(this.currentAction, this.fadeSpeed);
       if (this.currentAction.name === "land") this.fadeSpeed = 0.5;
-      if (this.currentAction.name === "idle") {
+      if (this.currentAction.name === "idle" && animation !== "stunned") {
         this.fadeJointsRequired = true;
         setTimeout(() => {
           this.fadeJointsRequired = false;
