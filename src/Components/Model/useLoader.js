@@ -22,6 +22,7 @@ export const useLoader = (modelRef) => {
       model.mixer.update(delta);
       model.moveJoints();
       model.fadeJoints();
+      model.checkForWave();
     }
   });
 

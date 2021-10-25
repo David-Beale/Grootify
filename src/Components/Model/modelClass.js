@@ -25,6 +25,7 @@ class ModelClass {
     this.fadeJointsRequired = false;
     this.x = 0;
     this.y = 0;
+    this.waveStatus = { count: 0, side: null, time: null };
     this.init();
   }
   init() {
@@ -175,13 +176,14 @@ class ModelClass {
   moveJoints() {
     if (!this.currentAction || this.currentAction.name !== "idle") return;
     // adjust xpos to account for model position
+    let xPos = this.mouseX;
     if (this.pos === "right") {
-      this.mouseX -= 0.43;
-      if (this.mouseX > 0) this.mouseX *= 13;
+      xPos -= 0.43;
+      if (xPos > 0) xPos *= 13;
     } else {
-      this.mouseX *= 2;
+      xPos *= 2;
     }
-    this.x += (this.mouseX - this.x) * 0.1;
+    this.x += (xPos - this.x) * 0.1;
     this.y += (this.mouseY - 0.1 - this.y) * 0.1;
     this.moveJoint(this.neck, 1.2);
     this.moveJoint(this.waist, 0.5);
@@ -195,6 +197,41 @@ class ModelClass {
     this.y += (targetY - this.y) * 0.1;
     this.moveJoint(this.neck, 1.2);
     this.moveJoint(this.waist, 0.5);
+  }
+  getSide() {
+    if (this.mouseX < -0.17) return -1;
+    if (this.mouseX < 0.17) return 0;
+    return 1;
+  }
+  checkForWave() {
+    if (
+      !this.currentAction ||
+      this.currentAction.blockUser ||
+      this.currentAction.blockAll
+    ) {
+      return;
+    }
+    const newSide = this.getSide();
+    if (!newSide) return;
+    const { count, side, time } = this.waveStatus;
+    const newTime = Date.now();
+    if (!count) {
+      this.waveStatus.count++;
+      this.waveStatus.side = newSide;
+      this.waveStatus.time = newTime;
+      return;
+    } else {
+      if (side === newSide) return;
+      if (newTime - time > 1000) return (this.waveStatus.count = 0);
+
+      this.waveStatus.count++;
+      this.waveStatus.side = newSide;
+      this.waveStatus.time = newTime;
+    }
+    if (this.waveStatus.count === 3) {
+      this.waveChain();
+      this.waveStatus.count = 0;
+    }
   }
   //
   // ─── CHAINS ─────────────────────────────────────────────────────────────────────
@@ -269,6 +306,18 @@ class ModelClass {
         { animation: "typing", cb: this.typing },
         { animation: "idle", cb: this.getJointAngle },
       ],
+    });
+  }
+  waveChain() {
+    const chain = [{ animation: "waving" }];
+    if (this.currentAction.name === "idle") {
+      chain.push({ animation: "idle", cb: this.getJointAngle });
+    } else {
+      chain.push({ animation: this.currentAction.name });
+    }
+    model.setNextAnimation({
+      chain,
+      userAction: true,
     });
   }
   fallOverChain() {
