@@ -17,20 +17,20 @@ import Idle from "./files/Idle/Breathing Idle.fbx";
 import Scared from "./files/Running/Scared.fbx";
 
 export const animations = {
-  hangingIdle: { file: HangingIdle, once: false, blocking: true },
+  hangingIdle: { file: HangingIdle, once: false, blockUser: true },
 
-  falling: { file: Falling, once: false, blocking: true },
-  land: { file: Land, once: true, blocking: true },
-  waving: { file: Waving, once: true, blocking: true },
-  runRight: { file: RunRight, once: false, blocking: true },
-  typing: { file: Typing, once: true, blocking: false },
-  runLeft: { file: RunLeft, once: false, blocking: true },
+  falling: { file: Falling, once: false, blockUser: true },
+  land: { file: Land, once: true, blockUser: true },
+  waving: { file: Waving, once: true, blockUser: true },
+  runRight: { file: RunRight, once: false, blockUser: true },
+  typing: { file: Typing, once: true },
+  runLeft: { file: RunLeft, once: false, blockUser: true },
 
-  angry: { file: Angry, once: false, blocking: false },
-  stunned: { file: Stunned, once: true, blocking: true },
-  gettingUp: { file: GettingUp, once: true, blocking: true },
+  angry: { file: Angry, once: false },
+  stunned: { file: Stunned, once: true, blockAll: true },
+  gettingUp: { file: GettingUp, once: true, blockAll: true },
 
-  idle: { file: Idle, once: false, blocking: false },
-  happyIdle: { file: HappyIdle, once: false, blocking: false },
-  scared: { file: Scared, once: false, blocking: true },
+  idle: { file: Idle, once: false },
+  happyIdle: { file: HappyIdle, once: false },
+  scared: { file: Scared, once: false, blockUser: true },
 };

@@ -44,7 +44,6 @@ class ModelClass {
       const action = this.mixer.clipAction(fbx.animations[0]);
       this.actions["hipHop1"] = action;
       action.name = "hipHop1";
-      action.blocking = false;
       this.fbx = fbx;
       for (const name in animations) {
         this.loadAnimation(name, animations[name]);
@@ -52,7 +51,7 @@ class ModelClass {
     });
   }
   loadAnimation(name, anim) {
-    const { file, once, blocking } = anim;
+    const { file, once, blockUser, blockAll } = anim;
     this.loader.load(file, (fbx) => {
       const action = this.mixer.clipAction(fbx.animations[0]);
       if (once) {
@@ -60,7 +59,8 @@ class ModelClass {
         action.clampWhenFinished = true;
       }
       action.name = name;
-      action.blocking = blocking;
+      action.blockUser = blockUser;
+      action.blockAll = blockAll;
       this.actions[name] = action;
       if (name === "idle") {
         action._clip.tracks.splice(5, 1);
@@ -93,8 +93,31 @@ class ModelClass {
 
     this.mixer.addEventListener("finished", this.runNextAnimation);
   };
-  setNextAnimation({ chain, override = false }) {
-    if (!override && this.currentAction.blocking) return;
+  getBlockingActions() {
+    const blockingActions = [];
+    for (let i = 0; i < this.chain.length; i++) {
+      const action = this.chain[i];
+      if (this.actions[action.animation].blockAll) {
+        blockingActions.push(action);
+      } else {
+        break;
+      }
+    }
+    return blockingActions;
+  }
+  setNextAnimation({ chain, userAction = false }) {
+    if (
+      (this.currentAction.blockUser || this.currentAction.blockAll) &&
+      userAction
+    ) {
+      return;
+    }
+    if (this.currentAction.blockAll) {
+      if (!chain) return;
+      const blockingActions = this.getBlockingActions();
+      this.chain = [...blockingActions, ...chain];
+      return;
+    }
     if (chain) this.chain = chain;
     this.runNextAnimation();
   }
@@ -163,13 +186,11 @@ class ModelClass {
         { animation: "runLeft", cb: this.runLeft },
         { animation: "hipHop1", cb: this.endLeft },
       ],
-      override: true,
     });
   }
   danceChain() {
     this.setNextAnimation({
       chain: [{ animation: "hipHop1" }],
-      override: true,
     });
   }
 
@@ -179,7 +200,6 @@ class ModelClass {
         { animation: "runRight", cb: this.runRight },
         { animation: "hipHop1", cb: this.endRight },
       ],
-      override: true,
     });
   }
   rightIdleChain() {
@@ -188,20 +208,17 @@ class ModelClass {
         { animation: "runRight", cb: this.runRight },
         { animation: "idle", cb: this.endRight },
       ],
-      override: true,
     });
   }
 
   idleChain() {
     this.setNextAnimation({
       chain: [{ animation: "idle", cb: this.endRight }],
-      override: true,
     });
   }
   angryChain() {
     this.setNextAnimation({
       chain: [{ animation: "angry" }],
-      override: true,
     });
   }
   scaredDanceChain() {
@@ -210,7 +227,6 @@ class ModelClass {
         { animation: "scared", cb: this.runRight },
         { animation: "hipHop1", cb: this.endRight },
       ],
-      override: true,
     });
   }
   scaredIdleChain() {
@@ -219,7 +235,6 @@ class ModelClass {
         { animation: "scared", cb: this.runRight },
         { animation: "idle", cb: this.endRight },
       ],
-      override: true,
     });
   }
   fallingChain() {
@@ -232,7 +247,6 @@ class ModelClass {
         { animation: "typing", cb: this.typing },
         { animation: "idle", cb: this.endRight },
       ],
-      override: true,
     });
   }
   fallOverChain() {
@@ -242,6 +256,7 @@ class ModelClass {
         { animation: "gettingUp" },
         { animation: "angry" },
       ],
+      userAction: true,
     });
   }
 
