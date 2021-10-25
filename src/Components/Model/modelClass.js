@@ -1,7 +1,7 @@
-import { animations } from "./animations";
+import { animations, allDancing, dancingCache } from "./animations";
 import { AnimationMixer, LoopOnce } from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
-import Main from "./files/Main/Hip Hop Dancing.fbx";
+import Model from "./files/Model/Model.fbx";
 import { useStore } from "../Store/store";
 
 class ModelClass {
@@ -29,10 +29,9 @@ class ModelClass {
     this.init();
   }
   init() {
-    const mainModel = Main;
-    this.loader.load(mainModel, (fbx) => {
-      fbx.scale.setScalar(0.02);
-      fbx.traverse((c) => {
+    this.loader.load(Model, (model) => {
+      model.scale.setScalar(0.02);
+      model.traverse((c) => {
         if (c.isMesh) {
           c.castShadow = true;
           c.__r3f = { handlers: {} };
@@ -42,11 +41,8 @@ class ModelClass {
           this.waist = c;
         }
       });
-      this.mixer = new AnimationMixer(fbx);
-      const action = this.mixer.clipAction(fbx.animations[0]);
-      this.actions["hipHop1"] = action;
-      action.name = "hipHop1";
-      this.fbx = fbx;
+      this.mixer = new AnimationMixer(model);
+      this.fbx = model;
       for (const name in animations) {
         this.loadAnimation(name, animations[name]);
       }
@@ -76,10 +72,12 @@ class ModelClass {
   }
   runNextAnimation = () => {
     this.mixer.removeEventListener("finished", this.runNextAnimation);
-    const next = this.chain.shift();
+    const next = this.chain[0];
     if (!next) return;
-    const { animation, cb } = next;
+    let { animation, cb } = next;
     if (animation === this.currentAction.name) return;
+    if (animation === "dance") animation = this.getDanceMove();
+    else this.chain.shift();
     if (cb) cb();
     const action = this.actions[animation];
     action.reset();
@@ -102,11 +100,13 @@ class ModelClass {
     const blockingActions = [];
     for (let i = 0; i < this.chain.length; i++) {
       const action = this.chain[i];
-      if (this.actions[action.animation].blockAll) {
-        blockingActions.push(action);
-      } else {
+      if (
+        !this.actions[action.animation] ||
+        !this.actions[action.animation].blockAll
+      ) {
         break;
       }
+      blockingActions.push(action);
     }
     return blockingActions;
   }
@@ -233,6 +233,34 @@ class ModelClass {
       this.waveStatus.count = 0;
     }
   }
+  getCachedDance() {
+    let res;
+    do {
+      const randomCachedIndex = Math.floor(Math.random() * dancingCache.length);
+      res = dancingCache[randomCachedIndex];
+    } while (res === this.currentAction.name);
+    return res;
+  }
+  getDanceMove() {
+    //prevent cache from getting too big
+    if (dancingCache.length > 10) {
+      const oldest = dancingCache.shift();
+      delete this.actions[oldest];
+    }
+    const randomMoveIndex = Math.floor(Math.random() * allDancing.length);
+    const randomMove = allDancing[randomMoveIndex];
+    //pick a random available move
+    if (!this.actions[randomMove]) {
+      import(`./files/Dancing/${randomMove}.fbx`)
+        .then((file) => {
+          this.loadAnimation(randomMove, { file: file.default, once: true });
+          dancingCache.push(randomMove);
+        })
+        .catch((err) => console.log(err));
+    }
+    //get random move from cache
+    return this.getCachedDance();
+  }
   //
   // ─── CHAINS ─────────────────────────────────────────────────────────────────────
   //
@@ -240,13 +268,13 @@ class ModelClass {
     this.setNextAnimation({
       chain: [
         { animation: "runLeft", cb: this.runLeft },
-        { animation: "hipHop1", cb: this.endLeft },
+        { animation: "dance", cb: this.endLeft },
       ],
     });
   }
   danceChain() {
     this.setNextAnimation({
-      chain: [{ animation: "hipHop1" }],
+      chain: [{ animation: "dance" }],
     });
   }
 
@@ -254,7 +282,7 @@ class ModelClass {
     this.setNextAnimation({
       chain: [
         { animation: "runRight", cb: this.runRight },
-        { animation: "hipHop1", cb: this.endRight },
+        { animation: "dance", cb: this.endRight },
       ],
     });
   }
@@ -284,7 +312,7 @@ class ModelClass {
     this.setNextAnimation({
       chain: [
         { animation: "scared", cb: this.runRight },
-        { animation: "hipHop1", cb: this.endRight },
+        { animation: "dance", cb: this.endRight },
       ],
     });
   }
@@ -312,8 +340,8 @@ class ModelClass {
     const chain = [{ animation: "waving" }];
     if (this.currentAction.name === "idle") {
       chain.push({ animation: "idle", cb: this.getJointAngle });
-    } else {
-      chain.push({ animation: this.currentAction.name });
+    } else if (this.chain[0].animation === "dance") {
+      chain.push({ animation: "dance" });
     }
     model.setNextAnimation({
       chain,
@@ -324,8 +352,8 @@ class ModelClass {
     const chain = [{ animation: "stunned" }, { animation: "gettingUp" }];
     if (this.currentAction.name === "idle") {
       chain.push({ animation: "idle", cb: this.getJointAngle });
-    } else {
-      chain.push({ animation: this.currentAction.name });
+    } else if (this.chain[0].animation === "dance") {
+      chain.push({ animation: "dance" });
     }
     model.setNextAnimation({
       chain,

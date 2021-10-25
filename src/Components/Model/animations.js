@@ -16,21 +16,35 @@ import HappyIdle from "./files/Idle/Happy Idle.fbx";
 import Idle from "./files/Idle/Breathing Idle.fbx";
 import Scared from "./files/Running/Scared.fbx";
 
-export const animations = {
-  hangingIdle: { file: HangingIdle, once: false, blockUser: true },
+import ArmSwing from "./files/Dancing/ArmSwing.fbx";
+import Silly from "./files/Dancing/Silly.fbx";
 
-  falling: { file: Falling, once: false, blockUser: true },
+export const animations = {
+  //params:
+  //once = no loop
+  //blockUser = no user interaction allowed
+  //blockAll = animation must finish
+  hangingIdle: { file: HangingIdle, blockUser: true },
+
+  falling: { file: Falling, blockUser: true },
   land: { file: Land, once: true, blockUser: true },
   waving: { file: Waving, once: true, blockUser: true },
-  runRight: { file: RunRight, once: false, blockUser: true },
+  runRight: { file: RunRight, blockUser: true },
   typing: { file: Typing, once: true, blockUser: true },
-  runLeft: { file: RunLeft, once: false, blockUser: true },
+  runLeft: { file: RunLeft, blockUser: true },
 
   angry: { file: Angry, once: true, blockUser: true },
   stunned: { file: Stunned, once: true, blockAll: true },
   gettingUp: { file: GettingUp, once: true, blockAll: true },
 
-  idle: { file: Idle, once: false },
-  happyIdle: { file: HappyIdle, once: false },
-  scared: { file: Scared, once: false, blockUser: true },
+  idle: { file: Idle },
+  happyIdle: { file: HappyIdle },
+  scared: { file: Scared, blockUser: true },
+
+  //default dancing:
+  ArmSwing: { file: ArmSwing, once: true },
+  Silly: { file: Silly, once: true },
 };
+
+export const dancingCache = ["ArmSwing", "Silly"];
+export const allDancing = ["ArmSwing", "Silly", "Twerk"];
