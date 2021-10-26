@@ -51,7 +51,6 @@ export default class DanceManger {
   }
   get(currentAction, loadCb) {
     this.isDancing = true;
-    console.log(this.mood);
     //prevent cache from getting too big
     // if (dancingCache.length > 10) {
     //   const oldest = dancingCache.shift();

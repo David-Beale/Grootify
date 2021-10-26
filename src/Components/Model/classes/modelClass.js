@@ -81,7 +81,7 @@ class ModelClass {
     if (animation === "dance")
       animation = this.danceManager.get(this.currentAction, this.loadAnimation);
     else {
-      this.dancing = false;
+      this.danceManager.isDancing = false;
       this.chain.shift();
     }
     if (cb) cb();
