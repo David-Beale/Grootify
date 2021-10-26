@@ -114,10 +114,10 @@ class ModelClass {
     }
     return blockingActions;
   }
-  setNextAnimation({ chain, userAction = false }) {
+  setNextAnimation({ chain, isUserAction = false }) {
     if (
       (this.currentAction.blockUser || this.currentAction.blockAll) &&
-      userAction
+      isUserAction
     ) {
       return;
     }
@@ -350,7 +350,7 @@ class ModelClass {
     }
     model.setNextAnimation({
       chain,
-      userAction: true,
+      isUserAction: true,
     });
   }
   fallOverChain() {
@@ -362,7 +362,7 @@ class ModelClass {
     }
     model.setNextAnimation({
       chain,
-      userAction: true,
+      isUserAction: true,
     });
   }
 
