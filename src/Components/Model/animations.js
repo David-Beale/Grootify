@@ -17,7 +17,10 @@ import Idle from "./files/Idle/Breathing Idle.fbx";
 import Scared from "./files/Running/Scared.fbx";
 
 import ArmSwing from "./files/Dancing/ArmSwing.fbx";
-import Silly from "./files/Dancing/Silly.fbx";
+import HipHop5 from "./files/Dancing/HipHop5.fbx";
+import Jazz3 from "./files/Dancing/Jazz3.fbx";
+import Shuffling from "./files/Dancing/Shuffling.fbx";
+import Belly from "./files/Dancing/Belly.fbx";
 
 export const animations = {
   //params:
@@ -43,14 +46,124 @@ export const animations = {
 
   //default dancing:
   ArmSwing: { file: ArmSwing, once: true },
-  Silly: { file: Silly, once: true },
+  HipHop5: { file: HipHop5, once: true },
+  Jazz3: { file: Jazz3, once: true },
+  Shuffling: { file: Shuffling, once: true },
+  Belly: { file: Belly, once: true },
 };
 
-export const allDanceLow = ["ArmSwing", "Silly"];
-export const danceLowStack = ["ArmSwing", "Silly"];
+export const allDanceLow = [
+  "Breakdance2",
+  "Spin",
+  "HipHop5",
+  "Jazz2",
+  "Samba4",
+  "Salsa3",
+  "Salsa4",
+  "Dance",
+  "Jazz3",
+  "HipHop11",
+  "Belly",
+  "Arms",
+];
+export const danceLowStack = ["HipHop5", "Jazz3"];
 
-export const allDanceMed = ["ArmSwing", "Silly"];
-export const danceMedStack = ["ArmSwing", "Silly"];
+export const allDanceMed = [
+  "ArmSwing",
+  "Rumba",
+  "Twist",
+  "Breakdance1",
+  "Shuffling",
+  "Swing",
+  "Bboy1",
+  "Robot",
+  "Samba1",
+  "HipHop2",
+  "HipHop3",
+  "HipHop4",
+  "Breakdance2",
+  "Spin",
+  "HipHop5",
+  "Swing2",
+  "Salsa1",
+  "Hokey",
+  "HipHop6",
+  "Chicken",
+  "Samba2",
+  "Jazz",
+  "Maraschino",
+  "Jazz2",
+  "Samba3",
+  "Samba4",
+  "Salsa2",
+  "Locking",
+  "Silly2",
+  "HipHop7",
+  "Salsa3",
+  "Salsa4",
+  "Macarena",
+  "HipHop8",
+  "HipHop9",
+  "HipHop10",
+  "Jazz3",
+  "HipHop11",
+  "Swing3",
+  "Dance2",
+  "HipHop12",
+  "Tut",
+  "Samba5",
+  "Can",
+  "Samba6",
+  "Bboy2",
+  "House2",
+  "HipHop13",
+  "Arms",
+];
+export const danceMedStack = ["ArmSwing", "HipHop5", "Jazz3", "Shuffling"];
 
-export const allDanceHigh = ["ArmSwing", "Silly", "Twerk"];
-export const danceHighStack = ["ArmSwing", "Silly"];
+export const allDanceHigh = [
+  "ArmSwing",
+  "Silly1",
+  "Twerk",
+  "Rumba",
+  "Twist",
+  "Breakdance1",
+  "Brooklyn1",
+  "Shuffling",
+  "Swing",
+  "Bboy1",
+  "Robot",
+  "House1",
+  "Samba1",
+  "HipHop2",
+  "HipHop3",
+  "HipHop4",
+  "Spin",
+  "HipHop5",
+  "Swing2",
+  "Salsa1",
+  "HipHop6",
+  "Chicken",
+  "Samba2",
+  "Jazz",
+  "Maraschino",
+  "Samba3",
+  "Salsa2",
+  "Locking",
+  "Silly2",
+  "HipHop7",
+  "Macarena",
+  "HipHop8",
+  "HipHop9",
+  "HipHop10",
+  "Swing3",
+  "Dance2",
+  "HipHop12",
+  "Tut",
+  "Samba5",
+  "Samba6",
+  "Bboy2",
+  "House2",
+  "Running",
+];
+export const danceHighStack = ["ArmSwing", "HipHop5", "Shuffling"];
