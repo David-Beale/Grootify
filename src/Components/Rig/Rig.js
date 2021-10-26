@@ -1,5 +1,5 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import model from "../Model/modelClass";
+import model from "../Model/classes/modelClass";
 
 const mouseRangeX = 20;
 const mouseRangeY = 20;

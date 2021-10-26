@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { useStore } from "../Store/store";
-import model from "./modelClass";
+import { useStore } from "../../Store/store";
+import model from "../classes/modelClass";
 
 export const usePosition = () => {
   const isPlayingRef = useRef(false);
@@ -17,8 +17,8 @@ export const usePosition = () => {
   }, [isLoaded]);
 
   useEffect(() => {
-    model.mood = mood;
-    if (model.dancing) model.danceChain();
+    model.setMood(mood);
+    if (model.getDancingState()) model.danceChain();
   }, [mood]);
 
   useEffect(() => {

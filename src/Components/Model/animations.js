@@ -46,5 +46,11 @@ export const animations = {
   Silly: { file: Silly, once: true },
 };
 
-export const dancingCache = ["ArmSwing", "Silly"];
-export const allDancing = ["ArmSwing", "Silly", "Twerk"];
+export const allDanceLow = ["ArmSwing", "Silly"];
+export const danceLowStack = ["ArmSwing", "Silly"];
+
+export const allDanceMed = ["ArmSwing", "Silly"];
+export const danceMedStack = ["ArmSwing", "Silly"];
+
+export const allDanceHigh = ["ArmSwing", "Silly", "Twerk"];
+export const danceHighStack = ["ArmSwing", "Silly"];

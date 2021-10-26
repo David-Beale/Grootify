@@ -1,8 +1,9 @@
-import { animations, allDancing, dancingCache } from "../animations";
+import { animations } from "../animations";
 import { AnimationMixer, LoopOnce } from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
-import Model from "./files/Model/Model.fbx";
+import Model from "../files/Model/Model.fbx";
 import { useStore } from "../../Store/store";
+import DanceManager from "./danceManager";
 
 class ModelClass {
   constructor() {
@@ -26,7 +27,7 @@ class ModelClass {
     this.x = 0;
     this.y = 0;
     this.waveStatus = { count: 0, side: null, time: null };
-    this.dancing = false;
+    this.danceManager = new DanceManager(this.actions);
     this.init();
   }
   init() {
@@ -49,7 +50,7 @@ class ModelClass {
       }
     });
   }
-  loadAnimation(name, anim) {
+  loadAnimation = (name, anim) => {
     const { file, once, blockUser, blockAll } = anim;
     this.loader.load(file, (fbx) => {
       const action = this.mixer.clipAction(fbx.animations[0]);
@@ -70,14 +71,15 @@ class ModelClass {
         action.play();
       }
     });
-  }
+  };
   runNextAnimation = () => {
     this.mixer.removeEventListener("finished", this.runNextAnimation);
     const next = this.chain[0];
     if (!next) return;
     let { animation, cb } = next;
     if (animation === this.currentAction.name) return;
-    if (animation === "dance") animation = this.getDanceMove();
+    if (animation === "dance")
+      animation = this.danceManager.get(this.currentAction, this.loadAnimation);
     else {
       this.dancing = false;
       this.chain.shift();
@@ -237,46 +239,13 @@ class ModelClass {
       this.waveStatus.count = 0;
     }
   }
-  popDanceStack() {
-    const nextDance = dancingCache.pop();
-    dancingCache.unshift(nextDance);
-    return nextDance;
+  getDancingState() {
+    return this.danceManager.isDancing;
   }
-  checkDanceStack(randomMove) {
-    if (randomMove === dancingCache[dancingCache.length - 1]) {
-      this.popDanceStack();
-    }
+  setMood(mood) {
+    this.danceManager.mood = mood;
   }
-  getRandomMove() {
-    let randomMove;
-    do {
-      const randomMoveIndex = Math.floor(Math.random() * allDancing.length);
-      randomMove = allDancing[randomMoveIndex];
-    } while (randomMove === this.currentAction.name);
-    return randomMove;
-  }
-  getDanceMove() {
-    this.dancing = true;
-    //prevent cache from getting too big
-    // if (dancingCache.length > 10) {
-    //   const oldest = dancingCache.shift();
-    //   delete this.actions[oldest];
-    // }
-    const randomMove = this.getRandomMove();
-    if (!this.actions[randomMove]) {
-      this.actions[randomMove] = true;
-      import(`./files/Dancing/${randomMove}.fbx`)
-        .then((file) => {
-          this.loadAnimation(randomMove, { file: file.default, once: true });
-          dancingCache.push(randomMove);
-        })
-        .catch((err) => console.log(err));
-      return this.popDanceStack();
-    } else {
-      this.checkDanceStack(randomMove);
-      return randomMove;
-    }
-  }
+
   //
   // ─── CHAINS ─────────────────────────────────────────────────────────────────────
   //

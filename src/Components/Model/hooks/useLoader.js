@@ -1,7 +1,7 @@
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useState } from "react";
-import { useStore } from "../Store/store";
-import model from "./modelClass";
+import { useStore } from "../../Store/store";
+import model from "../classes/modelClass";
 
 export const useLoader = (modelRef) => {
   const isPreLoaded = useStore((state) => state.isPreLoaded);
