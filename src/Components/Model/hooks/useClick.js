@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useStore } from "../Store/store";
-import model from "./modelClass";
+import { useStore } from "../../Store/store";
+import model from "../classes/modelClass";
 
 export const useClick = () => {
   const click = useStore((state) => state.click);

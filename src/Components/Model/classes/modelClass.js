@@ -1,8 +1,8 @@
-import { animations, allDancing, dancingCache } from "./animations";
+import { animations, allDancing, dancingCache } from "../animations";
 import { AnimationMixer, LoopOnce } from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import Model from "./files/Model/Model.fbx";
-import { useStore } from "../Store/store";
+import { useStore } from "../../Store/store";
 
 class ModelClass {
   constructor() {
