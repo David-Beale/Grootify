@@ -7,6 +7,7 @@ export const usePosition = () => {
   const menuOpenRef = useRef(false);
   const isLoadedRef = useRef(false);
   const isPlaying = useStore((state) => state.isPlaying);
+  const mood = useStore((state) => state.mood);
   const playlistTracksOpen = useStore((state) => state.playlistTracksOpen);
   const searchTracksOpen = useStore((state) => state.searchTracksOpen);
   const isLoaded = useStore((state) => state.isLoaded);
@@ -14,6 +15,11 @@ export const usePosition = () => {
   useEffect(() => {
     isLoadedRef.current = isLoaded;
   }, [isLoaded]);
+
+  useEffect(() => {
+    model.mood = mood;
+    if (model.dancing) model.danceChain();
+  }, [mood]);
 
   useEffect(() => {
     isPlayingRef.current = isPlaying;

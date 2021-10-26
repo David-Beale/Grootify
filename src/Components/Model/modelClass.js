@@ -26,6 +26,7 @@ class ModelClass {
     this.x = 0;
     this.y = 0;
     this.waveStatus = { count: 0, side: null, time: null };
+    this.dancing = false;
     this.init();
   }
   init() {
@@ -77,7 +78,10 @@ class ModelClass {
     let { animation, cb } = next;
     if (animation === this.currentAction.name) return;
     if (animation === "dance") animation = this.getDanceMove();
-    else this.chain.shift();
+    else {
+      this.dancing = false;
+      this.chain.shift();
+    }
     if (cb) cb();
     const action = this.actions[animation];
     action.reset();
@@ -183,8 +187,8 @@ class ModelClass {
     } else {
       xPos *= 2;
     }
-    this.x += (xPos - this.x) * 0.1;
-    this.y += (this.mouseY - 0.1 - this.y) * 0.1;
+    this.x += (xPos - this.x) * 0.07;
+    this.y += (this.mouseY - 0.1 - this.y) * 0.07;
     this.moveJoint(this.neck, 1.2);
     this.moveJoint(this.waist, 0.5);
   }
@@ -193,8 +197,8 @@ class ModelClass {
     const targetX = this.neck.rotation.y / 1.2;
     const targetY = this.neck.rotation.x / 1.2;
 
-    this.x += (targetX - this.x) * 0.1;
-    this.y += (targetY - this.y) * 0.1;
+    this.x += (targetX - this.x) * 0.07;
+    this.y += (targetY - this.y) * 0.07;
     this.moveJoint(this.neck, 1.2);
     this.moveJoint(this.waist, 0.5);
   }
@@ -259,6 +263,7 @@ class ModelClass {
         .catch((err) => console.log(err));
     }
     //get random move from cache
+    this.dancing = true;
     return this.getCachedDance();
   }
   //

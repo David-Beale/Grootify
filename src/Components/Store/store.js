@@ -14,10 +14,3 @@ export const useStore = create((set, get) => ({
   ...playlistSlice(set, get),
   ...triggersSlice(set, get),
 }));
-
-// spotifyApi.getAudioFeaturesForTrack(song).then(
-//   function (data) {
-//     console.log(data.body);
-//   },
-//   function (err) {}
-// );

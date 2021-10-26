@@ -13,4 +13,7 @@ export const triggersSlice = (set) => ({
 
   isPlaying: false,
   setIsPlaying: (status) => set(() => ({ isPlaying: status })),
+
+  mood: null,
+  setMood: (mood) => set(() => ({ mood })),
 });
