@@ -237,34 +237,45 @@ class ModelClass {
       this.waveStatus.count = 0;
     }
   }
-  getCachedDance() {
-    let res;
+  popDanceStack() {
+    const nextDance = dancingCache.pop();
+    dancingCache.unshift(nextDance);
+    return nextDance;
+  }
+  checkDanceStack(randomMove) {
+    if (randomMove === dancingCache[dancingCache.length - 1]) {
+      this.popDanceStack();
+    }
+  }
+  getRandomMove() {
+    let randomMove;
     do {
-      const randomCachedIndex = Math.floor(Math.random() * dancingCache.length);
-      res = dancingCache[randomCachedIndex];
-    } while (res === this.currentAction.name);
-    return res;
+      const randomMoveIndex = Math.floor(Math.random() * allDancing.length);
+      randomMove = allDancing[randomMoveIndex];
+    } while (randomMove === this.currentAction.name);
+    return randomMove;
   }
   getDanceMove() {
+    this.dancing = true;
     //prevent cache from getting too big
-    if (dancingCache.length > 10) {
-      const oldest = dancingCache.shift();
-      delete this.actions[oldest];
-    }
-    const randomMoveIndex = Math.floor(Math.random() * allDancing.length);
-    const randomMove = allDancing[randomMoveIndex];
-    //pick a random available move
+    // if (dancingCache.length > 10) {
+    //   const oldest = dancingCache.shift();
+    //   delete this.actions[oldest];
+    // }
+    const randomMove = this.getRandomMove();
     if (!this.actions[randomMove]) {
+      this.actions[randomMove] = true;
       import(`./files/Dancing/${randomMove}.fbx`)
         .then((file) => {
           this.loadAnimation(randomMove, { file: file.default, once: true });
           dancingCache.push(randomMove);
         })
         .catch((err) => console.log(err));
+      return this.popDanceStack();
+    } else {
+      this.checkDanceStack(randomMove);
+      return randomMove;
     }
-    //get random move from cache
-    this.dancing = true;
-    return this.getCachedDance();
   }
   //
   // ─── CHAINS ─────────────────────────────────────────────────────────────────────
