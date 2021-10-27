@@ -4,6 +4,8 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import Model from "../files/Model/Model.fbx";
 import { useStore } from "../../Store/store";
 import DanceManager from "./danceManager";
+import RunningManager from "./runningManager";
+import PositionManager from "./positionManager";
 
 class ModelClass {
   constructor() {
@@ -14,11 +16,7 @@ class ModelClass {
     this.currentAction = null;
     this.fadeSpeed = 0.25;
     this.fbx = null;
-    this.vel = 0;
-    this.ref = null;
-    this.falling = false;
     this.started = false;
-    this.pos = null;
     this.neck = null;
     this.waist = null;
     this.mouseX = 0;
@@ -27,7 +25,9 @@ class ModelClass {
     this.x = 0;
     this.y = 0;
     this.waveStatus = { count: 0, side: null, time: null };
+    this.positionManager = new PositionManager();
     this.danceManager = new DanceManager(this.actions);
+    this.runningManager = new RunningManager(this.positionManager);
     this.init();
   }
   init() {
@@ -72,34 +72,50 @@ class ModelClass {
       }
     });
   };
+  reset() {
+    this.danceManager.isDancing = false;
+  }
+  animationRouter(animation) {
+    if (animation === "dance") {
+      //dancing will always be the last in a chain, continue dancing until manually stopped
+      this.chain.push({ animation: "dance" });
+      const dance = this.danceManager.get(
+        this.currentAction,
+        this.loadAnimation
+      );
+      return this.actions[dance];
+    }
+    if (animation === "running") {
+      const run = this.runningManager.get();
+      if (!run) return false;
+      return this.actions[run];
+    }
+    if (animation === this.currentAction.name) return false;
+    return this.actions[animation];
+  }
+  fade(action) {
+    if (!this.currentAction) return;
+    action.crossFadeFrom(this.currentAction, this.fadeSpeed);
+    //if prev action was idle, we need to fade out the manually controlled joints
+    //ignore "stunned" as it will result in a clanky animation
+    if (this.currentAction.name === "idle" && action.name !== "stunned") {
+      this.fadeJointsRequired = true;
+      setTimeout(() => {
+        this.fadeJointsRequired = false;
+      }, 500);
+    }
+  }
   runNextAnimation = () => {
     this.mixer.removeEventListener("finished", this.runNextAnimation);
-    const next = this.chain[0];
-    if (!next) return;
-    let { animation, cb } = next;
-    if (animation === this.currentAction.name) return;
-    if (animation === "dance")
-      animation = this.danceManager.get(this.currentAction, this.loadAnimation);
-    else {
-      this.danceManager.isDancing = false;
-      this.chain.shift();
-    }
+    this.reset();
+    let { animation, cb } = this.chain.shift();
     if (cb) cb();
-    const action = this.actions[animation];
+    const action = this.animationRouter(animation);
+    if (!action) return;
     action.reset();
-    if (this.currentAction) {
-      action.crossFadeFrom(this.currentAction, this.fadeSpeed);
-      if (this.currentAction.name === "land") this.fadeSpeed = 0.5;
-      if (this.currentAction.name === "idle" && animation !== "stunned") {
-        this.fadeJointsRequired = true;
-        setTimeout(() => {
-          this.fadeJointsRequired = false;
-        }, 500);
-      }
-    }
+    this.fade(action);
     action.play();
     this.currentAction = action;
-
     this.mixer.addEventListener("finished", this.runNextAnimation);
   };
   getBlockingActions() {
@@ -132,41 +148,26 @@ class ModelClass {
     if (chain) this.chain = chain;
     this.runNextAnimation();
   }
-  setRef(ref) {
-    this.ref = ref;
-  }
-  fall = () => {
-    this.falling = true;
+  startFalling = () => {
+    this.positionManager.startFalling();
     this.started = true;
   };
   land = () => {
-    this.falling = false;
-    this.started = true;
-    this.ref.current.position.y = -20;
-    this.vel = 0;
     useStore.setState({ lightsOn: true });
   };
 
   runLeft = () => {
-    this.running = -1;
-    this.vel = 0;
-    this.pos = "transit";
-  };
-  endLeft = () => {
-    this.pos = "left";
-    this.getJointAngle();
+    this.positionManager.setDirection(-1);
   };
   runRight = () => {
-    this.running = 1;
-    this.vel = 0;
-    this.pos = "transit";
+    this.positionManager.setDirection(1);
   };
-  endRight = () => {
-    this.pos = "right";
-    this.getJointAngle();
+  runScared = () => {
+    this.positionManager.setDirection(1);
+    this.runningManager.setScared();
   };
+
   typing = () => {
-    this.pos = "right";
     setTimeout(() => {
       useStore.setState({ interfaceOpen: true });
     }, 3000);
@@ -183,7 +184,7 @@ class ModelClass {
     if (!this.currentAction || this.currentAction.name !== "idle") return;
     // adjust xpos to account for model position
     let xPos = this.mouseX;
-    if (this.pos === "right") {
+    if (this.positionManager.pos === "right") {
       xPos -= 0.43;
       if (xPos > 0) xPos *= 13;
     } else {
@@ -239,11 +240,19 @@ class ModelClass {
       this.waveStatus.count = 0;
     }
   }
-  getDancingState() {
-    return this.danceManager.isDancing;
+  fall() {
+    if (!this.positionManager.isFalling) return;
+    this.positionManager.incrVel(-0.01);
+    this.positionManager.updateY();
+    const stopped = this.positionManager.checkForYLimit();
+    if (stopped) this.setNextAnimation({ override: true });
   }
-  setMood(mood) {
-    this.danceManager.mood = mood;
+  run() {
+    if (!this.positionManager.runningDirection) return;
+    this.positionManager.incrVel(0.008, 0.4);
+    this.positionManager.updateX();
+    const stopped = this.positionManager.checkForXLimit();
+    if (stopped) this.setNextAnimation({ override: true });
   }
 
   //
@@ -252,8 +261,8 @@ class ModelClass {
   leftDanceChain() {
     this.setNextAnimation({
       chain: [
-        { animation: "runLeft", cb: this.runLeft },
-        { animation: "dance", cb: this.endLeft },
+        { animation: "running", cb: this.runLeft },
+        { animation: "dance" },
       ],
     });
   }
@@ -266,16 +275,16 @@ class ModelClass {
   rightDanceChain() {
     this.setNextAnimation({
       chain: [
-        { animation: "runRight", cb: this.runRight },
-        { animation: "dance", cb: this.endRight },
+        { animation: "running", cb: this.runRight },
+        { animation: "dance" },
       ],
     });
   }
   rightIdleChain() {
     this.setNextAnimation({
       chain: [
-        { animation: "runRight", cb: this.runRight },
-        { animation: "idle", cb: this.endRight },
+        { animation: "running", cb: this.runRight },
+        { animation: "idle", cb: this.getJointAngle },
       ],
     });
   }
@@ -296,26 +305,26 @@ class ModelClass {
   scaredDanceChain() {
     this.setNextAnimation({
       chain: [
-        { animation: "scared", cb: this.runRight },
-        { animation: "dance", cb: this.endRight },
+        { animation: "running", cb: this.runScared },
+        { animation: "dance" },
       ],
     });
   }
   scaredIdleChain() {
     this.setNextAnimation({
       chain: [
-        { animation: "scared", cb: this.runRight },
-        { animation: "idle", cb: this.endRight },
+        { animation: "running", cb: this.runScared },
+        { animation: "idle", cb: this.getJointAngle },
       ],
     });
   }
   fallingChain() {
     model.setNextAnimation({
       chain: [
-        { animation: "falling", cb: this.fall },
+        { animation: "falling", cb: this.startFalling },
         { animation: "land", cb: this.land },
-        { animation: "waving" },
-        { animation: "runRight", cb: this.runRight },
+        { animation: "waving", cb: () => (this.fadeSpeed = 0.5) },
+        { animation: "running", cb: this.runRight },
         { animation: "typing", cb: this.typing },
         { animation: "idle", cb: this.getJointAngle },
       ],

@@ -11,7 +11,7 @@ export const useLoader = (modelRef) => {
   useEffect(() => {
     if (!isPreLoaded) return;
     setFbx(model.fbx);
-    model.setRef(modelRef);
+    model.positionManager.setPosController(modelRef.current.position);
     setTimeout(() => {
       setLoaded();
     }, 2000);

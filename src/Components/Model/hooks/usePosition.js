@@ -17,31 +17,29 @@ export const usePosition = () => {
   }, [isLoaded]);
 
   useEffect(() => {
-    model.setMood(mood);
-    if (model.getDancingState()) model.danceChain();
+    model.danceManager.setMood(mood);
+    if (model.danceManager.isDancing) model.danceChain();
   }, [mood]);
 
   useEffect(() => {
     isPlayingRef.current = isPlaying;
     if (!isLoadedRef.current) return;
+    const pos = model.positionManager.pos;
     if (isPlaying) {
       if (!menuOpenRef.current) {
-        if (model.pos === "right" || model.pos === "transit")
-          model.leftDanceChain();
+        if (pos === "right" || pos === "transit") model.leftDanceChain();
         else model.danceChain();
       } else {
-        if (model.pos === "left" || model.pos === "transit")
-          model.rightDanceChain();
+        if (pos === "left" || pos === "transit") model.rightDanceChain();
         else model.danceChain();
       }
     } else {
       if (!menuOpenRef.current) {
-        if (model.pos === "right") model.idleChain();
-        else if (model.pos === "transit") model.rightIdleChain();
+        if (pos === "right") model.idleChain();
+        else if (pos === "transit") model.rightIdleChain();
         else model.angryChain();
       } else {
-        if (model.pos === "left" || model.pos === "transit")
-          model.rightIdleChain();
+        if (pos === "left" || pos === "transit") model.rightIdleChain();
         else model.idleChain();
       }
     }
@@ -49,16 +47,16 @@ export const usePosition = () => {
 
   useEffect(() => {
     if (!isLoadedRef.current) return;
+    const pos = model.positionManager.pos;
     menuOpenRef.current = playlistTracksOpen || searchTracksOpen;
     if (isPlayingRef.current) {
-      if (menuOpenRef.current && model.pos === "right") model.danceChain();
+      if (menuOpenRef.current && pos === "right") model.danceChain();
       else if (playlistTracksOpen) model.scaredDanceChain();
       else if (searchTracksOpen) model.rightDanceChain();
-      else if (model.pos === "right" || model.pos === "transit")
-        model.leftDanceChain();
+      else if (pos === "right" || pos === "transit") model.leftDanceChain();
       else model.danceChain();
     } else {
-      if (model.pos === "right") model.idleChain();
+      if (pos === "right") model.idleChain();
       else if (playlistTracksOpen) model.scaredIdleChain();
       else model.rightIdleChain();
     }

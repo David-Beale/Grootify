@@ -75,4 +75,7 @@ export default class DanceManger {
       return randomMove;
     }
   }
+  setMood(mood) {
+    this.mood = mood;
+  }
 }

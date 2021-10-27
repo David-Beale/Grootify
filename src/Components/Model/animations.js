@@ -52,6 +52,10 @@ export const animations = {
   Belly: { file: Belly, once: true },
 };
 
+export const runLeft = ["runLeft"];
+export const runRight = ["runRight"];
+export const runScared = ["scared"];
+
 export const allDanceLow = [
   "Breakdance2",
   "Spin",

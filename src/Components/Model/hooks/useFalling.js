@@ -20,12 +20,6 @@ export const useFalling = () => {
   }, [loggedIn, isLoaded, onInterfaceOpen, setLightsOn]);
 
   useFrame(() => {
-    if (!model.falling) return;
-    model.vel += 0.01;
-    model.ref.current.position.y -= model.vel;
-
-    if (model.ref.current.position.y <= -20) {
-      model.setNextAnimation({ override: true });
-    }
+    model.fall();
   });
 };
