@@ -10,7 +10,7 @@ export const useLoader = (modelRef) => {
 
   useEffect(() => {
     if (!isPreLoaded) return;
-    setFbx(model.fbx);
+    setFbx(model.animationManager.fbx);
     model.positionManager.setPosController(modelRef.current.position);
     setTimeout(() => {
       setLoaded();
@@ -18,8 +18,8 @@ export const useLoader = (modelRef) => {
   }, [isPreLoaded, modelRef, setLoaded]);
 
   useFrame((state, delta) => {
-    if (model.mixer) {
-      model.mixer.update(delta);
+    if (model.animationManager.mixer) {
+      model.animationManager.mixer.update(delta);
       model.moveJoints();
       model.fadeJoints();
       model.wave();

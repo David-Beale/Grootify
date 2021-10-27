@@ -1,8 +1,8 @@
 import { runLeft, runRight, runScared } from "../animations";
 
 export default class RunningManger {
-  constructor(positionManager) {
-    this.positionManager = positionManager;
+  constructor(model) {
+    this.model = model;
     this.lists = {
       [-1]: runLeft,
       1: runRight,
@@ -16,8 +16,8 @@ export default class RunningManger {
       this.scared = false;
       return this.lists.scared[0];
     }
-
-    const allMoves = this.lists[this.positionManager.runningDirection];
+    const runningDirection = this.model.positionManager.runningDirection;
+    const allMoves = this.lists[runningDirection];
     const randomMoveIndex = Math.floor(Math.random() * allMoves.length);
     return allMoves[randomMoveIndex];
   }
@@ -25,7 +25,7 @@ export default class RunningManger {
     this.scared = true;
   }
   get() {
-    if (!this.positionManager.updateDirection()) {
+    if (!this.model.positionManager.updateDirection()) {
       this.scared = false;
       return false;
     }

@@ -1,7 +1,6 @@
 export default class JointManager {
-  constructor(mouseManager, positionManager) {
-    this.mouseManager = mouseManager;
-    this.positionManager = positionManager;
+  constructor(model) {
+    this.model = model;
     this.x = 0;
     this.y = 0;
     this.neck = null;
@@ -24,10 +23,14 @@ export default class JointManager {
     joint.rotation.x = this.y * angle;
   }
   moveJoints() {
-    let yPos = this.mouseManager.mouseY - 0.1;
+    const { mouseX, mouseY } = this.model.mouseManager;
+    const { pos } = this.model.positionManager;
+    const currentAction = this.model.animationManager.currentAction;
+    if (!currentAction || currentAction.name !== "idle") return;
+    let yPos = mouseY - 0.1;
     // adjust xpos to account for model position
-    let xPos = this.mouseManager.mouseX;
-    if (this.positionManager.pos === "right") {
+    let xPos = mouseX;
+    if (pos === "right") {
       xPos -= 0.43;
       if (xPos > 0) xPos *= 13;
     } else {

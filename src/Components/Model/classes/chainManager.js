@@ -6,18 +6,15 @@ export default class ChainManager {
     this.positionManager = model.positionManager;
     this.runningManager = model.runningManager;
     this.jointManager = model.jointManager;
-    this.actions = model.actions;
     this.chain = [];
   }
 
   getBlockingActions() {
+    const actions = this.model.animationManager.actions;
     const blockingActions = [];
     for (let i = 0; i < this.chain.length; i++) {
       const action = this.chain[i];
-      if (
-        !this.actions[action.animation] ||
-        !this.actions[action.animation].blockAll
-      ) {
+      if (!actions[action.animation] || !actions[action.animation].blockAll) {
         break;
       }
       blockingActions.push(action);
@@ -31,12 +28,14 @@ export default class ChainManager {
     const { chain } = this[chainName]();
     this.chain.push(...chain);
   }
-  setChain(chainName, currentAction) {
+  setChain(chainName) {
     if (!this[chainName]) {
       console.log(chainName, " does not exist");
       return false;
     }
     const { chain, isUserAction } = this[chainName]();
+
+    const currentAction = this.model.animationManager.currentAction;
     if ((currentAction.blockUser || currentAction.blockAll) && isUserAction) {
       return false;
     }
@@ -59,7 +58,7 @@ export default class ChainManager {
     this.model.started = true;
   };
   updateFade = () => {
-    this.model.fadeSpeed = 0.5;
+    this.model.animationManager.fadeSpeed = 0.5;
   };
   land = () => {
     useStore.setState({ lightsOn: true });
@@ -159,7 +158,8 @@ export default class ChainManager {
   }
   waveChain() {
     const chain = [{ animation: "waving" }];
-    if (this.currentAction.name === "idle") {
+    const currentAction = this.model.animationManager.currentAction;
+    if (currentAction.name === "idle") {
       chain.push({ animation: "idle", cb: this.jointManager.getJointAngle });
     } else if (this.chain[0].animation === "dance") {
       chain.push({ animation: "dance" });
@@ -171,7 +171,8 @@ export default class ChainManager {
   }
   fallOverChain() {
     const chain = [{ animation: "stunned" }, { animation: "gettingUp" }];
-    if (this.currentAction.name === "idle") {
+    const currentAction = this.model.animationManager.currentAction;
+    if (currentAction.name === "idle") {
       chain.push({ animation: "idle", cb: this.jointManager.getJointAngle });
     } else if (this.chain[0].animation === "dance") {
       chain.push({ animation: "dance" });

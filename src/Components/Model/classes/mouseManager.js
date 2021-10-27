@@ -1,5 +1,6 @@
 export default class WaveManager {
-  constructor() {
+  constructor(model) {
+    this.model = model;
     this.mouseX = 0;
     this.mouseY = 0;
     this.waveStatus = { count: 0, side: null, time: null };
@@ -14,6 +15,7 @@ export default class WaveManager {
     return 1;
   }
   wave() {
+    if (!this.model.animationManager.waveAllowed()) return;
     const newSide = this.getSide();
     if (!newSide) return;
     const { count, side, time } = this.waveStatus;

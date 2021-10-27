@@ -8,8 +8,8 @@ import {
 } from "../animations";
 
 export default class DanceManger {
-  constructor(actions) {
-    this.actions = actions;
+  constructor(model) {
+    this.model = model;
     this.stacks = {
       1: { name: "low", stack: danceLowStack },
       2: { name: "med", stack: danceMedStack },
@@ -50,16 +50,17 @@ export default class DanceManger {
     return randomMove;
   }
   get(currentAction, loadCb) {
+    const actions = this.model.animationManager.actions;
     this.isDancing = true;
     //prevent cache from getting too big
     // if (dancingCache.length > 10) {
     //   const oldest = dancingCache.shift();
-    //   delete this.actions[oldest];
+    //   delete actions[oldest];
     // }
     const randomMove = this.getRandomMove(currentAction);
-    if (!this.actions[randomMove]) {
+    if (!actions[randomMove]) {
       if (!this.downloading) {
-        this.actions[randomMove] = true;
+        actions[randomMove] = true;
         this.downloading = true;
         import(`../files/Dancing/${randomMove}.fbx`)
           .then((file) => {
