@@ -170,30 +170,26 @@ class ModelClass {
   fadeJoints() {
     this.jointManager.fadeJoints();
   }
+  waveAllowed() {
+    return (
+      this.currentAction &&
+      !this.currentAction.blockUser &&
+      !this.currentAction.blockAll
+    );
+  }
   wave() {
-    if (
-      !this.currentAction ||
-      this.currentAction.blockUser ||
-      this.currentAction.blockAll
-    ) {
-      return;
+    if (this.waveAllowed()) {
+      const wave = this.mouseManager.wave();
+      if (wave) this.waveChain();
     }
-    const wave = this.mouseManager.wave();
-    if (wave) this.waveChain();
   }
   fall() {
-    if (!this.positionManager.isFalling) return;
-    this.positionManager.incrVel(-0.01);
-    this.positionManager.updateY();
-    const stopped = this.positionManager.checkForYLimit();
-    if (stopped) this.setNextAnimation({ override: true });
+    const end = this.positionManager.fall();
+    if (end) this.setNextAnimation({ override: true });
   }
   run() {
-    if (!this.positionManager.runningDirection) return;
-    this.positionManager.incrVel(0.008, 0.4);
-    this.positionManager.updateX();
-    const stopped = this.positionManager.checkForXLimit();
-    if (stopped) this.setNextAnimation({ override: true });
+    const end = this.positionManager.run();
+    if (end) this.setNextAnimation({ override: true });
   }
 
   //
