@@ -11,9 +11,13 @@ export default class DanceManger {
   constructor(model) {
     this.model = model;
     this.stacks = {
-      1: { name: "low", stack: danceLowStack },
-      2: { name: "med", stack: danceMedStack },
-      3: { name: "high", stack: danceHighStack },
+      1: { name: "low", stack: danceLowStack, count: danceLowStack.length - 1 },
+      2: { name: "med", stack: danceMedStack, count: danceMedStack.length - 1 },
+      3: {
+        name: "high",
+        stack: danceHighStack,
+        count: danceHighStack.length - 1,
+      },
     };
     this.lists = {
       1: { name: "low", list: allDanceLow },
@@ -25,20 +29,17 @@ export default class DanceManger {
     this.downloading = false;
   }
   addToStack(move) {
+    this.stacks[this.mood].count++;
     const stack = this.stacks[this.mood].stack;
     stack.push(move);
   }
   popStack() {
+    this.stacks[this.mood].count--;
+    if (this.stacks[this.mood].count < 0) this.stacks[this.mood].count = 0;
     const stack = this.stacks[this.mood].stack;
     const nextDance = stack.pop();
     stack.unshift(nextDance);
     return nextDance;
-  }
-  checkStack(randomMove) {
-    const stack = this.stacks[this.mood].stack;
-    if (randomMove === stack[stack.length - 1]) {
-      this.popStack();
-    }
   }
   getRandomMove(currentAction) {
     const allMoves = this.lists[this.mood].list;
@@ -57,24 +58,23 @@ export default class DanceManger {
     //   const oldest = dancingCache.shift();
     //   delete actions[oldest];
     // }
+    const stackCount = this.stacks[this.mood].count;
+    if (stackCount) return this.popStack();
     const randomMove = this.getRandomMove(currentAction);
-    if (!actions[randomMove]) {
-      if (!this.downloading) {
-        actions[randomMove] = true;
-        this.downloading = true;
-        import(`../files/Dancing/${randomMove}.fbx`)
-          .then((file) => {
-            loadCb(randomMove, { file: file.default, once: true });
-            this.addToStack(randomMove);
-            this.downloading = false;
-          })
-          .catch((err) => console.log(err));
-      }
-      return this.popStack();
-    } else {
-      this.checkStack(randomMove);
-      return randomMove;
+    if (actions[randomMove]) return randomMove;
+
+    if (!this.downloading) {
+      actions[randomMove] = true;
+      this.downloading = true;
+      import(`../files/Dancing/${randomMove}.fbx`)
+        .then((file) => {
+          loadCb(randomMove, { file: file.default, once: true });
+          this.addToStack(randomMove);
+          this.downloading = false;
+        })
+        .catch((err) => console.log(err));
     }
+    return this.popStack();
   }
   setMood(mood) {
     this.mood = mood;

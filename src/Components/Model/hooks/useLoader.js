@@ -17,9 +17,9 @@ export const useLoader = (modelRef) => {
     }, 2000);
   }, [isPreLoaded, modelRef, setLoaded]);
 
-  useFrame((state, delta) => {
+  useFrame(() => {
     if (model.animationManager.mixer) {
-      model.animationManager.mixer.update(delta);
+      model.animationManager.mixer.update(0.0167);
       model.moveJoints();
       model.fadeJoints();
       model.wave();
