@@ -11,6 +11,9 @@ import Typing from "./files/Typing.fbx";
 
 import RunRight from "./files/Running/RunningRight.fbx";
 import RunLeft from "./files/Running/RunningLeft.fbx";
+import RunLeft2 from "./files/Running/RunningLeft2.fbx";
+import RunLeft3 from "./files/Running/RunningLeft3.fbx";
+import RunLeft4 from "./files/Running/RunningLeft4.fbx";
 
 import HappyIdle from "./files/Idle/Happy Idle.fbx";
 import Idle from "./files/Idle/Breathing Idle.fbx";
@@ -32,9 +35,7 @@ export const animations = {
   falling: { file: Falling, blockUser: true },
   land: { file: Land, once: true, blockUser: true },
   waving: { file: Waving, once: true, blockUser: true },
-  runRight: { file: RunRight, blockUser: true },
   typing: { file: Typing, once: true, blockUser: true },
-  runLeft: { file: RunLeft, blockUser: true },
 
   angry: { file: Angry, once: true, blockUser: true },
   stunned: { file: Stunned, once: true, blockAll: true },
@@ -42,7 +43,13 @@ export const animations = {
 
   idle: { file: Idle },
   happyIdle: { file: HappyIdle },
+
+  runRight: { file: RunRight, blockUser: true },
   scared: { file: Scared, blockUser: true },
+  runLeft: { file: RunLeft, blockUser: true },
+  runLeft2: { file: RunLeft2, blockUser: true },
+  runLeft3: { file: RunLeft3, blockUser: true },
+  runLeft4: { file: RunLeft4, blockUser: true },
 
   //default dancing:
   ArmSwing: { file: ArmSwing, once: true },
@@ -52,7 +59,7 @@ export const animations = {
   Belly: { file: Belly, once: true },
 };
 
-export const runLeft = ["runLeft"];
+export const runLeft = ["runLeft", "runLeft2", "runLeft3", "runLeft4"];
 export const runRight = ["runRight"];
 export const runScared = ["scared"];
 
