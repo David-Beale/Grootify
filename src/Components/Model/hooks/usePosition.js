@@ -18,7 +18,7 @@ export const usePosition = () => {
 
   useEffect(() => {
     model.danceManager.setMood(mood);
-    if (model.danceManager.isDancing) model.danceChain();
+    if (model.danceManager.isDancing) model.setChain("danceChain");
   }, [mood]);
 
   useEffect(() => {
@@ -27,20 +27,23 @@ export const usePosition = () => {
     const pos = model.positionManager.pos;
     if (isPlaying) {
       if (!menuOpenRef.current) {
-        if (pos === "right" || pos === "transit") model.leftDanceChain();
-        else model.danceChain();
+        if (pos === "right" || pos === "transit") {
+          model.setChain("leftDanceChain");
+        } else model.setChain("danceChain");
       } else {
-        if (pos === "left" || pos === "transit") model.rightDanceChain();
-        else model.danceChain();
+        if (pos === "left" || pos === "transit") {
+          model.setChain("rightDanceChain");
+        } else model.setChain("danceChain");
       }
     } else {
       if (!menuOpenRef.current) {
-        if (pos === "right") model.idleChain();
-        else if (pos === "transit") model.rightIdleChain();
-        else model.angryChain();
+        if (pos === "right") model.setChain("idleChain");
+        else if (pos === "transit") model.setChain("rightIdleChain");
+        else model.setChain("angryChain");
       } else {
-        if (pos === "left" || pos === "transit") model.rightIdleChain();
-        else model.idleChain();
+        if (pos === "left" || pos === "transit") {
+          model.setChain("rightIdleChain");
+        } else model.setChain("idleChain");
       }
     }
   }, [isPlaying]);
@@ -50,15 +53,16 @@ export const usePosition = () => {
     const pos = model.positionManager.pos;
     menuOpenRef.current = playlistTracksOpen || searchTracksOpen;
     if (isPlayingRef.current) {
-      if (menuOpenRef.current && pos === "right") model.danceChain();
-      else if (playlistTracksOpen) model.scaredDanceChain();
-      else if (searchTracksOpen) model.rightDanceChain();
-      else if (pos === "right" || pos === "transit") model.leftDanceChain();
-      else model.danceChain();
+      if (menuOpenRef.current && pos === "right") model.setChain("danceChain");
+      else if (playlistTracksOpen) model.setChain("scaredDanceChain");
+      else if (searchTracksOpen) model.setChain("rightDanceChain");
+      else if (pos === "right" || pos === "transit") {
+        model.setChain("leftDanceChain");
+      } else model.setChain("danceChain");
     } else {
-      if (pos === "right") model.idleChain();
-      else if (playlistTracksOpen) model.scaredIdleChain();
-      else model.rightIdleChain();
+      if (pos === "right") model.setChain("idleChain");
+      else if (playlistTracksOpen) model.setChain("scaredIdleChain");
+      else model.setChain("rightIdleChain");
     }
   }, [playlistTracksOpen, searchTracksOpen]);
 };

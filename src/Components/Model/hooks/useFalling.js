@@ -12,7 +12,7 @@ export const useFalling = () => {
   useEffect(() => {
     if (!loggedIn || !isLoaded) return;
     if (!model.started) {
-      model.fallingChain();
+      model.setChain("fallingChain");
     } else {
       onInterfaceOpen();
       setLightsOn();

@@ -7,6 +7,6 @@ export const useClick = () => {
 
   useEffect(() => {
     if (!click) return;
-    model.fallOverChain();
+    model.setChain("fallOverChain");
   }, [click]);
 };

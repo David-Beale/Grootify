@@ -2,17 +2,17 @@ import { animations } from "../animations";
 import { AnimationMixer, LoopOnce } from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import Model from "../files/Model/Model.fbx";
-import { useStore } from "../../Store/store";
 import DanceManager from "./danceManager";
 import RunningManager from "./runningManager";
 import PositionManager from "./positionManager";
 import MouseManager from "./mouseManager";
 import JointManager from "./jointManager";
+import ChainManager from "./chainManager";
 
 class ModelClass {
   constructor() {
     this.loader = new FBXLoader();
-    this.chain = [];
+
     this.actions = {};
     this.mixer = null;
     this.currentAction = null;
@@ -27,6 +27,7 @@ class ModelClass {
       this.mouseManager,
       this.positionManager
     );
+    this.chainManager = new ChainManager(this);
     this.init();
   }
   init() {
@@ -75,7 +76,7 @@ class ModelClass {
   animationRouter(animation) {
     if (animation === "dance") {
       //dancing will always be the last in a chain, continue dancing until manually stopped
-      this.chain.push({ animation: "dance" });
+      this.chainManager.push("danceChain");
       const dance = this.danceManager.get(
         this.currentAction,
         this.loadAnimation
@@ -99,7 +100,7 @@ class ModelClass {
   runNextAnimation = () => {
     this.mixer.removeEventListener("finished", this.runNextAnimation);
     this.reset();
-    let { animation, cb } = this.chain.shift();
+    let { animation, cb } = this.chainManager.shift();
     if (cb) cb();
     const action = this.animationRouter(animation);
     if (!action) return;
@@ -108,59 +109,6 @@ class ModelClass {
     action.play();
     this.currentAction = action;
     this.mixer.addEventListener("finished", this.runNextAnimation);
-  };
-  getBlockingActions() {
-    const blockingActions = [];
-    for (let i = 0; i < this.chain.length; i++) {
-      const action = this.chain[i];
-      if (
-        !this.actions[action.animation] ||
-        !this.actions[action.animation].blockAll
-      ) {
-        break;
-      }
-      blockingActions.push(action);
-    }
-    return blockingActions;
-  }
-  setNextAnimation({ chain, isUserAction = false }) {
-    if (
-      (this.currentAction.blockUser || this.currentAction.blockAll) &&
-      isUserAction
-    ) {
-      return;
-    }
-    if (this.currentAction.blockAll) {
-      if (!chain) return;
-      const blockingActions = this.getBlockingActions();
-      this.chain = [...blockingActions, ...chain];
-      return;
-    }
-    if (chain) this.chain = chain;
-    this.runNextAnimation();
-  }
-  startFalling = () => {
-    this.positionManager.startFalling();
-    this.started = true;
-  };
-  land = () => {
-    useStore.setState({ lightsOn: true });
-  };
-  runLeft = () => {
-    this.positionManager.setDirection(-1);
-  };
-  runRight = () => {
-    this.positionManager.setDirection(1);
-  };
-  runScared = () => {
-    this.positionManager.setDirection(1);
-    this.runningManager.setScared();
-  };
-
-  typing = () => {
-    setTimeout(() => {
-      useStore.setState({ interfaceOpen: true });
-    }, 3000);
   };
 
   moveJoints() {
@@ -180,121 +128,22 @@ class ModelClass {
   wave() {
     if (this.waveAllowed()) {
       const wave = this.mouseManager.wave();
-      if (wave) this.waveChain();
+      if (wave) this.setChain("waveChain");
     }
   }
   fall() {
     const end = this.positionManager.fall();
-    if (end) this.setNextAnimation({ override: true });
+    if (end) this.runNextAnimation();
   }
   run() {
     const end = this.positionManager.run();
-    if (end) this.setNextAnimation({ override: true });
+    if (end) this.runNextAnimation();
   }
 
-  //
-  // ─── CHAINS ─────────────────────────────────────────────────────────────────────
-  //
-  leftDanceChain() {
-    this.setNextAnimation({
-      chain: [
-        { animation: "running", cb: this.runLeft },
-        { animation: "dance" },
-      ],
-    });
+  setChain(chain) {
+    const nextAction = this.chainManager.setChain(chain, this.currentAction);
+    if (nextAction) this.runNextAnimation();
   }
-  danceChain() {
-    this.setNextAnimation({
-      chain: [{ animation: "dance" }],
-    });
-  }
-
-  rightDanceChain() {
-    this.setNextAnimation({
-      chain: [
-        { animation: "running", cb: this.runRight },
-        { animation: "dance" },
-      ],
-    });
-  }
-  rightIdleChain() {
-    this.setNextAnimation({
-      chain: [
-        { animation: "running", cb: this.runRight },
-        { animation: "idle", cb: this.jointManager.getJointAngle },
-      ],
-    });
-  }
-
-  idleChain() {
-    this.setNextAnimation({
-      chain: [{ animation: "idle", cb: this.jointManager.getJointAngle }],
-    });
-  }
-  angryChain() {
-    this.setNextAnimation({
-      chain: [
-        { animation: "angry" },
-        { animation: "idle", cb: this.jointManager.getJointAngle },
-      ],
-    });
-  }
-  scaredDanceChain() {
-    this.setNextAnimation({
-      chain: [
-        { animation: "running", cb: this.runScared },
-        { animation: "dance" },
-      ],
-    });
-  }
-  scaredIdleChain() {
-    this.setNextAnimation({
-      chain: [
-        { animation: "running", cb: this.runScared },
-        { animation: "idle", cb: this.jointManager.getJointAngle },
-      ],
-    });
-  }
-  fallingChain() {
-    model.setNextAnimation({
-      chain: [
-        { animation: "falling", cb: this.startFalling },
-        { animation: "land", cb: this.land },
-        { animation: "waving", cb: () => (this.fadeSpeed = 0.5) },
-        { animation: "running", cb: this.runRight },
-        { animation: "typing", cb: this.typing },
-        { animation: "idle", cb: this.jointManager.getJointAngle },
-      ],
-    });
-  }
-  waveChain() {
-    const chain = [{ animation: "waving" }];
-    if (this.currentAction.name === "idle") {
-      chain.push({ animation: "idle", cb: this.jointManager.getJointAngle });
-    } else if (this.chain[0].animation === "dance") {
-      chain.push({ animation: "dance" });
-    }
-    model.setNextAnimation({
-      chain,
-      isUserAction: true,
-    });
-  }
-  fallOverChain() {
-    const chain = [{ animation: "stunned" }, { animation: "gettingUp" }];
-    if (this.currentAction.name === "idle") {
-      chain.push({ animation: "idle", cb: this.jointManager.getJointAngle });
-    } else if (this.chain[0].animation === "dance") {
-      chain.push({ animation: "dance" });
-    }
-    model.setNextAnimation({
-      chain,
-      isUserAction: true,
-    });
-  }
-
-  //
-  // ─── END ────────────────────────────────────────────────────────────────────────
-  //
 }
 
 const model = new ModelClass();
