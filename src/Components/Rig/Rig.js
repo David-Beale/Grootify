@@ -12,8 +12,7 @@ export default function Rig({ mouse }) {
       (-mouse.current[1] * mouseRangeY - camera.position.y) * 0.025;
     camera.lookAt(0, 0, 0);
 
-    model.mouseX = mouse.current[0];
-    model.mouseY = mouse.current[1];
+    model.mouseManager.setMouse(mouse.current);
   });
   return null;
 }

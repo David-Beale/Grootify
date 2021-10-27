@@ -6,6 +6,8 @@ import { useStore } from "../../Store/store";
 import DanceManager from "./danceManager";
 import RunningManager from "./runningManager";
 import PositionManager from "./positionManager";
+import MouseManager from "./mouseManager";
+import JointManager from "./jointManager";
 
 class ModelClass {
   constructor() {
@@ -17,17 +19,14 @@ class ModelClass {
     this.fadeSpeed = 0.25;
     this.fbx = null;
     this.started = false;
-    this.neck = null;
-    this.waist = null;
-    this.mouseX = 0;
-    this.mouseY = 0;
-    this.fadeJointsRequired = false;
-    this.x = 0;
-    this.y = 0;
-    this.waveStatus = { count: 0, side: null, time: null };
     this.positionManager = new PositionManager();
     this.danceManager = new DanceManager(this.actions);
     this.runningManager = new RunningManager(this.positionManager);
+    this.mouseManager = new MouseManager();
+    this.jointManager = new JointManager(
+      this.mouseManager,
+      this.positionManager
+    );
     this.init();
   }
   init() {
@@ -37,10 +36,8 @@ class ModelClass {
         if (c.isMesh) {
           c.castShadow = true;
           c.__r3f = { handlers: {} };
-        } else if (c.isBone && c.name === "mixamorigNeck") {
-          this.neck = c;
-        } else if (c.isBone && c.name === "mixamorigSpine") {
-          this.waist = c;
+        } else {
+          this.jointManager.setJoint(c);
         }
       });
       this.mixer = new AnimationMixer(model);
@@ -96,15 +93,9 @@ class ModelClass {
   fade(action) {
     if (!this.currentAction) return;
     action.crossFadeFrom(this.currentAction, this.fadeSpeed);
-    //if prev action was idle, we need to fade out the manually controlled joints
-    //ignore "stunned" as it will result in a clanky animation
-    if (this.currentAction.name === "idle" && action.name !== "stunned") {
-      this.fadeJointsRequired = true;
-      setTimeout(() => {
-        this.fadeJointsRequired = false;
-      }, 500);
-    }
+    this.jointManager.checkIfFadeRequired(this.currentAction, action);
   }
+
   runNextAnimation = () => {
     this.mixer.removeEventListener("finished", this.runNextAnimation);
     this.reset();
@@ -155,7 +146,6 @@ class ModelClass {
   land = () => {
     useStore.setState({ lightsOn: true });
   };
-
   runLeft = () => {
     this.positionManager.setDirection(-1);
   };
@@ -172,45 +162,15 @@ class ModelClass {
       useStore.setState({ interfaceOpen: true });
     }, 3000);
   };
-  getJointAngle = () => {
-    this.x = this.neck.rotation.y / 1.2;
-    this.y = this.neck.rotation.x / 1.2;
-  };
-  moveJoint(joint, angle) {
-    joint.rotation.y = this.x * angle;
-    joint.rotation.x = this.y * angle;
-  }
+
   moveJoints() {
     if (!this.currentAction || this.currentAction.name !== "idle") return;
-    // adjust xpos to account for model position
-    let xPos = this.mouseX;
-    if (this.positionManager.pos === "right") {
-      xPos -= 0.43;
-      if (xPos > 0) xPos *= 13;
-    } else {
-      xPos *= 2;
-    }
-    this.x += (xPos - this.x) * 0.07;
-    this.y += (this.mouseY - 0.1 - this.y) * 0.07;
-    this.moveJoint(this.neck, 1.2);
-    this.moveJoint(this.waist, 0.5);
+    this.jointManager.moveJoints();
   }
   fadeJoints() {
-    if (!this.fadeJointsRequired) return;
-    const targetX = this.neck.rotation.y / 1.2;
-    const targetY = this.neck.rotation.x / 1.2;
-
-    this.x += (targetX - this.x) * 0.07;
-    this.y += (targetY - this.y) * 0.07;
-    this.moveJoint(this.neck, 1.2);
-    this.moveJoint(this.waist, 0.5);
+    this.jointManager.fadeJoints();
   }
-  getSide() {
-    if (this.mouseX < -0.17) return -1;
-    if (this.mouseX < 0.17) return 0;
-    return 1;
-  }
-  checkForWave() {
+  wave() {
     if (
       !this.currentAction ||
       this.currentAction.blockUser ||
@@ -218,27 +178,8 @@ class ModelClass {
     ) {
       return;
     }
-    const newSide = this.getSide();
-    if (!newSide) return;
-    const { count, side, time } = this.waveStatus;
-    const newTime = Date.now();
-    if (!count) {
-      this.waveStatus.count++;
-      this.waveStatus.side = newSide;
-      this.waveStatus.time = newTime;
-      return;
-    } else {
-      if (side === newSide) return;
-      if (newTime - time > 1000) return (this.waveStatus.count = 0);
-
-      this.waveStatus.count++;
-      this.waveStatus.side = newSide;
-      this.waveStatus.time = newTime;
-    }
-    if (this.waveStatus.count === 3) {
-      this.waveChain();
-      this.waveStatus.count = 0;
-    }
+    const wave = this.mouseManager.wave();
+    if (wave) this.waveChain();
   }
   fall() {
     if (!this.positionManager.isFalling) return;
@@ -284,21 +225,21 @@ class ModelClass {
     this.setNextAnimation({
       chain: [
         { animation: "running", cb: this.runRight },
-        { animation: "idle", cb: this.getJointAngle },
+        { animation: "idle", cb: this.jointManager.getJointAngle },
       ],
     });
   }
 
   idleChain() {
     this.setNextAnimation({
-      chain: [{ animation: "idle", cb: this.getJointAngle }],
+      chain: [{ animation: "idle", cb: this.jointManager.getJointAngle }],
     });
   }
   angryChain() {
     this.setNextAnimation({
       chain: [
         { animation: "angry" },
-        { animation: "idle", cb: this.getJointAngle },
+        { animation: "idle", cb: this.jointManager.getJointAngle },
       ],
     });
   }
@@ -314,7 +255,7 @@ class ModelClass {
     this.setNextAnimation({
       chain: [
         { animation: "running", cb: this.runScared },
-        { animation: "idle", cb: this.getJointAngle },
+        { animation: "idle", cb: this.jointManager.getJointAngle },
       ],
     });
   }
@@ -326,14 +267,14 @@ class ModelClass {
         { animation: "waving", cb: () => (this.fadeSpeed = 0.5) },
         { animation: "running", cb: this.runRight },
         { animation: "typing", cb: this.typing },
-        { animation: "idle", cb: this.getJointAngle },
+        { animation: "idle", cb: this.jointManager.getJointAngle },
       ],
     });
   }
   waveChain() {
     const chain = [{ animation: "waving" }];
     if (this.currentAction.name === "idle") {
-      chain.push({ animation: "idle", cb: this.getJointAngle });
+      chain.push({ animation: "idle", cb: this.jointManager.getJointAngle });
     } else if (this.chain[0].animation === "dance") {
       chain.push({ animation: "dance" });
     }
@@ -345,7 +286,7 @@ class ModelClass {
   fallOverChain() {
     const chain = [{ animation: "stunned" }, { animation: "gettingUp" }];
     if (this.currentAction.name === "idle") {
-      chain.push({ animation: "idle", cb: this.getJointAngle });
+      chain.push({ animation: "idle", cb: this.jointManager.getJointAngle });
     } else if (this.chain[0].animation === "dance") {
       chain.push({ animation: "dance" });
     }
