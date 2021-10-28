@@ -9,9 +9,10 @@ importScripts("helpers/NURBSUtils.js");
 const loader = new FBXLoader();
 
 self.onmessage = (e) => {
-  loader.load(`files/${e.data}.fbx`, (fbx) => {
+  const { name, type } = e.data;
+  loader.load(`files/${type}/${name}.fbx`, (fbx) => {
     const string = JSON.stringify(fbx.animations[0]);
     const parsed1 = JSON.parse(string);
-    self.postMessage(parsed1);
+    self.postMessage({ anim: parsed1, type });
   });
 };

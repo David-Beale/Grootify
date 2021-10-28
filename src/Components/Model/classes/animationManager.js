@@ -12,6 +12,7 @@ export default class AnimationManager {
     this.actions = {};
     this.currentAction = null;
     this.fadeSpeed = 0.25;
+    this.init();
   }
   init() {
     this.loader.load(Model, (model) => {

@@ -5,10 +5,13 @@ import MouseManager from "./mouseManager";
 import JointManager from "./jointManager";
 import ChainManager from "./chainManager";
 import AnimationManager from "./animationManager";
+import { AnimationClip } from "three";
+const worker = new Worker("./loader/loader.js");
 
 class ModelClass {
   constructor() {
     this.started = false;
+    this.worker = worker;
     this.positionManager = new PositionManager();
     this.danceManager = new DanceManager(this);
     this.runningManager = new RunningManager(this);
@@ -16,7 +19,18 @@ class ModelClass {
     this.jointManager = new JointManager(this);
     this.chainManager = new ChainManager(this);
     this.animationManager = new AnimationManager(this);
-    this.animationManager.init();
+    this.workerInit();
+  }
+  workerInit() {
+    this.worker.onmessage = (e) => {
+      const { anim, type } = e.data;
+      const animation = AnimationClip.parse(anim);
+      if (type === "dance") {
+        this.danceManager.onWorkerMessage(animation);
+      } else if (type === "running") {
+        this.runningManager.onWorkerMessage(animation);
+      }
+    };
   }
 
   moveJoints() {

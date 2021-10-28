@@ -1,4 +1,3 @@
-import { AnimationClip } from "three";
 import {
   allDanceLow,
   allDanceMed,
@@ -7,18 +6,14 @@ import {
   danceMedStack,
   danceHighStack,
 } from "../animations";
-const worker = new Worker("./danceLoader/danceLoader.js");
+
 export default class DanceManger {
   constructor(model) {
     this.model = model;
     this.stacks = {
-      1: { name: "low", stack: danceLowStack, count: danceLowStack.length - 1 },
-      2: { name: "med", stack: danceMedStack, count: danceMedStack.length - 1 },
-      3: {
-        name: "high",
-        stack: danceHighStack,
-        count: danceHighStack.length - 1,
-      },
+      1: { name: "low", list: danceLowStack, count: 0 },
+      2: { name: "med", list: danceMedStack, count: 0 },
+      3: { name: "high", list: danceHighStack, count: 0 },
     };
     this.lists = {
       1: { name: "low", list: allDanceLow },
@@ -27,32 +22,20 @@ export default class DanceManger {
     };
     this.mood = 1;
     this.isDancing = false;
-    this.downloading = false;
-    this.init();
+    this.downloading = { name: null, mood: null, active: false };
   }
-  init() {
-    worker.onmessage = (e) => {
-      const animation = AnimationClip.parse(e.data);
-      this.model.animationManager.loadAnimation({
-        animation,
-        once: true,
-        name: this.downloading,
-      });
-      this.addToStack(this.downloading);
-      this.downloading = false;
-    };
+
+  addToStack() {
+    const { name, mood } = this.downloading;
+    const stack = this.stacks[mood];
+    stack.count++;
+    stack.list.push(name);
   }
-  addToStack(move) {
-    this.stacks[this.mood].count++;
-    const stack = this.stacks[this.mood].stack;
-    stack.push(move);
-  }
-  popStack() {
-    this.stacks[this.mood].count--;
-    if (this.stacks[this.mood].count < 0) this.stacks[this.mood].count = 0;
-    const stack = this.stacks[this.mood].stack;
-    const nextDance = stack.pop();
-    stack.unshift(nextDance);
+  popStack(stack) {
+    stack.count--;
+    if (stack.count < 0) stack.count = 0;
+    const nextDance = stack.list.pop();
+    stack.list.unshift(nextDance);
     return nextDance;
   }
   getRandomMove(currentAction) {
@@ -61,10 +44,13 @@ export default class DanceManger {
     do {
       const randomMoveIndex = Math.floor(Math.random() * allMoves.length);
       randomMove = allMoves[randomMoveIndex];
-    } while (randomMove === currentAction.name);
+    } while (
+      randomMove === currentAction.name ||
+      randomMove === this.downloading.name
+    );
     return randomMove;
   }
-  get(currentAction, loadCb) {
+  get(currentAction) {
     const actions = this.model.animationManager.actions;
     this.isDancing = true;
     //prevent cache from getting too big
@@ -72,19 +58,28 @@ export default class DanceManger {
     //   const oldest = dancingCache.shift();
     //   delete actions[oldest];
     // }
-    const stackCount = this.stacks[this.mood].count;
-    if (stackCount) return this.popStack();
+    const stack = this.stacks[this.mood];
+    if (stack.count) return this.popStack(stack);
     const randomMove = this.getRandomMove(currentAction);
     if (actions[randomMove]) return randomMove;
 
-    if (!this.downloading) {
+    if (!this.downloading.active) {
       actions[randomMove] = true;
-      this.downloading = randomMove;
-      worker.postMessage(randomMove);
+      this.downloading = { name: randomMove, mood: this.mood, active: true };
+      this.model.worker.postMessage({ name: randomMove, type: "dance" });
     }
-    return this.popStack();
+    return this.popStack(stack);
   }
   setMood(mood) {
     this.mood = mood;
+  }
+  onWorkerMessage(animation) {
+    this.model.animationManager.loadAnimation({
+      animation,
+      once: true,
+      name: this.downloading.name,
+    });
+    this.addToStack();
+    this.downloading = { name: null, mood: null, active: false };
   }
 }

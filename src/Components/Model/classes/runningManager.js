@@ -1,14 +1,25 @@
-import { runLeft, runRight, runScared } from "../animations";
+import { runLeft, runLeftStack, runRight, runScared } from "../animations";
 
 export default class RunningManger {
   constructor(model) {
     this.model = model;
-    this.lists = {
-      [-1]: runLeft,
-      1: runRight,
-      scared: runScared,
-    };
+    this.stacks = { [-1]: { name: "left", list: runLeftStack, count: 0 } };
+    this.lists = { [-1]: runLeft, 1: runRight, scared: runScared };
     this.scared = false;
+    this.downloading = { name: null, direction: null, active: false };
+  }
+  addToStack() {
+    const { name, direction } = this.downloading;
+    const stack = this.stacks[direction];
+    stack.count++;
+    stack.list.push(name);
+  }
+  popStack(stack) {
+    stack.count--;
+    if (stack.count < 0) stack.count = 0;
+    const next = stack.list.pop();
+    stack.list.unshift(next);
+    return next;
   }
 
   getRandomMove() {
@@ -16,10 +27,14 @@ export default class RunningManger {
       this.scared = false;
       return this.lists.scared[0];
     }
-    const runningDirection = this.model.positionManager.runningDirection;
-    const allMoves = this.lists[runningDirection];
-    const randomMoveIndex = Math.floor(Math.random() * allMoves.length);
-    return allMoves[randomMoveIndex];
+    const direction = this.model.positionManager.runningDirection;
+    const allMoves = this.lists[direction];
+    let randomMove;
+    do {
+      const randomMoveIndex = Math.floor(Math.random() * allMoves.length);
+      randomMove = allMoves[randomMoveIndex];
+    } while (randomMove === this.downloading.name);
+    return randomMove;
   }
   setScared() {
     this.scared = true;
@@ -29,6 +44,27 @@ export default class RunningManger {
       this.scared = false;
       return false;
     }
-    return this.getRandomMove();
+    const direction = this.model.positionManager.runningDirection;
+    const actions = this.model.animationManager.actions;
+
+    const stack = this.stacks[direction];
+    if (stack && stack.count) return this.popStack(stack);
+    const randomMove = this.getRandomMove();
+    if (actions[randomMove]) return randomMove;
+
+    if (!this.downloading.active) {
+      actions[randomMove] = true;
+      this.downloading = { name: randomMove, direction, active: true };
+      this.model.worker.postMessage({ name: randomMove, type: "running" });
+    }
+    return this.popStack(stack);
+  }
+  onWorkerMessage(animation) {
+    this.model.animationManager.loadAnimation({
+      animation,
+      name: this.downloading.name,
+    });
+    this.addToStack();
+    this.downloading = { name: null, direction: null, active: false };
   }
 }
