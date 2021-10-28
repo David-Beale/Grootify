@@ -1,3 +1,4 @@
+import { AnimationClip } from "three";
 import {
   allDanceLow,
   allDanceMed,
@@ -6,7 +7,7 @@ import {
   danceMedStack,
   danceHighStack,
 } from "../animations";
-
+const worker = new Worker("./danceLoader/danceLoader.js");
 export default class DanceManger {
   constructor(model) {
     this.model = model;
@@ -27,6 +28,19 @@ export default class DanceManger {
     this.mood = 1;
     this.isDancing = false;
     this.downloading = false;
+    this.init();
+  }
+  init() {
+    worker.onmessage = (e) => {
+      const animation = AnimationClip.parse(e.data);
+      this.model.animationManager.loadAnimation({
+        animation,
+        once: true,
+        name: this.downloading,
+      });
+      this.addToStack(this.downloading);
+      this.downloading = false;
+    };
   }
   addToStack(move) {
     this.stacks[this.mood].count++;
@@ -65,14 +79,8 @@ export default class DanceManger {
 
     if (!this.downloading) {
       actions[randomMove] = true;
-      this.downloading = true;
-      import(`../files/Dancing/${randomMove}.fbx`)
-        .then((file) => {
-          loadCb(randomMove, { file: file.default, once: true });
-          this.addToStack(randomMove);
-          this.downloading = false;
-        })
-        .catch((err) => console.log(err));
+      this.downloading = randomMove;
+      worker.postMessage(randomMove);
     }
     return this.popStack();
   }

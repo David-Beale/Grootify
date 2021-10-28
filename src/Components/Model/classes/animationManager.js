@@ -27,30 +27,39 @@ export default class AnimationManager {
       this.mixer = new AnimationMixer(model);
       this.fbx = model;
       for (const name in animations) {
-        this.loadAnimation(name, animations[name]);
+        this.loadFile(name, animations[name]);
       }
     });
   }
-  loadAnimation = (name, anim) => {
+  loadAnimation = ({ animation, name, once, blockUser, blockAll }) => {
+    const action = this.mixer.clipAction(animation);
+    if (once) {
+      action.loop = LoopOnce;
+      action.clampWhenFinished = true;
+    }
+    action.name = name;
+    action.blockUser = blockUser;
+    action.blockAll = blockAll;
+    this.actions[name] = action;
+    if (name === "idle") {
+      action._clip.tracks.splice(5, 1);
+      action._clip.tracks.splice(2, 1);
+    }
+    if (name === "hangingIdle") {
+      this.currentAction = action;
+      action.play();
+    }
+  };
+  loadFile = (name, anim) => {
     const { file, once, blockUser, blockAll } = anim;
     this.loader.load(file, (fbx) => {
-      const action = this.mixer.clipAction(fbx.animations[0]);
-      if (once) {
-        action.loop = LoopOnce;
-        action.clampWhenFinished = true;
-      }
-      action.name = name;
-      action.blockUser = blockUser;
-      action.blockAll = blockAll;
-      this.actions[name] = action;
-      if (name === "idle") {
-        action._clip.tracks.splice(5, 1);
-        action._clip.tracks.splice(2, 1);
-      }
-      if (name === "hangingIdle") {
-        this.currentAction = action;
-        action.play();
-      }
+      this.loadAnimation({
+        animation: fbx.animations[0],
+        name,
+        once,
+        blockUser,
+        blockAll,
+      });
     });
   };
   reset() {
@@ -60,10 +69,7 @@ export default class AnimationManager {
     if (animation === "dance") {
       //dancing will always be the last in a chain, continue dancing until manually stopped
       this.model.chainManager.push("danceChain");
-      const dance = this.model.danceManager.get(
-        this.currentAction,
-        this.loadAnimation
-      );
+      const dance = this.model.danceManager.get(this.currentAction);
       return this.actions[dance];
     }
     if (animation === "running") {
