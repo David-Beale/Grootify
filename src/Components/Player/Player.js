@@ -59,7 +59,7 @@ export default function Player() {
             callback={playerCB}
             showSaveIcon
             syncExternalDevice
-            uris={songs}
+            uris={songs.length ? songs : null}
             styles={styles}
           />
         </PlayerContainer>
