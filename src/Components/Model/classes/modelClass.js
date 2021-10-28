@@ -11,6 +11,7 @@ const worker = new Worker("./loader/loader.js");
 class ModelClass {
   constructor() {
     this.started = false;
+    this.isPlaying = false;
     this.worker = worker;
     this.positionManager = new PositionManager();
     this.danceManager = new DanceManager(this);
@@ -20,6 +21,9 @@ class ModelClass {
     this.chainManager = new ChainManager(this);
     this.animationManager = new AnimationManager(this);
     this.workerInit();
+  }
+  setIsPlaying(state) {
+    this.isPlaying = state;
   }
   workerInit() {
     this.worker.onmessage = (e) => {

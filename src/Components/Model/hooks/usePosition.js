@@ -3,7 +3,6 @@ import { useStore } from "../../Store/store";
 import model from "../classes/modelClass";
 
 export const usePosition = () => {
-  const isPlayingRef = useRef(false);
   const menuOpenRef = useRef(false);
   const isLoadedRef = useRef(false);
   const isPlaying = useStore((state) => state.isPlaying);
@@ -22,7 +21,7 @@ export const usePosition = () => {
   }, [mood]);
 
   useEffect(() => {
-    isPlayingRef.current = isPlaying;
+    model.setIsPlaying(isPlaying);
     if (!isLoadedRef.current) return;
     const pos = model.positionManager.pos;
     if (isPlaying) {
@@ -52,7 +51,7 @@ export const usePosition = () => {
     if (!isLoadedRef.current) return;
     const pos = model.positionManager.pos;
     menuOpenRef.current = playlistTracksOpen || searchTracksOpen;
-    if (isPlayingRef.current) {
+    if (model.isPlaying) {
       if (menuOpenRef.current && pos === "right") model.setChain("danceChain");
       else if (playlistTracksOpen) model.setChain("scaredDanceChain");
       else if (searchTracksOpen) model.setChain("rightDanceChain");

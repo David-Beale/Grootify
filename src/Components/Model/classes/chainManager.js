@@ -77,7 +77,8 @@ export default class ChainManager {
   typing = () => {
     setTimeout(() => {
       useStore.setState({ interfaceOpen: true });
-    }, 3000);
+      if (this.model.isPlaying) this.model.setChain("leftDanceChain");
+    }, 2000);
   };
 
   //
