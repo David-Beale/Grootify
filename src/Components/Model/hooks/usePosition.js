@@ -24,7 +24,6 @@ export const usePosition = () => {
     model.setIsPlaying(isPlaying);
     if (!isLoadedRef.current) return;
     const pos = model.positionManager.pos;
-    // console.log("1", { isPlaying, menu: menuOpenRef.current });
     if (isPlaying) {
       if (!menuOpenRef.current) {
         if (pos === "right" || pos === "transit") {
@@ -52,7 +51,6 @@ export const usePosition = () => {
     if (!isLoadedRef.current) return;
     const pos = model.positionManager.pos;
     menuOpenRef.current = playlistTracksOpen || searchTracksOpen;
-    // console.log("2", { isPlaying: model.isPlaying, menu: menuOpenRef.current });
     if (model.isPlaying) {
       if (menuOpenRef.current && pos === "right") model.setChain("danceChain");
       else if (playlistTracksOpen) model.setChain("scaredDanceChain");
