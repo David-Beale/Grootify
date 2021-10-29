@@ -98,6 +98,7 @@ export default class AnimationManager {
     if (cb) cb();
     const action = this.animationRouter(animation);
     if (!action) return;
+    // console.log(action.name);
     action.reset();
     this.fade(action);
     action.play();

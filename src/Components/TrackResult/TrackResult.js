@@ -7,12 +7,12 @@ import {
   Duration,
 } from "./TrackResultStyle";
 
-export default function TrackResult({ track, selectSong }) {
+export default function TrackResult({ track, selectSong, top }) {
   const onClick = () => {
     selectSong(track.id);
   };
   return (
-    <TrackResultContainer onClick={onClick}>
+    <TrackResultContainer onClick={onClick} top={top}>
       <Image src={track.albumUrl} alt={track.title} />
       <TextContainer>
         <TrackTitle>{track.title}</TrackTitle>

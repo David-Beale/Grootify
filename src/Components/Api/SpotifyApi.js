@@ -34,6 +34,7 @@ spotifyApi.refreshAccessToken = () => {
       localStorage.setItem("sp-expiry", Date.now() + adjustedExpiry);
       spotifyApi.setAccessToken(access_token);
       setTimeout(() => {
+        console.log("auto refresh 1");
         spotifyApi.refreshAccessToken();
       }, adjustedExpiry);
       console.log("accessTokenRefreshed");
@@ -150,6 +151,7 @@ spotifyApi.requestTokens = (payload) => {
       spotifyApi.setAccessToken(access_token);
       spotifyApi.setRefreshToken(refresh_token);
       setTimeout(() => {
+        console.log("auto refresh 2");
         spotifyApi.refreshAccessToken();
       }, adjustedExpiry);
 
@@ -183,16 +185,16 @@ const formatTracks = (tracks, playlist = false) => {
     };
   });
 };
-spotifyApi.getTracks = (query) => {
+spotifyApi.getTracks = (query, offset) => {
   return spotifyApi
-    .searchTracks(query)
+    .searchTracks(query, { offset: offset })
     .then((res) => formatTracks(res.body.tracks.items))
     .catch(() => false);
 };
-spotifyApi.getMyPlaylist = (playlist) => {
+spotifyApi.getMyPlaylist = (playlist, offset) => {
   if (playlist === "liked") {
     return spotifyApi
-      .getMySavedTracks()
+      .getMySavedTracks({ offset })
       .then((res) => formatTracks(res.body.items, true))
       .catch((err) => {
         console.log(err);
@@ -200,7 +202,7 @@ spotifyApi.getMyPlaylist = (playlist) => {
       });
   }
   return spotifyApi
-    .getPlaylist(playlist)
+    .getPlaylist(playlist, { offset })
     .then((res) => formatTracks(res.body.tracks.items, true))
     .catch((err) => {
       console.log(err);

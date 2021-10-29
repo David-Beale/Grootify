@@ -4,8 +4,7 @@ import { colors } from "../../colors";
 export const TrackResultContainer = styled.div`
   box-sizing: border-box;
   min-height: 65px;
-  width: calc(100%);
-  /* background-color: rgba(100, 110, 100, 1); */
+  width: 100%;
   background-color: rgba(60, 70, 60, 1);
   margin-bottom: 2px;
   border-radius: 15px;
@@ -13,10 +12,11 @@ export const TrackResultContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  position: relative;
+  position: absolute;
   overflow: hidden;
   padding-left: 100px;
   padding-right: 35px;
+  top: ${({ top }) => top}px;
 
   &:hover {
     background-color: rgb(50, 60, 50);

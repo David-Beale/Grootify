@@ -1,26 +1,39 @@
 import { spotifyApi } from "../Api/SpotifyApi";
 import { onCloseSearch } from "./searchSlice";
 
-let playlistId = null;
+let clearPlaylistId = null;
+let queryId = null;
 
 export const playlistSlice = (set, get) => ({
   playlistTracksOpen: false,
   playlistTracks: [],
   selectedPlaylist: null,
+
+  playlistRequestsFinised: false,
+  playlistRequestsOffset: 0,
+  playlistRequestsInProgress: false,
+
   onClosePlaylist: () => {
     onClosePlaylist(set);
   },
   onSelectPlayList: async (playlist) => {
-    //request playist tracks
     if (playlist === get().selectedPlaylist) {
       onClosePlaylist(set);
       return;
     }
-    onCloseSearch(set);
-    playlistId = Date.now();
-    set(() => ({ selectedPlaylist: playlist, playlistTracksOpen: true }));
+    const id = Date.now();
+    queryId = id;
     const tracks = await spotifyApi.getMyPlaylist(playlist);
-    if (tracks) set(() => ({ playlistTracks: tracks }));
+    if (queryId !== id) return;
+    clearPlaylistId = "abort";
+    set(() => ({
+      selectedPlaylist: playlist,
+      playlistTracksOpen: true,
+      playlistTracks: tracks,
+      playlistRequestsOffset: 20,
+      playlistRequestsFinised: tracks.length < 20,
+    }));
+    onCloseSearch(set);
   },
 
   setPlaylistSong: (song) => {
@@ -28,6 +41,22 @@ export const playlistSlice = (set, get) => ({
     const playlistTracks = get().playlistTracks;
     const newPlaylist = buildPlaylist(playlistTracks, song);
     set(() => ({ songs: newPlaylist }));
+  },
+
+  playlistRequestsLoadNextPage: async () => {
+    if (!get().playlistRequestsOffset || get().playlistRequestsInProgress)
+      return;
+    set(() => ({ playlistRequestsInProgress: true }));
+    const tracks = await spotifyApi.getMyPlaylist(
+      get().selectedPlaylist,
+      get().playlistRequestsOffset
+    );
+    set((state) => ({
+      playlistTracks: [...state.playlistTracks, ...tracks],
+      playlistRequestsOffset: state.playlistRequestsOffset + 20,
+      playlistRequestsFinised: tracks.length < 20,
+      playlistRequestsInProgress: false,
+    }));
   },
 });
 
@@ -44,11 +73,14 @@ export const onClosePlaylist = (set) => {
   set(() => ({
     selectedPlaylist: null,
     playlistTracksOpen: false,
+    playlistRequestsFinised: false,
+    playlistRequestsOffset: 0,
+    playlistRequestsInProgress: false,
   }));
   let id = Date.now();
-  playlistId = Date.now();
+  clearPlaylistId = Date.now();
   setTimeout(() => {
-    if (id !== playlistId) return;
+    if (id !== clearPlaylistId) return;
     set(() => ({ playlistTracks: [] }));
   }, 500);
 };

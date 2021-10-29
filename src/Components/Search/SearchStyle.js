@@ -11,7 +11,7 @@ export const HeaderContainer = styled.div`
   background-color: ${colors.primaryBackground};
   height: 75px;
   box-shadow: 0 0 15px 0 ${colors.spotifyGreen};
-  z-index: 1;
+  z-index: 2;
   position: fixed;
   left: 0;
   top: ${({ open }) => (open ? 0 : "-75px")};
@@ -56,23 +56,4 @@ export const StyledCancelIcon = styled(ClearIcon)`
   right: 15px;
   top: 10px;
   cursor: pointer;
-`;
-
-export const SearchResultsContainer = styled.div`
-  box-sizing: border-box;
-  z-index: 1;
-  position: absolute;
-  height: calc(100vh - 150px);
-  width: calc(100vw - 750px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  overflow: auto;
-  padding: 25px;
-  color: white;
-  font-size: 1.5rem;
-  left: 350px;
-  top: ${({ open }) => (open ? "75px" : "-100%")};
-  transition: top 500ms ease-in-out;
 `;

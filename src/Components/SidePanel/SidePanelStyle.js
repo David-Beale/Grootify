@@ -15,22 +15,3 @@ export const SidePanelContainer = styled.div`
   left: ${({ open }) => (open ? 0 : "-360px")};
   transition: left 1s ease-in-out;
 `;
-
-export const PlaylistTracksContainer = styled.div`
-  box-sizing: border-box;
-  z-index: 1;
-  position: absolute;
-  height: calc(100vh - 150px);
-  width: calc(100vw - 750px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  overflow-y: scroll;
-  padding: 25px;
-  color: white;
-  font-size: 1.5rem;
-  top: 75px;
-  left: ${({ open }) => (open ? "350px" : "-100%")};
-  transition: left 500ms ease-in-out;
-`;

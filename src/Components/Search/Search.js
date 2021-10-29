@@ -1,12 +1,5 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { debounce } from "lodash";
-import { spotifyApi } from "../Api/SpotifyApi";
 import {
   Input,
   HeaderContainer,
@@ -20,10 +13,9 @@ export default function Search() {
   const interfaceOpen = useStore((state) => state.interfaceOpen);
   const clearSearchText = useStore((state) => state.clearSearchText);
   const onCloseSearch = useStore((state) => state.onCloseSearch);
-  const setSearchTracks = useStore((state) => state.setSearchTracks);
+  const sendSearchRequest = useStore((state) => state.sendSearchRequest);
 
   const [searchText, setSearchText] = useState("");
-  const id = useRef();
 
   useEffect(() => {
     setSearchText("");
@@ -33,13 +25,9 @@ export default function Search() {
     () =>
       debounce(async (query) => {
         if (!query) return;
-        const localId = Date.now();
-        id.current = localId;
-        const tracks = await spotifyApi.getTracks(query);
-        if (id.current !== localId) return;
-        setSearchTracks(tracks);
+        sendSearchRequest(query);
       }, 300),
-    [setSearchTracks]
+    [sendSearchRequest]
   );
 
   useEffect(() => {
