@@ -9,7 +9,7 @@ export const Container = styled.div`
   top: 10px;
   right: 10px;
   color: white;
-  z-index: 2;
+  z-index: 4;
 `;
 export const StyledLogoutIcon = styled(LogoutIcon)`
   color: ${colors.primary};
