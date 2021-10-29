@@ -39,6 +39,7 @@ export default class AnimationManager {
       action.clampWhenFinished = true;
     } else if (loop) {
       action.repetitions = loop;
+      action.clampWhenFinished = true;
     }
     action.name = name;
     action.blockUser = blockUser;
