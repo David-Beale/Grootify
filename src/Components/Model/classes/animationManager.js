@@ -32,11 +32,13 @@ export default class AnimationManager {
       }
     });
   }
-  loadAnimation = ({ animation, name, once, blockUser, blockAll }) => {
+  loadAnimation = ({ animation, name, once, loop, blockUser, blockAll }) => {
     const action = this.mixer.clipAction(animation);
     if (once) {
       action.loop = LoopOnce;
       action.clampWhenFinished = true;
+    } else if (loop) {
+      action.repetitions = loop;
     }
     action.name = name;
     action.blockUser = blockUser;
@@ -71,6 +73,7 @@ export default class AnimationManager {
       //dancing will always be the last in a chain, continue dancing until manually stopped
       this.model.chainManager.push("danceChain");
       const dance = this.model.danceManager.get(this.currentAction);
+      // console.log(this.model.danceManager.mood, dance);
       return this.actions[dance];
     }
     if (animation === "running") {

@@ -36,7 +36,8 @@ spotifyApi.refreshAccessToken = () => {
       setTimeout(() => {
         spotifyApi.refreshAccessToken();
       }, adjustedExpiry);
-      return "accessTokenRefreshed";
+      console.log("accessTokenRefreshed");
+      return true;
     })
     .catch((err) => {
       console.log("Could not refresh access token", err);
@@ -53,7 +54,7 @@ spotifyApi.preFlightCheck = async (accessToken) => {
   } else {
     setTimeout(() => {
       spotifyApi.refreshAccessToken();
-    }, Date.now() - expiry);
+    }, +expiry - Date.now());
   }
   spotifyApi.setAccessToken(accessToken);
   return "accessTokenValid";

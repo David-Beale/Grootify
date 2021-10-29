@@ -5,6 +5,7 @@ import {
   danceLowStack,
   danceMedStack,
   danceHighStack,
+  loops,
 } from "../animations";
 
 export default class DanceManger {
@@ -23,6 +24,7 @@ export default class DanceManger {
     this.mood = 1;
     this.isDancing = false;
     this.downloading = { name: null, mood: null, active: false };
+    // this.index = -1;
   }
 
   addToStack() {
@@ -40,6 +42,7 @@ export default class DanceManger {
   }
   getRandomMove(currentAction) {
     const allMoves = this.lists[this.mood].list;
+    // return allMoves[this.index] || allMoves[0];
     let randomMove;
     do {
       const randomMoveIndex = Math.floor(Math.random() * allMoves.length);
@@ -74,9 +77,11 @@ export default class DanceManger {
     this.mood = mood;
   }
   onWorkerMessage(animation) {
+    const loop = loops[this.downloading.name];
     this.model.animationManager.loadAnimation({
       animation,
-      once: true,
+      once: !loop,
+      loop: loop,
       name: this.downloading.name,
     });
     this.addToStack();
