@@ -40,7 +40,7 @@ export default function App() {
             }}
             shadows
           >
-            <Stats className="stats" />
+            {/* <Stats className="stats" /> */}
             <Main />
             <Rig mouse={mouse} />
           </Canvas>
