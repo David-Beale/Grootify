@@ -32,9 +32,9 @@ spotifyApi.refreshAccessToken = () => {
       localStorage.setItem("sp-refreshToken", refresh_token);
       const adjustedExpiry = (expires_in - 60) * 1000;
       localStorage.setItem("sp-expiry", Date.now() + adjustedExpiry);
+      spotifyApi.setRefreshToken(refresh_token);
       spotifyApi.setAccessToken(access_token);
       setTimeout(() => {
-        console.log("auto refresh 1");
         spotifyApi.refreshAccessToken();
       }, adjustedExpiry);
       console.log("accessTokenRefreshed");
@@ -162,7 +162,6 @@ spotifyApi.requestTokens = (payload) => {
       spotifyApi.setAccessToken(access_token);
       spotifyApi.setRefreshToken(refresh_token);
       setTimeout(() => {
-        console.log("auto refresh 2");
         spotifyApi.refreshAccessToken();
       }, adjustedExpiry);
 
