@@ -43,10 +43,10 @@ export default function App() {
             {/* <Stats className="stats" /> */}
             <Main />
             <Rig mouse={mouse} />
+            {/* <OrbitControls /> */}
           </Canvas>
         </Suspense>
       </div>
-      {/* <OrbitControls /> */}
     </>
   );
 }
