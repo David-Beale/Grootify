@@ -1,7 +1,7 @@
 import "./App.css";
 import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Stats } from "@react-three/drei";
+// import { OrbitControls, Stats } from "@react-three/drei";
 
 import Main from "./Components/Main/Main";
 import { useMouseInteraction } from "./Components/Rig/useInteractions";
