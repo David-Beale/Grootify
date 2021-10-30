@@ -1,5 +1,10 @@
 import Dots from "./Dots";
-import { LoginContainer, LoginButton, Status } from "./LoginStyle";
+import {
+  LoginContainer,
+  LoginButton,
+  Status,
+  AccessRequired,
+} from "./LoginStyle";
 import { useLogin } from "./useLogin";
 import { spotifyApi } from "../Api/SpotifyApi";
 import { useEffect } from "react";
@@ -7,6 +12,7 @@ import { useStore } from "../Store/store";
 
 export default function Login() {
   const loggedIn = useStore((state) => state.loggedIn);
+  const accessRequired = useStore((state) => state.accessRequired);
   const login = useStore((state) => state.login);
   const logout = useStore((state) => state.logout);
 
@@ -34,6 +40,12 @@ export default function Login() {
               error && <>Error Logging In</>
             )}
           </Status>
+          {accessRequired && (
+            <AccessRequired>
+              Sorry, your account needs to be manually authorised. Please get in
+              touch.
+            </AccessRequired>
+          )}
         </LoginContainer>
       )}
     </>

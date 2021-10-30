@@ -62,14 +62,25 @@ spotifyApi.preFlightCheck = async (accessToken) => {
 };
 
 spotifyApi.login = async () => {
-  try {
-    const res = await spotifyApi.getMe();
-    userId = res.body.id;
-    return true;
-  } catch (error) {
-    console.log("access token error");
-    return false;
-  }
+  const accessToken = spotifyApi.getAccessToken();
+
+  return axios
+    .get("https://api.spotify.com/v1/me", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+    .then((res) => {
+      userId = res.data.id;
+      return true;
+    })
+    .catch((err) => {
+      console.log("Could not access profile data", err);
+      useStore.getState().setAccessRequired();
+      useStore.getState().logout();
+      return false;
+    });
 };
 
 spotifyApi.checkAuthentication = async () => {

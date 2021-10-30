@@ -38,3 +38,9 @@ export const LoginButton = styled.div`
   box-shadow: 0 0 6px 0px white;
   user-select: none;
 `;
+export const AccessRequired = styled.div`
+  font-size: 1rem;
+  color: white;
+  padding: 0 25px;
+  text-align: center;
+`;

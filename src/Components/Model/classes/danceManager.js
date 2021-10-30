@@ -61,14 +61,15 @@ export default class DanceManger {
     //   const oldest = dancingCache.shift();
     //   delete actions[oldest];
     // }
-    const stack = this.stacks[this.mood];
+    const mood = this.mood || 2;
+    const stack = this.stacks[mood];
     if (stack.count) return this.popStack(stack);
     const randomMove = this.getRandomMove(currentAction);
     if (actions[randomMove]) return randomMove;
 
     if (!this.downloading.active) {
       actions[randomMove] = true;
-      this.downloading = { name: randomMove, mood: this.mood, active: true };
+      this.downloading = { name: randomMove, mood, active: true };
       this.model.worker.postMessage({ name: randomMove, type: "dance" });
     }
     return this.popStack(stack);
