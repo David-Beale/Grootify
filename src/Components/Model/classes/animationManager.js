@@ -80,7 +80,7 @@ export default class AnimationManager {
       if (!run) return false;
       return this.actions[run];
     } else if (animation === "thriller") {
-      this.model.chainManager.push("thrillerChain");
+      this.model.chainManager.push("thrillerNextChain");
       const move = this.model.thrillerManager.get();
       if (!move) return false;
       return this.actions[move];

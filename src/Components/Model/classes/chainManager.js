@@ -188,8 +188,11 @@ export default class ChainManager {
   }
   thrillerChain() {
     return {
-      chain: [{ animation: "thriller", cb: this.thrillerReset }],
+      chain: [{ animation: "thriller", cb: this.resetThriller }],
     };
+  }
+  thrillerNextChain() {
+    return { chain: [{ animation: "thriller" }] };
   }
   leftThrillerChain() {
     return {

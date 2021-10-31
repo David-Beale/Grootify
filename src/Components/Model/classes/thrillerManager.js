@@ -12,7 +12,7 @@ export default class ThrillerManager {
 
   resetThriller() {
     this.index = 0;
-    this.downloadNextMove();
+    if (this.downloadIndex === 1) this.downloadNextMove();
   }
   downloadNextMove() {
     this.downloadIndex++;
