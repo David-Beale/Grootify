@@ -33,11 +33,14 @@ export default class DanceManger {
     stack.count++;
     stack.list.push(name);
   }
-  popStack(stack) {
+  popStack(stack, currentAction) {
+    let nextDance;
     stack.count--;
     if (stack.count < 0) stack.count = 0;
-    const nextDance = stack.list.pop();
-    stack.list.unshift(nextDance);
+    do {
+      nextDance = stack.list.pop();
+      stack.list.unshift(nextDance);
+    } while (nextDance === currentAction.name);
     return nextDance;
   }
   getRandomMove(currentAction) {
@@ -63,7 +66,7 @@ export default class DanceManger {
     // }
     const mood = this.mood || 2;
     const stack = this.stacks[mood];
-    if (stack.count) return this.popStack(stack);
+    if (stack.count) return this.popStack(stack, currentAction);
     const randomMove = this.getRandomMove(currentAction);
     if (actions[randomMove]) return randomMove;
 
@@ -72,7 +75,7 @@ export default class DanceManger {
       this.downloading = { name: randomMove, mood, active: true };
       this.model.worker.postMessage({ name: randomMove, type: "dance" });
     }
-    return this.popStack(stack);
+    return this.popStack(stack, currentAction);
   }
   setMood(mood) {
     this.mood = mood;
