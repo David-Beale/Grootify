@@ -23,6 +23,7 @@ import Samba1 from "./files/Dancing/Samba1.fbx";
 import Samba5 from "./files/Dancing/Samba5.fbx";
 import Dance from "./files/Dancing/Dance.fbx";
 import House2 from "./files/Dancing/House2.fbx";
+import Gangnam from "./files/Dancing/Gangnam Style.fbx";
 
 import moonwalk from "./files/Thriller/Moonwalk.fbx";
 import thrillerIdle from "./files/Thriller/Thriller Idle.fbx";
@@ -58,6 +59,7 @@ export const animations = {
   Samba5: { file: Samba5, once: true },
   Dance: { file: Dance, once: true },
   House2: { file: House2, once: true },
+  Gangnam: { file: Gangnam },
 
   moonwalk: { file: moonwalk, once: true, blockUser: true },
   thrillerIdle: { file: thrillerIdle, blockUser: true },
@@ -72,6 +74,8 @@ export const runLeft = [
 export const runLeftStack = ["runLeft"];
 export const runRight = ["runRight"];
 export const runScared = ["scared"];
+
+export const gangnam = ["Gangnam"];
 
 export const allDanceLow = [
   "Arms",

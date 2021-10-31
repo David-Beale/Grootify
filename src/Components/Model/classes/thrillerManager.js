@@ -8,11 +8,9 @@ export default class ThrillerManager {
     this.index = 0;
     this.downloadIndex = 1;
     this.paused = false;
-    this.thrillerPlaying = false;
   }
 
   resetThriller() {
-    this.thrillerPlaying = true;
     this.index = 0;
     this.downloadNextMove();
   }
@@ -38,10 +36,10 @@ export default class ThrillerManager {
     return next;
   }
   get() {
+    this.model.danceManager.isDancing = true;
     const nextMove = this.getNextMove();
     if (!nextMove) {
       //end reached
-      this.thrillerPlaying = false;
       this.model.setChain("danceChain");
       return;
     }

@@ -6,6 +6,7 @@ import {
   danceMedStack,
   danceHighStack,
   loops,
+  gangnam,
 } from "../animations";
 
 export default class DanceManger {
@@ -20,6 +21,7 @@ export default class DanceManger {
       1: { name: "low", list: allDanceLow },
       2: { name: "med", list: allDanceMed },
       3: { name: "high", list: allDanceHigh },
+      4: { name: "gangnam", list: gangnam },
     };
     this.mood = 1;
     this.isDancing = false;
@@ -66,7 +68,7 @@ export default class DanceManger {
     // }
     const mood = this.mood || 2;
     const stack = this.stacks[mood];
-    if (stack.count) return this.popStack(stack, currentAction);
+    if (stack && stack.count) return this.popStack(stack, currentAction);
     const randomMove = this.getRandomMove(currentAction);
     if (actions[randomMove]) return randomMove;
 
