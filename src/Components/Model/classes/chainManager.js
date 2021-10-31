@@ -80,6 +80,9 @@ export default class ChainManager {
       if (this.model.isPlaying) this.model.setChain("leftDanceChain");
     }, 2000);
   };
+  resetThriller = () => {
+    this.model.thrillerManager.resetThriller();
+  };
 
   //
   // ─── CHAINS ─────────────────────────────────────────────────────────────────────
@@ -181,6 +184,19 @@ export default class ChainManager {
     return {
       chain,
       isUserAction: true,
+    };
+  }
+  thrillerChain() {
+    return {
+      chain: [{ animation: "thriller", cb: this.thrillerReset }],
+    };
+  }
+  leftThrillerChain() {
+    return {
+      chain: [
+        { animation: "running", cb: this.runLeft },
+        { animation: "thriller", cb: this.resetThriller },
+      ],
     };
   }
 }

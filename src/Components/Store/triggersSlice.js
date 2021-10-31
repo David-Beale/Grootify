@@ -16,4 +16,7 @@ export const triggersSlice = (set) => ({
 
   mood: null,
   setMood: (mood) => set(() => ({ mood })),
+
+  songName: null,
+  setSongName: (songName) => set(() => ({ songName })),
 });

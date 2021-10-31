@@ -7,6 +7,7 @@ export const usePosition = () => {
   const isLoadedRef = useRef(false);
   const isPlaying = useStore((state) => state.isPlaying);
   const mood = useStore((state) => state.mood);
+  const songName = useStore((state) => state.songName);
   const playlistTracksOpen = useStore((state) => state.playlistTracksOpen);
   const searchTracksOpen = useStore((state) => state.searchTracksOpen);
   const isLoaded = useStore((state) => state.isLoaded);
@@ -19,6 +20,20 @@ export const usePosition = () => {
     model.danceManager.setMood(mood);
     if (model.danceManager.isDancing) model.setChain("danceChain");
   }, [mood]);
+
+  useEffect(() => {
+    if (!songName && model.thrillerManager.thrillerPlaying) {
+      model.setChain("danceChain");
+      return;
+    }
+    if (!songName) {
+      return;
+    }
+    const pos = model.positionManager.pos;
+    if (pos === "right" || pos === "transit") {
+      model.setChain("leftThrillerChain");
+    } else model.setChain("thrillerChain");
+  }, [songName]);
 
   useEffect(() => {
     model.setIsPlaying(isPlaying);

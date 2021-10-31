@@ -10,6 +10,7 @@ export default function Player() {
   const songs = useStore((state) => state.songs);
   const setIsPlaying = useStore((state) => state.setIsPlaying);
   const setMood = useStore((state) => state.setMood);
+  const setSongName = useStore((state) => state.setSongName);
   const prevTrack = useRef();
 
   const [play, setPlay] = useState(false);
@@ -34,14 +35,24 @@ export default function Player() {
     },
     [setMood]
   );
+  const checkName = useCallback(
+    (state) => {
+      const songName = state.track.name.toLowerCase();
+      if (songName.includes("thriller")) setSongName("thriller");
+      else if (songName.includes("gangnam")) setSongName("gangnam");
+      else setSongName(null);
+    },
+    [setSongName]
+  );
 
   const playerCB = useCallback(
     (state) => {
       setIsPlaying(state.isPlaying);
       if (!state.isPlaying) setPlay(false);
       updateMood(state);
+      checkName(state);
     },
-    [setIsPlaying, updateMood]
+    [setIsPlaying, updateMood, checkName]
   );
 
   useEffect(() => {

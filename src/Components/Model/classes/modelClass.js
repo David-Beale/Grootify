@@ -5,6 +5,7 @@ import MouseManager from "./mouseManager";
 import JointManager from "./jointManager";
 import ChainManager from "./chainManager";
 import AnimationManager from "./animationManager";
+import ThrillerManager from "./thrillerManager";
 import { AnimationClip } from "three";
 const worker = new Worker("./loader/loader.js");
 
@@ -20,6 +21,7 @@ class ModelClass {
     this.jointManager = new JointManager(this);
     this.chainManager = new ChainManager(this);
     this.animationManager = new AnimationManager(this);
+    this.thrillerManager = new ThrillerManager(this);
     this.workerInit();
   }
   setIsPlaying(state) {
@@ -33,6 +35,8 @@ class ModelClass {
         this.danceManager.onWorkerMessage(animation);
       } else if (type === "running") {
         this.runningManager.onWorkerMessage(animation);
+      } else if (type === "thriller") {
+        this.thrillerManager.onWorkerMessage(animation);
       }
     };
   }

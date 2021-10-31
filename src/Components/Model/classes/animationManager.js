@@ -74,15 +74,17 @@ export default class AnimationManager {
       //dancing will always be the last in a chain, continue dancing until manually stopped
       this.model.chainManager.push("danceChain");
       const dance = this.model.danceManager.get(this.currentAction);
-      // console.log(this.model.danceManager.mood, dance);
       return this.actions[dance];
-    }
-    if (animation === "running") {
+    } else if (animation === "running") {
       const run = this.model.runningManager.get();
       if (!run) return false;
       return this.actions[run];
-    }
-    if (animation === this.currentAction.name) return false;
+    } else if (animation === "thriller") {
+      this.model.chainManager.push("thrillerChain");
+      const move = this.model.thrillerManager.get();
+      if (!move) return false;
+      return this.actions[move];
+    } else if (animation === this.currentAction.name) return false;
     return this.actions[animation];
   }
   fade(action) {
@@ -98,7 +100,6 @@ export default class AnimationManager {
     if (cb) cb();
     const action = this.animationRouter(animation);
     if (!action) return;
-    // console.log(action.name);
     action.reset();
     this.fade(action);
     action.play();

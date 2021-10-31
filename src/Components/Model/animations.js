@@ -24,6 +24,9 @@ import Samba5 from "./files/Dancing/Samba5.fbx";
 import Dance from "./files/Dancing/Dance.fbx";
 import House2 from "./files/Dancing/House2.fbx";
 
+import moonwalk from "./files/Thriller/Moonwalk.fbx";
+import thrillerIdle from "./files/Thriller/Thriller Idle.fbx";
+
 export const animations = {
   //params:
   //once = no loop
@@ -55,6 +58,9 @@ export const animations = {
   Samba5: { file: Samba5, once: true },
   Dance: { file: Dance, once: true },
   House2: { file: House2, once: true },
+
+  moonwalk: { file: moonwalk, once: true, blockUser: true },
+  thrillerIdle: { file: thrillerIdle, blockUser: true },
 };
 
 export const runLeft = [
@@ -180,3 +186,12 @@ export const loops = {
   Salsa2: 3,
   Swing2: 2,
 };
+
+export const thriller = [
+  "moonwalk",
+  "thrillerIdle",
+  "thriller1",
+  "thriller2",
+  "thriller3",
+  "thriller4",
+];
