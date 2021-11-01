@@ -23,7 +23,7 @@ export default class DanceManger {
       3: { name: "high", list: allDanceHigh },
       4: { name: "gangnam", list: gangnam },
     };
-    this.mood = 1;
+    this.mood = 2;
     this.isDancing = false;
     this.downloading = { name: null, mood: null, active: false };
     // this.index = -1;

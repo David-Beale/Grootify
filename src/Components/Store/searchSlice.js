@@ -1,5 +1,4 @@
 import { spotifyApi } from "../Api/SpotifyApi";
-import model from "../Model/classes/modelClass";
 import { onClosePlaylist } from "./playlistSlice";
 
 let clearTracksId = null;
@@ -34,8 +33,7 @@ export const searchSlice = (set, get) => ({
 
   setSearchSong: (song) => {
     onCloseSearch(set);
-    set(() => ({ songs: ["spotify:track:" + song] }));
-    model.isPlaying = true;
+    set(() => ({ songs: ["spotify:track:" + song], isPlaying: true }));
   },
 
   searchLoadNextPage: async () => {
