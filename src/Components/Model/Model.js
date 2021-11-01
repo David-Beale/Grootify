@@ -3,7 +3,7 @@ import { useLoader } from "./hooks/useLoader";
 import { useFalling } from "./hooks/useFalling";
 import { useRunning } from "./hooks/useRunning";
 import { useClick } from "./hooks/useClick";
-import { usePosition } from "./hooks/usePosition";
+import { useTriggers } from "./hooks/useTriggers";
 import { useStore } from "../Store/store";
 
 export default memo(function Model({ modelRef }) {
@@ -12,7 +12,7 @@ export default memo(function Model({ modelRef }) {
   useFalling();
   useRunning();
   useClick();
-  usePosition();
+  useTriggers();
   return (
     <group onClick={onClick} ref={modelRef} position={[0, 21.5, 0]}>
       <primitive object={fbx} />;

@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useStore } from "../../Store/store";
 import model from "../classes/modelClass";
 
-export const usePosition = () => {
+export const useTriggers = () => {
   const isLoadedRef = useRef(false);
   const isPlaying = useStore((state) => state.isPlaying);
   const mood = useStore((state) => state.mood);
