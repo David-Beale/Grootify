@@ -92,9 +92,14 @@ export default class AnimationManager {
     action.crossFadeFrom(this.currentAction, this.fadeSpeed);
     this.model.jointManager.checkIfFadeRequired(this.currentAction, action);
   }
+  eventFinished = (e) => {
+    //ignore old event listener:
+    if (e.action.name !== this.currentAction.name) return;
+    this.runNextAnimation();
+  };
 
   runNextAnimation = () => {
-    this.mixer.removeEventListener("finished", this.runNextAnimation);
+    this.mixer.removeEventListener("finished", this.eventFinished);
     this.reset();
     let { animation, cb } = this.model.chainManager.shift();
     if (cb) cb();
@@ -104,7 +109,7 @@ export default class AnimationManager {
     this.fade(action);
     action.play();
     this.currentAction = action;
-    this.mixer.addEventListener("finished", this.runNextAnimation);
+    this.mixer.addEventListener("finished", this.eventFinished);
   };
   waveAllowed = () => {
     return (
