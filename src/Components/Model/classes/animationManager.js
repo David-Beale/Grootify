@@ -102,7 +102,10 @@ export default class AnimationManager {
     this.mixer.removeEventListener("finished", this.eventFinished);
     this.reset();
     let { animation, cb } = this.model.chainManager.shift();
-    if (cb) cb();
+    if (cb) {
+      const skip = cb();
+      if (skip) return;
+    }
     const action = this.animationRouter(animation);
     if (!action) return;
     action.reset();

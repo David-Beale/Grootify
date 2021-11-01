@@ -60,6 +60,15 @@ export default class ChainManager {
   updateFade = () => {
     this.model.animationManager.fadeSpeed = 0.5;
   };
+  isPlayingCheck = () => {
+    if (this.model.isPlaying) {
+      useStore.setState({ interfaceOpen: true });
+      this.model.setChain("danceChain");
+      return true;
+    } else {
+      this.runRight();
+    }
+  };
   land = () => {
     useStore.setState({ lightsOn: true });
   };
@@ -77,7 +86,6 @@ export default class ChainManager {
   typing = () => {
     setTimeout(() => {
       useStore.setState({ interfaceOpen: true });
-      if (this.model.isPlaying) this.model.setChain("leftDanceChain");
     }, 2000);
   };
   resetThriller = () => {
@@ -154,7 +162,7 @@ export default class ChainManager {
         { animation: "falling", cb: this.startFalling },
         { animation: "land", cb: this.land },
         { animation: "waving", cb: this.updateFade },
-        { animation: "running", cb: this.runRight },
+        { animation: "running", cb: this.isPlayingCheck },
         { animation: "typing", cb: this.typing },
         { animation: "idle", cb: this.jointManager.getJointAngle },
       ],
