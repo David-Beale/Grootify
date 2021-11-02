@@ -14,7 +14,7 @@ export const HeaderContainer = styled.div`
   z-index: 2;
   position: fixed;
   left: 0;
-  top: ${({ open }) => (open ? 0 : "-75px")};
+  top: ${({ open }) => (open ? 0 : "-80px")};
   transition: top 1s ease-in-out;
 `;
 
