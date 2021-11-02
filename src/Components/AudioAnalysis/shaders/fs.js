@@ -31,7 +31,7 @@ void main() {
       float b = vol * vol * brightness;
      
       float x = float(i)/float(dots);
-      float y = -0.1;
+      float y = 0.;
       vec2 o = vec2(x,y);
        
       vec3 dotCol = hsv2rgb(vec3((float(i) + time)/float(dots),1.,1.0));
