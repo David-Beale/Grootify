@@ -4,7 +4,6 @@ import { _VS } from "./shaders/vs";
 import { _FS } from "./shaders/fs";
 import { useFrame } from "@react-three/fiber";
 
-const size = 100;
 export default function Shader({ sound }) {
   const shader = useRef();
 
@@ -27,10 +26,19 @@ export default function Shader({ sound }) {
     if (analyzer.current) {
       data.current = analyzer.current.getFrequencyData();
       const uniform = [];
+      let leftCounter = 9;
+      let rightCounter = 10;
       for (let i = 0; i < 20; i++) {
-        uniform.push(data.current[i * 4] / 255);
+        let index;
+        if (i % 2 === 0) {
+          index = leftCounter;
+          leftCounter--;
+        } else {
+          index = rightCounter;
+          rightCounter++;
+        }
+        uniform[index] = data.current[i * 4] / 255;
       }
-      // console.log(data.current);
       shader.current.uniforms.data.value = uniform;
       shader.current.uniforms.time.value = state.clock.elapsedTime;
     }
@@ -38,7 +46,7 @@ export default function Shader({ sound }) {
 
   return (
     <>
-      <mesh position={[0, 12, -100]} renderOrder={0}>
+      <mesh position={[0, 40, -100]} renderOrder={0}>
         <planeBufferGeometry
           args={[window.innerWidth / 8, window.innerHeight / 8]}
         />

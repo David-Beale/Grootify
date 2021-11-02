@@ -21,19 +21,17 @@ vec3 hsv2rgb(vec3 c){
 void main() {
 	
 	vec2 p=vPosition.xy / resolution;
+  p.x += 0.5;
   p.y += 0.5;
   vec3 c=vec3(0,0,0); //background color
 		
-  float dist = distance(p , vec2(0)); 
-
-  if(dist > 0.28 && p.y > 0.) {
     for(int i=0;i<dots; i++){
    
       float vol =  data[i];
       float b = vol * vol * brightness;
      
-      float x = radius*cos(3.14*(float(i)/float(dots)));
-      float y = radius*sin(3.14*(float(i)/float(dots)));
+      float x = float(i)/float(dots);
+      float y = -0.1;
       vec2 o = vec2(x,y);
        
       vec3 dotCol = hsv2rgb(vec3((float(i) + time)/float(dots),1.,1.0));
@@ -41,7 +39,6 @@ void main() {
       float dist1 = clamp(length(p-o),0.05,1.);
       c += b/dist1*dotCol;
     }
-  }
   gl_FragColor = vec4(c,1); 
 }
 
