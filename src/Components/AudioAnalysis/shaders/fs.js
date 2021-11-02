@@ -4,7 +4,7 @@ varying vec2 vPosition;
 
 const int dots = 20; 
 const float radius = .2; 
-const float brightness = 0.04;
+const float brightness = 0.03;
 
 uniform float resolution;
 uniform float data[ 20 ];
@@ -31,7 +31,7 @@ void main() {
       float b = vol * vol * brightness;
      
       float x = float(i)/float(dots);
-      float y = 0.;
+      float y = 0.9;
       vec2 o = vec2(x,y);
        
       vec3 dotCol = hsv2rgb(vec3((float(i) + time)/float(dots),1.,1.0));

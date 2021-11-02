@@ -85,7 +85,7 @@ export default class ChainManager {
 
   typing = () => {
     setTimeout(() => {
-      useStore.setState({ interfaceOpen: true });
+      // useStore.setState({ interfaceOpen: true });
     }, 2000);
   };
   resetThriller = () => {
