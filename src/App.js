@@ -1,7 +1,7 @@
 import "./App.css";
 import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-// import { OrbitControls, Stats } from "@react-three/drei";
+import { OrbitControls, Stats } from "@react-three/drei";
 
 import Main from "./Components/Main/Main";
 import { useMouseInteraction } from "./Components/Rig/useInteractions";
@@ -21,7 +21,7 @@ export default function App() {
   return (
     <>
       <div className="container" onPointerMove={onMouseMove}>
-        <Login />
+        {/* <Login />
         <Logout />
         <SidePanel />
         <PlaylistTracks />
@@ -29,7 +29,7 @@ export default function App() {
         <SearchTracks />
         <Loader />
         <Player />
-        <SpotifyLogo />
+        <SpotifyLogo /> */}
         <Suspense fallback={null}>
           <Canvas
             className="canvas"
@@ -42,8 +42,8 @@ export default function App() {
           >
             {/* <Stats className="stats" /> */}
             <Main />
-            <Rig mouse={mouse} />
-            {/* <OrbitControls /> */}
+            {/* <Rig mouse={mouse} /> */}
+            <OrbitControls />
           </Canvas>
         </Suspense>
       </div>

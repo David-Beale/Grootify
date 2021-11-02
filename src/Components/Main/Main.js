@@ -7,6 +7,7 @@ import NoEffects from "../NoEffects/NoEffects";
 import Ring from "../Ring/Ring";
 import Table from "../Table/Table";
 import Lighting from "../Lighting/Lighting";
+import AudioAnalysis from "../AudioAnalysis/AudioAnalysis";
 
 export default function Main() {
   const bloomRef = useRef();
@@ -15,15 +16,16 @@ export default function Main() {
   return (
     <>
       <NoEffects>
-        <Model modelRef={modelRef} />
+        {/* <Model modelRef={modelRef} />
         <Lighting modelRef={modelRef} bloomRef={bloomRef} />
         <Floor />
-        <Table />
+        <Table /> */}
+        <AudioAnalysis />
       </NoEffects>
-      <Effects bloomRef={bloomRef}>
+      {/* <Effects bloomRef={bloomRef}>
         <Logo />
         <Ring />
-      </Effects>
+      </Effects> */}
     </>
   );
 }
