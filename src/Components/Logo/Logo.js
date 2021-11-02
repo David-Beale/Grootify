@@ -19,6 +19,7 @@ export default function Logo() {
       outlineWidth={0.1}
       strokeColor="green"
       strokeWidth={0.21}
+      userData={{ active: true }}
     >
       Grootify
     </Text>

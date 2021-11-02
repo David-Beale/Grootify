@@ -11,12 +11,12 @@ export default function Lighting({ modelRef, bloomRef }) {
     if (lightsOn) {
       lightRef.current.intensity = 5;
       lightRef.current.angle = 0.8;
-      bloomRef.current.strength = 4;
+      // bloomRef.current.strength = 4;
       setAngle(0.8);
     } else {
       lightRef.current.intensity = 0;
       lightRef.current.angle = 360;
-      bloomRef.current.strength = 0;
+      // bloomRef.current.strength = 0;
       setAngle(360);
     }
   }, [lightsOn, bloomRef]);

@@ -20,9 +20,9 @@ export default function Main() {
         <Lighting modelRef={modelRef} bloomRef={bloomRef} />
         <Floor />
         <Table />
-        <AudioAnalysis />
       </NoEffects>
       <Effects bloomRef={bloomRef}>
+        <AudioAnalysis />
         <Logo />
         <Ring />
       </Effects>

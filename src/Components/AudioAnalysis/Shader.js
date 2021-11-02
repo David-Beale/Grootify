@@ -46,7 +46,7 @@ export default function Shader({ sound }) {
 
   return (
     <>
-      <mesh position={[0, 11, -100]} renderOrder={0}>
+      <mesh position={[0, 11, -100]}>
         <planeBufferGeometry args={[340, 130]} />
         <shaderMaterial
           ref={shader}
