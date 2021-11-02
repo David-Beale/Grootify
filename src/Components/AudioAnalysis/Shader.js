@@ -10,7 +10,7 @@ export default function Shader({ sound }) {
 
   const uniforms = useMemo(() => {
     return {
-      resolution: { value: size },
+      resolution: { value: window.innerHeight / 8 },
       data: { value: Array(40).fill(0) },
       time: { value: 0 },
     };
@@ -38,8 +38,10 @@ export default function Shader({ sound }) {
 
   return (
     <>
-      <mesh>
-        <planeBufferGeometry args={[size, size]} />
+      <mesh position={[0, 12, -100]} renderOrder={0}>
+        <planeBufferGeometry
+          args={[window.innerWidth / 8, window.innerHeight / 8]}
+        />
         <shaderMaterial
           ref={shader}
           uniforms={uniforms}

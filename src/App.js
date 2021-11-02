@@ -21,7 +21,7 @@ export default function App() {
   return (
     <>
       <div className="container" onPointerMove={onMouseMove}>
-        {/* <Login />
+        <Login />
         <Logout />
         <SidePanel />
         <PlaylistTracks />
@@ -29,7 +29,7 @@ export default function App() {
         <SearchTracks />
         <Loader />
         <Player />
-        <SpotifyLogo /> */}
+        <SpotifyLogo />
         <Suspense fallback={null}>
           <Canvas
             className="canvas"

@@ -21,7 +21,8 @@ vec3 hsv2rgb(vec3 c){
 void main() {
 	
 	vec2 p=vPosition.xy / resolution;
-  vec3 c=vec3(0,0,0.1); //background color
+  p.y += 0.5;
+  vec3 c=vec3(0,0,0); //background color
 		
   float dist = distance(p , vec2(0)); 
 

@@ -16,16 +16,16 @@ export default function Main() {
   return (
     <>
       <NoEffects>
-        {/* <Model modelRef={modelRef} />
+        <Model modelRef={modelRef} />
         <Lighting modelRef={modelRef} bloomRef={bloomRef} />
         <Floor />
-        <Table /> */}
+        <Table />
         <AudioAnalysis />
       </NoEffects>
-      {/* <Effects bloomRef={bloomRef}>
+      <Effects bloomRef={bloomRef}>
         <Logo />
         <Ring />
-      </Effects> */}
+      </Effects>
     </>
   );
 }

@@ -1,9 +1,7 @@
 import { PositionalAudio } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
-import { useEffect, useRef, useState } from "react";
+import { useThree, useFrame } from "@react-three/fiber";
+import { useEffect, useRef } from "react";
 import Shader from "./Shader";
-
-// import Sphere from "./Sphere";
 
 export default function AudioAnalysis() {
   const sound = useRef();
@@ -24,7 +22,6 @@ export default function AudioAnalysis() {
     <>
       <PositionalAudio url="./sound2.mp3" distance={100} loop ref={sound} />
       <Shader sound={sound} />
-      {/* {createSpheres()} */}
     </>
   );
 }
