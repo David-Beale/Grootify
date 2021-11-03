@@ -10,7 +10,7 @@ export default function Shader({ sound }) {
   const uniforms = useMemo(() => {
     return {
       resolution: { value: 175 },
-      data: { value: Array(40).fill(0) },
+      data: { value: Array(20).fill(0) },
       time: { value: 0 },
     };
   }, []);
