@@ -10,6 +10,10 @@
   color: rgb(0, 37, 46);
   z-index: 0;
 }
+.canvas2 {
+  position: fixed !important;
+  top: 0;
+}
 .stats {
   top: unset !important;
   left: unset !important;

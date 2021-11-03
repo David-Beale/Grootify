@@ -15,6 +15,7 @@ import Player from "./Components/Player/Player";
 import SidePanel from "./Components/SidePanel/SidePanel";
 import SearchTracks from "./Components/SearchTracks/SearchTracks";
 import PlaylistTracks from "./Components/PlaylistTracks/PlaylistTracks";
+import AudioAnalysis from "./Components/AudioAnalysis/AudioAnalysis";
 
 export default function App() {
   const [mouse, onMouseMove] = useMouseInteraction();
@@ -32,6 +33,16 @@ export default function App() {
         <SpotifyLogo />
         <Suspense fallback={null}>
           <Canvas
+            className="canvas2"
+            camera={{
+              position: [0, 0, 100],
+              fov: 40,
+              far: 100000,
+            }}
+          >
+            <AudioAnalysis />
+          </Canvas>
+          <Canvas
             className="canvas"
             camera={{
               position: [0, 0, 100],
@@ -42,8 +53,8 @@ export default function App() {
           >
             {/* <Stats className="stats" /> */}
             <Main />
-            {/* <Rig mouse={mouse} /> */}
-            <OrbitControls />
+            <Rig mouse={mouse} />
+            {/* <OrbitControls /> */}
           </Canvas>
         </Suspense>
       </div>

@@ -2,11 +2,6 @@ import { Text } from "@react-three/drei";
 import font from "./aAttackGraffiti.ttf";
 
 export default function Logo() {
-  // useEffect(()=>{
-  //   loader.load(font, (res=>{
-
-  //   }))
-  // },[])
   return (
     <Text
       font={font}
@@ -19,7 +14,6 @@ export default function Logo() {
       outlineWidth={0.1}
       strokeColor="green"
       strokeWidth={0.21}
-      userData={{ active: true }}
     >
       Grootify
     </Text>
