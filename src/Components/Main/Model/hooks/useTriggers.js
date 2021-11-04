@@ -17,7 +17,7 @@ export const useTriggers = () => {
       const pos = model.positionManager.pos;
       if (pos === "right" || pos === "transit") {
         model.setChain("leftDanceChain");
-      } else model.setChain("danceChain");
+      }
     }
   }, [mode]);
 

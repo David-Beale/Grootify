@@ -37,7 +37,7 @@ export const animations = {
 
   falling: { file: Falling, blockAll: true },
   land: { file: Land, once: true, blockAll: true },
-  waving: { file: Waving, once: true, blockAll: true },
+  waving: { file: Waving, once: true, blockUser: true },
   typing: { file: Typing, once: true, blockUser: true },
 
   angry: { file: Angry, once: true, blockUser: true },
