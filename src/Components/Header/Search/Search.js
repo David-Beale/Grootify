@@ -2,15 +2,13 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { debounce } from "lodash";
 import {
   Input,
-  HeaderContainer,
   SearchBarContainer,
   StyledSearchIcon,
   StyledCancelIcon,
 } from "./SearchStyle";
-import { useStore } from "../Store/store";
+import { useStore } from "../../Store/store";
 
 export default function Search() {
-  const interfaceOpen = useStore((state) => state.interfaceOpen);
   const clearSearchText = useStore((state) => state.clearSearchText);
   const onCloseSearch = useStore((state) => state.onCloseSearch);
   const sendSearchRequest = useStore((state) => state.sendSearchRequest);
@@ -48,21 +46,19 @@ export default function Search() {
   );
 
   return (
-    <HeaderContainer open={interfaceOpen}>
-      <SearchBarContainer>
-        <StyledSearchIcon fontSize="large" />
-        <Input
-          type="text"
-          id="search"
-          placeholder={"Search for songs..."}
-          value={searchText}
-          onChange={onSearchTextChange}
-          autoComplete="off"
-        />
-        {searchText && (
-          <StyledCancelIcon onClick={onCloseSearch} fontSize="large" />
-        )}
-      </SearchBarContainer>
-    </HeaderContainer>
+    <SearchBarContainer>
+      <StyledSearchIcon fontSize="large" />
+      <Input
+        type="text"
+        id="search"
+        placeholder={"Search for songs..."}
+        value={searchText}
+        onChange={onSearchTextChange}
+        autoComplete="off"
+      />
+      {searchText && (
+        <StyledCancelIcon onClick={onCloseSearch} fontSize="large" />
+      )}
+    </SearchBarContainer>
   );
 }
