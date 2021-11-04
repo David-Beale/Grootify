@@ -9,7 +9,7 @@ export const HeaderContainer = styled.div`
   background-color: ${colors.primaryBackground};
   height: 75px;
   box-shadow: 0 0 15px 0 ${colors.spotifyGreen};
-  z-index: 2;
+  z-index: 6;
   position: fixed;
   left: 0;
   top: ${({ open }) => (open ? 0 : "-80px")};

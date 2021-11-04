@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const StyledOuter = styled.div`
   box-sizing: border-box;
-  z-index: 1;
+  z-index: 4;
   position: absolute;
   height: ${({ height }) => height}px;
   width: calc(100vw - 750px);
