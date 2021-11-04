@@ -6,6 +6,7 @@ import Shader from "./Shader";
 
 const audioLoader = new AudioLoader();
 const listener = new AudioListener();
+const audio = new Audio(listener);
 
 export default function AudioAnalysis() {
   const file = useStore((state) => state.file);
@@ -15,8 +16,11 @@ export default function AudioAnalysis() {
 
   useEffect(() => {
     camera.add(listener);
-    sound.current = new Audio(listener);
+    sound.current = audio;
     analyzer.current = new AudioAnalyser(sound.current, 256);
+    return () => {
+      sound.current.stop();
+    };
   }, [camera]);
 
   useEffect(() => {
@@ -25,10 +29,10 @@ export default function AudioAnalysis() {
       sound.current.setBuffer(buffer);
       sound.current.setLoop(true);
       sound.current.setVolume(1);
+      setTimeout(() => {
+        sound.current.play();
+      }, 3000);
     });
-    setTimeout(() => {
-      sound.current.play();
-    }, 3000);
   }, [file]);
 
   return <Shader analyzer={analyzer} />;
