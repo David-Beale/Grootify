@@ -18,7 +18,7 @@ export default function AudioAnalysis() {
 
   return (
     <>
-      <PositionalAudio url="./sound3.mp3" distance={100} loop ref={sound} />
+      <PositionalAudio url="./sound2.mp3" distance={100} loop ref={sound} />
       <Shader sound={sound} />
     </>
   );

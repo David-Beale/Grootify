@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import Floor from "../Floor/Floor";
-import Logo from "../Logo/Logo";
+import Text from "../Text/Text";
 import Model from "../Model/Model";
 import Effects from "../Effects/Effects";
 import NoEffects from "../NoEffects/NoEffects";
@@ -21,7 +21,7 @@ export default function Main() {
         <Table />
       </NoEffects>
       <Effects bloomRef={bloomRef}>
-        <Logo />
+        <Text />
         <Ring />
       </Effects>
     </>
