@@ -62,7 +62,7 @@ export default class ChainManager {
   };
   isPlayingCheck = () => {
     if (this.model.isPlaying) {
-      // useStore.setState({ interfaceOpen: true });
+      useStore.setState({ interfaceOpen: true });
       this.model.setChain("danceChain");
       return true;
     } else {
@@ -85,7 +85,7 @@ export default class ChainManager {
 
   typing = () => {
     setTimeout(() => {
-      // useStore.setState({ interfaceOpen: true });
+      useStore.setState({ interfaceOpen: true });
     }, 2000);
   };
   resetThriller = () => {
