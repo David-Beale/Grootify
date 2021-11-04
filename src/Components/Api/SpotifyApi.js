@@ -91,7 +91,6 @@ spotifyApi.checkAuthentication = async () => {
 
   spotifyApi.setRefreshToken(refreshToken);
   const preFlight = await spotifyApi.preFlightCheck(accessToken);
-  console.log(preFlight);
   if (!preFlight) return false;
 
   return await spotifyApi.login();

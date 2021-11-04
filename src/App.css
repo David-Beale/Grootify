@@ -1,18 +1,9 @@
-.container {
-  position: absolute;
-  width: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at top, #034412, #000000);
-  overflow: hidden;
-  color: rgb(0, 37, 46);
-  z-index: 0;
-}
-.canvas2 {
+.canvas {
   position: fixed !important;
   top: 0;
+}
+.canvasMain {
+  z-index: 3;
 }
 .stats {
   top: unset !important;
