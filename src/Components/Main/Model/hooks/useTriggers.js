@@ -54,7 +54,6 @@ export const useTriggers = () => {
   }, [isPlaying, playlistTracksOpen, searchTracksOpen]);
 
   useEffect(() => {
-    if (mood === null) return;
     if (mood === "thriller") {
       model.danceManager.setMood(2);
       const pos = model.positionManager.pos;
