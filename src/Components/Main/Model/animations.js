@@ -139,7 +139,6 @@ export const danceMedStack = ["ArmSwing", "Samba1"];
 export const allDanceHigh = [
   "Bboy1",
   "Bboy2",
-  "Brooklyn1",
   "Dance2",
   "HipHop10",
   "HipHop12",
