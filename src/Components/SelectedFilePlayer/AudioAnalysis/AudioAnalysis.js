@@ -29,9 +29,7 @@ export default function AudioAnalysis() {
       sound.current.setBuffer(buffer);
       sound.current.setLoop(true);
       sound.current.setVolume(1);
-      setTimeout(() => {
-        sound.current.play();
-      }, 3000);
+      sound.current.play();
     });
   }, [file]);
 
