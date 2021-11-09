@@ -1,70 +1,33 @@
-# Getting Started with Create React App
+# Grootify
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+#### Epilepsy warning: This app contains flashing lights.
+#### A Spotify Premium account is required to stream content from Spotify.
+You can select a local mp3 file if you don't have a Spotify account.
 
-## Available Scripts
+https://david-beale.github.io/Grootify/
 
-In the project directory, you can run:
+[![Video](https://user-images.githubusercontent.com/59053870/140958706-d76f97d4-18c4-4d16-89c2-1bf6c483cd78.png)](https://youtu.be/n8k8v7pSvfY)
 
-### `yarn start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+[![Video](https://user-images.githubusercontent.com/59053870/140957555-ec35b069-18a3-415e-835d-ec9a3db51547.png)](https://youtu.be/ijKePMnR8vA)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Features
 
-### `yarn test`
+* Custom Spotify web interface
+* Interactive Groot :
+  + 70+ character animations
+  + 3 dance categories based on Spotify AI music analysis
+  + Mouse tracking when in idle mode
+  + On-click detection
+* Custom audio visualizer for local files (not available for Spotify streaming)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Libraries and resources used:
 
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+* React
+* Three.js
+* React Three Fiber
+* Spotify For Developers
+* Mixamo 
+* Zustand 
+* https://skfb.ly/6yBR7
+* react-window-infinite-loader
