@@ -1,7 +1,9 @@
 # Grootify
 
 #### Epilepsy warning: This app contains flashing lights.
-#### A Spotify Premium account is required to stream content from Spotify.
+
+#### To access Spotify, please send me an email (david_beale@outlook.com). You will also need a Spotify Premium account.
+
 You can select a local mp3 file if you don't have a Spotify account.
 
 https://david-beale.github.io/Grootify/
