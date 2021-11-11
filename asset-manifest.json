@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/Grootify/static/css/main.b89a5805.chunk.css",
-    "main.js": "/Grootify/static/js/main.ecf637bd.chunk.js",
-    "main.js.map": "/Grootify/static/js/main.ecf637bd.chunk.js.map",
+    "main.js": "/Grootify/static/js/main.0b6f708e.chunk.js",
+    "main.js.map": "/Grootify/static/js/main.0b6f708e.chunk.js.map",
     "runtime-main.js": "/Grootify/static/js/runtime-main.2e41f22c.js",
     "runtime-main.js.map": "/Grootify/static/js/runtime-main.2e41f22c.js.map",
-    "static/js/2.dd40c306.chunk.js": "/Grootify/static/js/2.dd40c306.chunk.js",
-    "static/js/2.dd40c306.chunk.js.map": "/Grootify/static/js/2.dd40c306.chunk.js.map",
+    "static/js/2.4da12235.chunk.js": "/Grootify/static/js/2.4da12235.chunk.js",
+    "static/js/2.4da12235.chunk.js.map": "/Grootify/static/js/2.4da12235.chunk.js.map",
     "index.html": "/Grootify/index.html",
     "static/css/main.b89a5805.chunk.css.map": "/Grootify/static/css/main.b89a5805.chunk.css.map",
-    "static/js/2.dd40c306.chunk.js.LICENSE.txt": "/Grootify/static/js/2.dd40c306.chunk.js.LICENSE.txt",
+    "static/js/2.4da12235.chunk.js.LICENSE.txt": "/Grootify/static/js/2.4da12235.chunk.js.LICENSE.txt",
     "static/media/Angry.7db84f18.fbx": "/Grootify/static/media/Angry.7db84f18.fbx",
     "static/media/ArmSwing.cfa64b8b.fbx": "/Grootify/static/media/ArmSwing.cfa64b8b.fbx",
     "static/media/Belly.e398baef.fbx": "/Grootify/static/media/Belly.e398baef.fbx",
@@ -41,8 +41,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.2e41f22c.js",
-    "static/js/2.dd40c306.chunk.js",
+    "static/js/2.4da12235.chunk.js",
     "static/css/main.b89a5805.chunk.css",
-    "static/js/main.ecf637bd.chunk.js"
+    "static/js/main.0b6f708e.chunk.js"
   ]
 }
