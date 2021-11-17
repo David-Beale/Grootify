@@ -6,8 +6,11 @@ import { colors } from "../../../../colors";
 export const SearchBarContainer = styled.div`
   width: 650px;
   height: 50px;
-  max-width: calc(100vw - 95px);
   position: relative;
+  @media (max-width: 1100px) {
+    margin-left: 230px;
+    margin-right: 60px;
+  }
 `;
 
 export const Input = styled.input`
